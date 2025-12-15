@@ -1,0 +1,18 @@
+.mdc-list-item__primary-text {
+  display: flex !important;
+  align-items: center !important;
+  justify-items: flex-start;
+}
+.mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+.image-select-box {
+  display: inline-block;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  aspect-ratio: auto;
+  width: 25px;
+  height: 25px;
+  margin-right: 0.5rem;
+}

@@ -1,0 +1,14 @@
+footer {
+  display: flex;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-items: center;
+
+  p {
+    font-size: 0.9em;
+    text-align: right;
+  }
+}

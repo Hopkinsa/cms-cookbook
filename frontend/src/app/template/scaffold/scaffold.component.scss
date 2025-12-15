@@ -1,0 +1,50 @@
+.app-page-container {
+  display: flex;
+  flex-direction: column;
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+}
+.app-header-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: -2rem;
+  background-color: #175ea1;
+}
+.app-header-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 0rem;
+  min-height: 1rem;
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #fff;
+}
+.app-header {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 0.75rem;
+  min-height: 3rem;
+  color: #fff;
+  & h1 {
+    padding: 0px;
+    margin: 0px;
+  }
+}
+.app-content {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  padding: 1rem;
+  min-height: 3rem;
+  width: 90%;
+  border-radius: 0.75rem;
+  background-color: #fff;
+  color: #333;
+}
+.app-footer {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  min-height: 1rem;
+  color: #333;
+}

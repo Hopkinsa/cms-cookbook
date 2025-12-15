@@ -1,0 +1,13 @@
+@for (item of signalService.ingredients(); track item) {
+  @if (item.is_title) {
+    <div class="ingredient-title">{{ item.ingredient }}</div>
+  }
+  @else {
+    <div class="ingredient-line">
+      @if (item.quantity > 0) { {{ item.quantity * signalService.recipeServesAdjustment() | number: '1.0-2'}} }
+      {{ signalService.units()![item.quantity_unit].abbreviation }} {{ item.ingredient }} {{ item.preparation }}
+    </div>
+  }
+} @empty {
+  <p>There are no ingredients</p>
+}

@@ -1,0 +1,23 @@
+<h1>Units</h1>
+<div class="row">
+  @if (signalService.units()) {
+    @for (unit of signalService.units() | groupBy:'title' | keyvalue; track unit.key) {
+      @if(unit.key !== "") {
+        <div class="column">
+          <h2>{{ unit.key }}</h2>
+          <ul>
+            @for (item of unit.value; track item) {
+              <li>{{ item?.unit }} ({{ item?.abbreviation }})</li>
+            }
+          </ul>
+        </div>
+      }
+    }
+  }
+  @else {
+    <p>No units found</p>
+  }
+</div>
+<div class="row">
+  <button matButton="filled" type="button" (click)="back()">Back</button>
+</div>

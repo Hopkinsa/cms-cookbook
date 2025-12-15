@@ -1,0 +1,15 @@
+<form>
+  <label><b>Is title:</b> <input type="checkbox" [field]="ingredientForm.is_title"></label>
+
+  @if (!ingredientForm.is_title().value()) {
+  <label><b>Quantity:</b> <input size="3" type="number" [field]="ingredientForm.quantity"> <app-unit-select
+      [formField]="ingredientForm.quantity_unit().value()"
+      (fieldChange)="qtyUnitSelectUpdate($event)"></app-unit-select>
+  </label>
+  <label><b>Ingredient:</b> <input type="text" [field]="ingredientForm.ingredient"></label>
+  <label><b>Preparation:</b> <input type="text" [field]="ingredientForm.preparation"></label>
+  }
+  @else {
+  <label><b>Title:</b> <input type="text" [field]="ingredientForm.ingredient"></label>
+  }
+</form>

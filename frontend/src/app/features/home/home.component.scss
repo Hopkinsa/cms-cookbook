@@ -1,0 +1,45 @@
+.link-bar {
+  display: flex;
+  position: relative;
+  padding: 0;
+  margin: 0;
+  justify-content: flex-end;
+  align-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+
+  ul {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+
+    li {
+      display: inline-block;
+      list-style: none;
+      margin-right: 1rem;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
+.banner {
+  position: relative;
+  background-image: url('http://localhost:3000/template/spice.jpg');
+  background-size: cover;
+  display: block;
+  aspect-ratio: auto;
+  height: 45vh;
+  margin-bottom: 1rem;
+}
+
+.entry {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}

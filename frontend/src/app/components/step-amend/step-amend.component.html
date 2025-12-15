@@ -1,0 +1,10 @@
+<form>
+  <label><b>Is title:</b> <input type="checkbox" [field]="stepForm.is_title"></label>
+  @if (!stepForm.is_title().value()) {
+  <label><span class="sr-only">Recipe step</span>
+    <textarea rows="5" [field]="stepForm.step"></textarea></label>
+  }
+  @else {
+  <label><b>Title:</b> <input type="text" [field]="stepForm.step"></label>
+  }
+</form>

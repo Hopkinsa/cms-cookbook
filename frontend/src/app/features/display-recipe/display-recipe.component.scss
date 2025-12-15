@@ -1,0 +1,142 @@
+h2 {
+  display: inline-block;
+  text-transform: lowercase;
+  &::first-letter {
+    text-transform: uppercase;
+  }
+}
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.recipe-heading {
+  margin-bottom: 0.5rem;
+  & b {
+    font-weight: 600;
+  }
+}
+
+.recipe-amend {
+  display: inline-block;
+  & b {
+    font-weight: 600;
+  }
+}
+
+.recipe-banner {
+  position: relative;
+  background-size: cover;
+  display: block;
+  aspect-ratio: auto;
+  height: 45vh;
+  margin-bottom: 1rem;
+}
+
+.recipe-title {
+  margin-bottom: 0.5rem;
+  & b {
+    font-weight: 600;
+  }
+}
+
+.recipe-description {
+  margin-bottom: 0.5rem;
+  & b {
+    font-weight: 600;
+  }
+}
+.recipe-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  .recipe-serve {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    & b {
+      margin-right: 0.5rem;
+      font-weight: 600;
+    }
+  }
+  .recipe-time {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .recipe-prep {
+      margin-bottom: 0.5rem;
+      & b {
+        margin-right: 0.5rem;
+        font-weight: 600;
+      }
+    }
+
+    .recipe-cook {
+      margin-left: 1rem;
+      margin-bottom: 0.5rem;
+      & b {
+        margin-right: 0.5rem;
+        font-weight: 600;
+      }
+    }
+
+    .recipe-total {
+      margin-left: 1rem;
+      margin-bottom: 0.5rem;
+      & b {
+        margin-right: 0.5rem;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.recipe-tags {
+  margin-bottom: 0.5rem;
+  & b {
+    font-weight: 600;
+  }
+
+  .recipe-tags-type {
+    display: inline-block;
+    margin-right: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #aaa;
+  }
+}
+
+.recipe-ingredients {
+  margin-bottom: 0.5rem;
+  & b {
+    font-weight: 600;
+  }
+
+  app-ingredients {
+    display: block;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+  }
+}
+
+.recipe-steps {
+  margin-bottom: 0.5rem;
+  & b {
+    font-weight: 600;
+  }
+
+  app-steps {
+    display: block;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+  }
+}
+
+.recipe-notes {
+  margin-bottom: 0.5rem;
+  & b {
+    font-weight: 600;
+  }
+}
