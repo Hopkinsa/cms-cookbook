@@ -66,3 +66,7 @@ vite.config.ts.timestamp-*
 backend/data/*
 backend/images/uploaded/*
 !backend/images/uploaded/barabrith.jpeg
+
+# OS Specific
+.DS_Store
+Thumbs.db
