@@ -1,17 +1,21 @@
 import { Injectable, WritableSignal, effect, inject, signal } from '@angular/core';
 import { httpResource, HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { environment } from 'src/environment/environment';
+
 import { SignalService } from '@server/core/services/signal.service';
 import { IRecipe } from '@server/core/interface/recipe.interface';
+import { ErrorHandlerService } from './error-handler.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RecipeService {
   private http: HttpClient = inject(HttpClient);
+  private error: ErrorHandlerService = inject(ErrorHandlerService);
   protected signalService: SignalService = inject(SignalService);
-  private apiUrl = 'http://localhost:3000/';
+  private apiUrl = environment.baseApiURL;
 
   // Signals only trigger if the new value is different to current value
   // to get a recipe pass the recipe id by using getRecipe.set(<id>)
@@ -33,22 +37,13 @@ export class RecipeService {
     return this.getRecipe() ? `${this.apiUrl}recipe/${this.getRecipe()}` : undefined
   });
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
-  }
-
   public createRecipe(data: IRecipe): Observable<IRecipe[]> {
     return this.http
       .post<IRecipe[]>(
         `${this.apiUrl}recipe`,
         data
       )
-      .pipe(catchError(this.handleError('createRecipeRequest', [])));
+      .pipe(catchError(this.error.handleError('createRecipe', 'Unable to save recipe', [])));
   }
 
   public updateRecipe(recipe: Number): Observable<IRecipe[]> {
@@ -57,20 +52,7 @@ export class RecipeService {
         `${this.apiUrl}recipe/${recipe}`,
         this.signalService.recipe()
       )
-      .pipe(catchError(this.handleError('updateRecipeRequest', [])));
-  }
-
-  public postImage(data: any): Observable<any> {
-    return this.http
-      .post<any>(
-        `${this.apiUrl}bob`,
-        data,
-        {
-          reportProgress: true,
-          observe: 'events'
-        }
-      )
-      .pipe(catchError(this.handleError('createRecipeRequest', [])));
+      .pipe(catchError(this.error.handleError('updateRecipe', 'Unable to save recipe', [])));
   }
 
   public deleteRecipe(recipe: Number): Observable<IRecipe[]> {
@@ -78,6 +60,6 @@ export class RecipeService {
       .delete<IRecipe[]>(
         `${this.apiUrl}recipe/${recipe}`,
       )
-      .pipe(catchError(this.handleError('deleteRecipeRequest', [])));
+      .pipe(catchError(this.error.handleError('deleteRecipe', 'Unable to remove recipe', [])));
   }
 }

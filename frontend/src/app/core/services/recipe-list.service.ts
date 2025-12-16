@@ -1,5 +1,7 @@
 import { Injectable, WritableSignal, effect, inject, signal } from '@angular/core';
 import { httpResource } from '@angular/common/http';
+import { environment } from 'src/environment/environment';
+
 import { SignalService } from '@server/core/services/signal.service';
 import { IRecipeList } from '@server/core/interface/recipe.interface';
 
@@ -8,7 +10,7 @@ import { IRecipeList } from '@server/core/interface/recipe.interface';
 })
 export class RecipeListService {
   protected signalService: SignalService = inject(SignalService);
-  private apiUrl = 'http://localhost:3000/';
+  private apiUrl = environment.baseApiURL;
 
   // Signals only trigger if the new value is different to current value
   // to get a recipe pass the recipe id by using getRecipe.set(<id>)

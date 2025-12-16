@@ -3,6 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { form, Field } from '@angular/forms/signals';
+import { environment } from 'src/environment/environment';
 
 import { RecipeListService, RecipeService, SignalService } from '@server/core/services';
 import { FilterArrayPipe } from '@server/shared/pipes';
@@ -27,6 +28,7 @@ export class RecipesComponent {
   private recipeListService: RecipeListService = inject(RecipeListService);
   private recipeService: RecipeService = inject(RecipeService);
 
+  protected imgURL = `${ environment.baseImgURL }image/`;
   protected fieldModel = signal<string>('');
   protected searchForm = form(this.fieldModel);
 

@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { IRecipe, IRecipeList, ITags, IUnits } from '@server/core/interface';
+import { IRecipe, IRecipeList, ITags, IUnits, IFeedback } from '@server/core/interface';
 import { storageSignal } from './signal-storage.service';
 
 @Injectable({
@@ -10,8 +10,11 @@ import { storageSignal } from './signal-storage.service';
 export class SignalService {
   private router: Router = inject(Router);
 
-  // Signal that controls
+  // Signal that controls access to editing
   editEnabled: WritableSignal<Boolean> = storageSignal('editEnabled', false, {storage: localStorage, crossTabSync: true});
+
+  // Signal that controls feedback
+  feedbackMessage: WritableSignal<IFeedback | null> = signal(null);
 
   // Signal that contains the Recipe List data
   recipeList: WritableSignal<Array<IRecipeList> | null> = signal(null);

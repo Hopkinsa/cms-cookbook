@@ -5,7 +5,7 @@
       @if (fileService.imageList()) {
         @for (image of fileService.imageList() | sortArrays:'image':'asc'; track image; let i = $index ) {
           <mat-option class="image-select-option" [value]="image">
-            <div class="image-select-box" style="background-image: url('http://localhost:3000/image/{{ image }}')"></div>
+            <div class="image-select-box" style="background-image: url('{{ imgURL }}{{ image }}')"></div>
             {{image | truncate:12 }}
           </mat-option>
         }

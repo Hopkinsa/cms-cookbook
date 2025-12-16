@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
+import { environment } from 'src/environment/environment';
 
 import { SignalService } from '@server/core/services/signal.service';
 import { HoursMinutesPipe } from '@server/shared/pipes';
@@ -29,6 +30,8 @@ export class DisplayRecipeComponent {
   private title: Title = inject(Title);
   private router: Router = inject(Router);
 
+  protected imgURL = `${ environment.baseImgURL }image/`;
+  protected imgPlaceholderURL = `${ environment.baseImgURL }template/`;
   protected signalService: SignalService = inject(SignalService);
 
   totalTime = 0;

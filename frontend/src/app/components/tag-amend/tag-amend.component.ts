@@ -3,8 +3,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Field, form } from '@angular/forms/signals';
 
-import { ITags, tagsInitialState } from '@server/core/interface';
-import { TagService } from '@server/core/services';
+import { crudResponse, ITags, tagsInitialState } from '@server/core/interface';
+import { SignalService, TagService } from '@server/core/services';
 
 @Component({
   selector: 'app-tag-amend',
@@ -23,6 +23,7 @@ export class TagAmendComponent {
     alias: "tag",
   });
 
+  protected signalService: SignalService = inject(SignalService);
   protected tagService: TagService = inject(TagService);
   protected tagModel = signal<ITags>(tagsInitialState);
   protected tagForm = form(this.tagModel);
@@ -60,11 +61,27 @@ export class TagAmendComponent {
     }
     if (tagId === -1) {
       this.enableSave = false;
-      this.tagService.createTag(tagObj).subscribe(() => { this.tagService.getTags.set(Date.now()); this.enableSave = true; });
+      this.tagService.createTag(tagObj).subscribe((res) => {
+        if (res !== null && res !== undefined) {
+          if ((res as unknown as crudResponse).completed) {
+            this.signalService.feedbackMessage.set({ type: 'success', message: 'Tag added' });
+
+          }
+        }
+        this.tagService.getTags.set(Date.now()); this.enableSave = true;
+      });
     }
     if (tagId >= 0) {
       this.enableSave = false;
-      this.tagService.updateTag(tagId, tagObj).subscribe(() => { this.tagService.getTags.set(Date.now()); this.enableSave = true; });
+      this.tagService.updateTag(tagId, tagObj).subscribe((res) => {
+        if (res !== null && res !== undefined) {
+          if ((res as unknown as crudResponse).completed) {
+            this.signalService.feedbackMessage.set({ type: 'success', message: 'Tag saved' });
+
+          }
+        }
+        this.tagService.getTags.set(Date.now()); this.enableSave = true;
+      });
     }
   }
 }

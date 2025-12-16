@@ -12,9 +12,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { environment } from 'src/environment/environment';
 
 import { SignalService, RecipeService } from '@server/core/services';
-import { IIngredients, IIngredientsUpdate, ingredientInitialState, IRecipe, IStep, IStepUpdate, recipeInitialState, stepInitialState } from '@server/core/interface';
+import { IIngredients, IIngredientsUpdate, ingredientInitialState, IRecipe, IStep, IStepUpdate, recipeInitialState, stepInitialState, crudResponse } from '@server/core/interface';
+import { FeedbackComponent } from '@server/components/feedback/feedback.component';
 import { RecipeTagAmendComponent } from '@server/components/recipe-tag-amend/recipe-tag-amend.component';
 import { IngredientAmendComponent } from '@server/components/ingredient-amend/ingredient-amend.component'
 import { StepAmendComponent } from '@server/components/step-amend/step-amend.component'
@@ -35,6 +37,7 @@ import { ImageUploadComponent } from '@server/components/image-upload/image-uplo
     MatChipsModule,
     MatIconModule,
     MatProgressBarModule,
+    FeedbackComponent,
     ImageSelectComponent,
     ImageUploadComponent,
     RecipeTagAmendComponent,
@@ -49,6 +52,7 @@ export class AmendRecipeComponent {
   private recipeService: RecipeService = inject(RecipeService);
   private id = this.route.snapshot.data['id'];
 
+  protected imgURL = `${ environment.baseImgURL }image/`;
   protected signalService: SignalService = inject(SignalService);
   protected enableSave = true;
   protected recipeModel = signal<IRecipe>(recipeInitialState);
@@ -174,13 +178,26 @@ export class AmendRecipeComponent {
     if (this.id >= 0) {
       this.enableSave = false;
       this.signalService.recipe.set(this.recipeModel());
-      this.recipeService.updateRecipe(this.id).subscribe(() => { this.enableSave = true; });
-      this.enableSave = true;
+      this.recipeService.updateRecipe(this.id).subscribe((res) => {
+        if (res !== null && res !== undefined) {
+          if ((res as unknown as crudResponse).completed) {
+            this.signalService.feedbackMessage.set({ type: 'success', message: 'Recipe saved' });
+          }
+        }
+        this.enableSave = true;
+      });
     }
     if (this.id === -1) {
       this.enableSave = false;
       const data = this.recipeModel();
-      this.recipeService.createRecipe(data).subscribe(() => { this.enableSave = true; });
+      this.recipeService.createRecipe(data).subscribe((res) => {
+        if (res !== null && res !== undefined) {
+          if ((res as unknown as crudResponse).completed) {
+            this.signalService.feedbackMessage.set({ type: 'success', message: 'Recipe added' });
+          }
+        }
+        this.enableSave = true;
+      });
     }
   }
 

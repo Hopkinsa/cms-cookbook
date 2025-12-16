@@ -1,15 +1,17 @@
+<app-feedback></app-feedback>
 <div class="row">
   <h1>Available Images</h1>
   @if (signalService.editEnabled()) {
     <app-image-upload [variant]="'text'"></app-image-upload>
   }
 </div>
+
 <div class="row">
   @if (fileService.imageList()) {
     <div class="column">
       @for (image of fileService.imageList() | sortArrays:'image':'asc'; track image; let i = $index ) {
         <div class="recipe-image">
-          <div class="image-box" style="background-image: url('http://localhost:3000/image/{{ image }}')"></div>
+          <div class="image-box" style="background-image: url('{{ imgURL }}{{ image }}')"></div>
             @if (signalService.editEnabled()) {
               <div class="image-amend">
                 <button type="button" matIconButton (click)="delete(image)"><mat-icon>delete</mat-icon></button>
