@@ -1,4 +1,3 @@
-import { N } from '@angular/cdk/keycodes';
 import { Component, effect, inject } from '@angular/core';
 
 import { SignalService } from '@server/core/services/signal.service';
@@ -22,7 +21,7 @@ export class FeedbackComponent {
     }
   })
 
-  fade (element: HTMLElement, duration: number) {
+  fade(element: HTMLElement, duration: number) {
     element.style.display = 'flex';
     element.style.opacity = '0';
     this.fadeIncrement(element, duration)
@@ -38,8 +37,8 @@ export class FeedbackComponent {
     } else {
       element.style.opacity = '1';
       setTimeout(() => {
-        this.fadeDecrement(element, duration/2);
-      }, duration*2);
+        this.fadeDecrement(element, duration / 2);
+      }, duration * 2);
     }
   }
 
