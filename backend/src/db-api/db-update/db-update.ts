@@ -27,6 +27,7 @@ class DBUpdate {
         res_code = 500;
         res_message = { message: 'IDs missing or invalid' };
       } else {
+        recipeData.date_updated = Date.now();
         await db
           .run(UPDATE_RECIPE_DATA, JSON.stringify(recipeData), recipeId)
           .catch((err) => {

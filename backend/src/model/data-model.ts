@@ -31,6 +31,8 @@ export interface IRecipe {
   ingredients?: Array<IIngredients>;
   steps?: Array<IStep>;
   notes: string;
+  date_created?: number;
+  date_updated?: number;
 }
 
 export interface IIngredients {

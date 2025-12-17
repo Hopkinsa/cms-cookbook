@@ -2,7 +2,7 @@ const UNIT_COLUMNS = 'id, title, unit, abbreviation';
 const TAG_COLUMNS = 'id, type, tag';
 const RECIPE_COLUMNS = 'id, card';
 
-const RECIPE_LIST_COLUMNS = `id, json_extract(card, '$.title') as title, json_extract(card, '$.img_url') as img_url, json_extract(card, '$.tags') as tags`;
+const RECIPE_LIST_COLUMNS = `id, json_extract(card, '$.title') as title, json_extract(card, '$.img_url') as img_url, json_extract(card, '$.tags') as tags, json_extract(card, '$.date_created') as date_created, json_extract(card, '$.date_updated') as date_updated`;
 
 
 export const FIND_RECIPE_BY_ID = `SELECT ${RECIPE_COLUMNS} FROM recipe WHERE id = ?`;

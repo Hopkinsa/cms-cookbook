@@ -28,9 +28,9 @@ export async function populateDatabase(db: Database<sqlite3.Database, sqlite3.St
         .catch((err) => log.error(`${DEBUG}Error adding Unit data: `, err.message));
 
     try {
-    await db.run(RECIPE_DATA)
-        .then(() => log.info_lv3(`${DEBUG}Recipe data added successfully`))
-        .catch((err) => log.error(`${DEBUG}Error adding Recipe data: `, err.message));
+        await db.run(RECIPE_DATA)
+            .then(() => log.info_lv3(`${DEBUG}Recipe data added successfully`))
+            .catch((err) => log.error(`${DEBUG}Error adding Recipe data: `, err.message));
     } catch(e) {
         log.error(`${DEBUG}Error adding Recipe data: `, e as any);
     }

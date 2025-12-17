@@ -21,7 +21,8 @@ class DBCreate {
             let res_code = 200;
             let res_message: IResponse = { completed: true };
             log.info_lv2(`${DEBUG}createRecipe`);
-
+            recipeData.date_created = Date.now();
+            recipeData.date_updated = Date.now();
             const data = JSON.stringify(recipeData);
             await db
                 .run(CREATE_RECIPE_DATA, `${data}`)
