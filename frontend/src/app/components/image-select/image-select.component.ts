@@ -2,6 +2,7 @@ import { Component, effect, inject, input, output, signal, ViewEncapsulation } f
 import { Field, form } from '@angular/forms/signals';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { environment } from 'src/environment/environment';
 
 import { FileService } from '@server/core/services';
 import { SortArrayPipe, TruncatePipe } from '@server/shared/pipes';
@@ -21,6 +22,7 @@ export class ImageSelectComponent {
   });
   fieldChange = output<string>();
 
+  protected imgURL = `${ environment.baseImgURL }image/`;
   protected fileService: FileService = inject(FileService);
   protected fieldModel = signal<string>('');
   protected fieldForm = form(this.fieldModel);

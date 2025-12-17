@@ -1,0 +1,30 @@
+.feedback-container {
+  position: fixed;
+  top: 1rem;
+  display: none;
+  align-items: center;
+  box-sizing: border-box;
+  z-index: 999;
+  width: calc(100% - 2rem);
+  background-color: rgb(255, 255, 255, 0.85);
+}
+.feedback-message {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0rem 1rem;
+  border-radius: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgb(0, 0, 0);
+  color: #000000;
+}
+.error {
+  background-color: rgba(255, 0, 0, 0.15);
+  border: 1px solid rgb(255, 0, 0);
+}
+
+.success {
+  background-color: rgba(0, 135, 0, 0.15);
+  border: 1px solid rgb(0, 135, 0);
+}

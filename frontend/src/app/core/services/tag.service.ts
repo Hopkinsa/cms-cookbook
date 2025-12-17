@@ -1,17 +1,21 @@
 import { Injectable, WritableSignal, effect, inject, signal } from '@angular/core';
 import { httpResource, HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { environment } from 'src/environment/environment';
+
 import { SignalService } from '@server/core/services/signal.service';
 import { ITags } from '@server/core/interface';
+import { ErrorHandlerService } from './error-handler.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TagService {
   private http: HttpClient = inject(HttpClient);
+  private error: ErrorHandlerService = inject(ErrorHandlerService);
   protected signalService: SignalService = inject(SignalService);
-  private apiUrl = 'http://localhost:3000/';
+  private apiUrl = environment.baseApiURL;
 
   // Signals only trigger if the new value is different to current value
   // to ensure this signal triggers use getTags.set(Date.now())
@@ -33,22 +37,13 @@ export class TagService {
     return this.getTags() ? `${this.apiUrl}tags` : undefined
   });
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
-  }
-
   public createTag(data: ITags): Observable<ITags[]> {
     return this.http
       .post<ITags[]>(
         `${this.apiUrl}tags`,
         data
       )
-      .pipe(catchError(this.handleError('createTagRequest', [])));
+      .pipe(catchError(this.error.handleError('createTag', 'Unable to save tag', [])));
   }
 
   public updateTag(tag: Number, data: ITags): Observable<any> {
@@ -57,13 +52,13 @@ export class TagService {
         `${this.apiUrl}tags/${tag}`,
         data
       )
-      .pipe(catchError(this.handleError('updateTagRequest', [])));
+      .pipe(catchError(this.error.handleError('updateTag', 'Unable to save tag', [])));
   }
 
   public deleteTag(tag: Number): Observable<any> {
     return this.http
       .delete<any>(`${this.apiUrl}tags/${tag}`)
-      .pipe(catchError(this.handleError('deleteTagRequest', [])));
+      .pipe(catchError(this.error.handleError('deleteTag', 'Unable to remove tag', [])));
   }
 
 }

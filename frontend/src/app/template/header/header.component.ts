@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { environment } from 'src/environment/environment';
 
 import { SignalService } from '@server/core/services/signal.service';
 
@@ -15,6 +16,7 @@ import { SignalService } from '@server/core/services/signal.service';
   standalone: true,
 })
 export class HeaderComponent {
+  protected imgURL = `${ environment.baseImgURL }template/`;
   protected signalService: SignalService = inject(SignalService);
 
   toggleEdit(): void {

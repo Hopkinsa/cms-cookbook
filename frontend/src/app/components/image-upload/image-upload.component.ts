@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
-import { FileService } from '@server/core/services';
+import { SignalService, FileService } from '@server/core/services';
 
 @Component({
   selector: 'app-image-upload',
@@ -18,6 +18,7 @@ export class ImageUploadComponent {
   @Input() variant: string = '';
   fileUploaded = output<string>();
 
+  protected signalService: SignalService = inject(SignalService);
   protected fileService: FileService = inject(FileService);
   uploadProgress: number = 0;
   value: number = 0
@@ -38,6 +39,7 @@ export class ImageUploadComponent {
             }
           } else if (event.type === HttpEventType.Response) {
             this.uploadProgress = 100; // Ensure progress reaches 100%
+            this.signalService.feedbackMessage.set({ type: 'success', message: 'Image added' });
             this.fileService.getImages.set(Date.now());
             this.fileUploaded.emit(file.name);
             setTimeout(() => {
@@ -48,6 +50,7 @@ export class ImageUploadComponent {
         },
         (error) => {
           console.error('Upload error:', error);
+          this.signalService.feedbackMessage.set({ type: 'error', message: 'Image upload failed' });
           this.isUploading = false;
         }
       );

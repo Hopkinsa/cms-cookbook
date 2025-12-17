@@ -7,7 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { SignalService, TagService } from '@server/core/services';
 import { GroupByPipe, RemoveCharactersPipe } from '@server/shared/pipes';
-import { ITags, tagsInitialState } from '@server/core/interface';
+import { ITags, tagsInitialState, crudResponse } from '@server/core/interface';
+import { FeedbackComponent } from '@server/components/feedback/feedback.component';
 import { TagAmendComponent } from '@server/components/tag-amend/tag-amend.component';
 
 @Component({
@@ -20,6 +21,7 @@ import { TagAmendComponent } from '@server/components/tag-amend/tag-amend.compon
     MatIconModule,
     GroupByPipe,
     KeyValuePipe,
+    FeedbackComponent,
     RemoveCharactersPipe,
     TagAmendComponent,
   ],
@@ -59,7 +61,14 @@ export class AmendTagsComponent {
 
   delete(id: number): void {
     if (id >= 0) {
-      this.tagService.deleteTag(id).subscribe(() => { this.tagService.getTags.set(Date.now()) });
+      this.tagService.deleteTag(id).subscribe((res) => {
+        if (res !== null && res !== undefined) {
+          if ((res as unknown as crudResponse).completed) {
+            this.signalService.feedbackMessage.set({ type: 'success', message: 'Tag deleted' });
+          }
+        }
+        this.tagService.getTags.set(Date.now())
+      });
     }
     if (id === -1) {
       const x = this.signalService.tags() as ITags[];
@@ -67,6 +76,7 @@ export class AmendTagsComponent {
         const index = x.map(item => item.id).indexOf(-1);
         x.splice(index, 1);
         this.signalService.tags.set(x.slice());
+        this.signalService.feedbackMessage.set({ type: 'success', message: 'Tag deleted' });
         // Force new object/array
         // use someArray.slice() (for Arrays - returns a copy of array) and Object Destructuring ({...someSignal() }) (for objects)
         // to create a new memory reference so that the signal pickups the change.

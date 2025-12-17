@@ -1,14 +1,18 @@
 import { Injectable, WritableSignal, effect, inject, signal } from '@angular/core';
 import { httpResource, HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { environment } from 'src/environment/environment';
+
+import { ErrorHandlerService } from './error-handler.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FileService {
   private http: HttpClient = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/';
+  private error: ErrorHandlerService = inject(ErrorHandlerService);
+  private apiUrl = environment.baseApiURL;
 
   public imageList: WritableSignal<Array<string> | null> = signal(null);
 
@@ -39,21 +43,12 @@ export class FileService {
         reportProgress: true,
         observe: 'events',
       })
-      .pipe(catchError(this.handleError('uploadImage', [])));
+      .pipe(catchError(this.error.handleError('uploadImage', 'Unable to upload file', [])));
   }
 
   public deleteImage(imgName: string): Observable<any> {
     return this.http
       .delete<any>(`${this.apiUrl}images/${imgName}`)
-      .pipe(catchError(this.handleError('deleteImageRequest', [])));
-  }
-
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
+      .pipe(catchError(this.error.handleError('deleteImage', 'Unable to remove file', [])));
   }
 }
