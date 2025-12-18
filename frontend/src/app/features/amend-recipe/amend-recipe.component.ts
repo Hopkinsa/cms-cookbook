@@ -104,73 +104,73 @@ export class AmendRecipeComponent {
 
   addIngredient(): void {
     const x = this.recipeModel() as IRecipe;
-    let y: IIngredients[] | undefined = x.ingredients;
+    let y: IIngredients[] | undefined = x.ingredients?.slice();
     if (y !== undefined) {
       y.push(ingredientInitialState);
-      this.recipeModel.set(x);
+      this.recipeModel.set({...x, ingredients: y});
     }
   }
 
   ingredientUpdate(event: IIngredientsUpdate, idx: number): void {
     const x = this.recipeModel() as IRecipe;
-    let y: IIngredients[] | undefined = x.ingredients;
+    let y: IIngredients[] | undefined = x.ingredients?.slice();
     if (y !== undefined) {
       y[idx] = { ...y[idx], ...event };
+      this.recipeModel.set({...x, ingredients: y});
     }
-    this.recipeModel.set(x)
   }
 
   removeIngredient(index: number): void {
     const x = this.recipeModel() as IRecipe;
-    let y: IIngredients[] | undefined = x.ingredients;
+    let y: IIngredients[] | undefined = x.ingredients?.slice();
     if (y !== undefined) {
       y.splice(index, 1);
-      this.recipeModel.set(x);
+      this.recipeModel.set({...x, ingredients: y});
     }
   }
 
   dropIngredient(event: CdkDragDrop<any[]>): void {
     const x = this.recipeModel() as IRecipe;
-    let y: IIngredients[] | undefined = x.ingredients;
+    let y: IIngredients[] | undefined = x.ingredients?.slice();
     if (y !== undefined) {
       moveItemInArray(y, event.previousIndex, event.currentIndex);
-      this.recipeModel.set(x);
+      this.recipeModel.set({...x, ingredients: y});
     }
   }
 
   addStep(): void {
     const x = this.recipeModel() as IRecipe;
-    let y: IStep[] | undefined = x.steps;
+    let y: IStep[] | undefined = x.steps?.slice();
     if (y !== undefined) {
       y.push(stepInitialState);
-      this.recipeModel.set(x);
+      this.recipeModel.set({...x, steps: y});
     }
   }
 
   stepUpdate(event: IStepUpdate, idx: number): void {
     const x = this.recipeModel() as IRecipe;
-    let y: IStep[] | undefined = x.steps;
+    let y: IStep[] | undefined = x.steps?.slice();
     if (y !== undefined) {
       y[idx] = { ...y[idx], ...event };
+      this.recipeModel.set({...x, steps: y});
     }
-    this.recipeModel.set(x);
   }
 
   removeStep(index: number): void {
     const x = this.recipeModel() as IRecipe;
-    let y: IStep[] | undefined = x.steps;
+    let y: IStep[] | undefined = x.steps?.slice();
     if (y !== undefined) {
       y.splice(index, 1);
-      this.recipeModel.set(x);
+      this.recipeModel.set({...x, steps: y});
     }
   }
 
   dropStep(event: CdkDragDrop<any[]>): void {
     const x = this.recipeModel() as IRecipe;
-    let y: IStep[] | undefined = x.steps;
+    let y: IStep[] | undefined = x.steps?.slice();
     if (y !== undefined) {
       moveItemInArray(y, event.previousIndex, event.currentIndex);
-      this.recipeModel.set(x);
+      this.recipeModel.set({...x, steps: y});
     }
   }
 

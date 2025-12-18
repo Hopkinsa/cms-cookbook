@@ -29,6 +29,7 @@ import { Title } from '@angular/platform-browser';
 export class DisplayRecipeComponent {
   private title: Title = inject(Title);
   private router: Router = inject(Router);
+  private formInit = true;
 
   protected imgURL = `${ environment.baseImgURL }image/`;
   protected imgPlaceholderURL = `${ environment.baseImgURL }template/`;
@@ -39,28 +40,33 @@ export class DisplayRecipeComponent {
   private displayInit = effect(() => {
     const data = this.signalService.recipe();
 
-    if (data !== null) {
+    if (data !== null && this.formInit) {
       const recipeTitle = data.title || 'Unknown';
       this.title.setTitle(`${recipeTitle} | Cookbook`)
       this.totalTime = data.prep_time + data.cook_time;
-      this.signalService.recipeServes.set(data.serves)
+      this.signalService.recipeServes.set((data.serves as number))
+      this.formInit = false;
     }
   });
 
   servingUp(): void {
-    if (this.signalService.recipeServes() !== null) {
-      let serve = this.signalService.recipeServes() || 1;
+    let serve: number | null = this.signalService.recipeServes();
+    if (serve !== null) {
       if (serve < 10) {
-        this.signalService.recipeServes.set(serve + 1);
+        // Because can be <number | null> cast as <number> to avoid error
+        // +(value as number) used as type being lost and defaulting to string
+        this.signalService.recipeServes.update((value: number | null) => +(value as number) + 1);
       }
     }
   }
 
   servingDown(): void {
-    if (this.signalService.recipeServes() !== null) {
-      let serve = this.signalService.recipeServes() || 1;
+    let serve: number | null = this.signalService.recipeServes();
+    if (serve !== null) {
       if (serve > 1) {
-        this.signalService.recipeServes.set(serve - 1);
+        // Because can be <number | null> cast as <number> to avoid error
+        // +(value as number) used as type being lost and defaulting to string
+        this.signalService.recipeServes.update((value: number | null) => +(value as number) - 1);
       }
     }
   }
