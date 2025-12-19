@@ -1,4 +1,4 @@
-const CRAYONS = (...args: string[]) => ({
+const CRAYONS = (...args: string[]): any => ({
   default: '\x1b[0m',
   black: `\x1b[30m${args.join(' ')}`,
   red: `\x1b[31m${args.join(' ')}`,
@@ -19,22 +19,22 @@ const CRAYONS = (...args: string[]) => ({
 });
 
 export const log = {
-  title: (...args: string[]) => {
+  title: (...args: string[]): void => {
     args = [' ', ...args, ' '];
     console.info(CRAYONS(CRAYONS(...args).blue).bgWhite);
   },
-  info_lv1: (...args: string[]) => {
+  info_lv1: (...args: string[]): void => {
     console.info(CRAYONS(...args).yellow, CRAYONS().default);
   },
-  info_lv2: (...args: string[]) => {
+  info_lv2: (...args: string[]): void => {
     args = ['  ', ...args];
     console.info(CRAYONS(...args).cyan, CRAYONS().default);
   },
-  info_lv3: (...args: string[]) => {
+  info_lv3: (...args: string[]): void => {
     args = ['    ', ...args];
     console.info(CRAYONS(...args).magenta, CRAYONS().default);
   },
-  error: (...args: string[]) => console.info(CRAYONS(...args).red, CRAYONS().default),
+  error: (...args: string[]): void => console.info(CRAYONS(...args).red, CRAYONS().default),
 };
 
 export function num2Bool(x: number): boolean {

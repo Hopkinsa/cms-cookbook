@@ -13,13 +13,7 @@ import { FilterArrayPipe } from '@server/shared/pipes';
   templateUrl: './recipes.component.html',
   styleUrls: ['./recipes.component.scss'],
   standalone: true,
-  imports: [
-    RouterLink,
-    MatButtonModule,
-    MatIconModule,
-    Field,
-    FilterArrayPipe
-  ],
+  imports: [RouterLink, MatButtonModule, MatIconModule, Field, FilterArrayPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipesComponent {
@@ -28,7 +22,7 @@ export class RecipesComponent {
   private recipeListService: RecipeListService = inject(RecipeListService);
   private recipeService: RecipeService = inject(RecipeService);
 
-  protected imgURL = `${ environment.baseImgURL }image/`;
+  protected imgURL = `${environment.baseImgURL}image/`;
   protected readonly fieldModel = signal<string>('');
   protected searchForm = form(this.fieldModel);
 

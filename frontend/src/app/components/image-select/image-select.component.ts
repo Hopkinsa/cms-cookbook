@@ -60,7 +60,9 @@ export class ImageSelectComponent {
   // Update form if input signal value has changed
   private selectUpdateEffect = effect(() => {
     let updateData = null;
-    if (this.fieldModel() !== this.signalField()) { updateData = this.signalField(); }
+    if (this.fieldModel() !== this.signalField()) {
+      updateData = this.signalField();
+    }
     if (updateData !== null) {
       this.fieldModel.set(updateData);
     }

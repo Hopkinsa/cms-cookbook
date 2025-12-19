@@ -20,15 +20,15 @@ export class UnitsService {
     if (this.unitRequest.status() === 'resolved') {
       this.signalService.units.set(this.unitRequest.value() as IUnits[]);
     }
-  })
+  });
 
   private unitRequestError = effect(() => {
     if (this.unitRequest.error()) {
       console.error('Units error', this.unitRequest.error()?.message);
     }
-  })
+  });
 
   private unitRequest = httpResource<IUnits[]>(() => {
-    return this.getUnits() ? `${this.apiUrl}units` : undefined
+    return this.getUnits() ? `${this.apiUrl}units` : undefined;
   });
 }

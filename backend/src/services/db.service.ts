@@ -19,7 +19,7 @@ export const db = await open({
   driver: sqlite3.Database,
 });
 
-export async function connectToDatabase() {
+export async function connectToDatabase(): Promise<void> {
   if (newDB) {
     log.info_lv2(`${DEBUG}The database does not exist.`);
     await createDatabase(db);

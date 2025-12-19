@@ -7,7 +7,7 @@ import {
   recipeListResolver,
   recipeResolver,
   tagResolver,
-  unitResolver
+  unitResolver,
 } from '@server/core/resolver';
 
 export const routes: Routes = [

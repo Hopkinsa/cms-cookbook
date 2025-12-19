@@ -13,12 +13,16 @@ export class HoursMinutesPipe implements PipeTransform {
     let timeText = '';
     if (hrs > 0) {
       timeText += `${hrs} hour`;
-      if (hrs > 1) { timeText += `s`; }
+      if (hrs > 1) {
+        timeText += `s`;
+      }
       timeText += ' ';
     }
     if (min > 0) {
       timeText += `${min} minute`;
-      if (min > 1) { timeText += `s`; }
+      if (min > 1) {
+        timeText += `s`;
+      }
     }
     return timeText;
   }
