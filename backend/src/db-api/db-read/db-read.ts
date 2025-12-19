@@ -4,19 +4,19 @@ import { validationResult } from 'express-validator';
 import { log } from '../../utility/helpers.ts';
 import { db } from '../../services/db.service.ts';
 import { ICard, IRecipe, ITags, IUnit } from '../../model/data-model.ts';
-import { FIND_RECIPE_BY_ID, GET_RECIPES, FIND_RECIPES, FIND_UNIT_BY_ID, GET_UNITS, GET_TAGS } from './sql-read.ts';
+import { FIND_RECIPE_BY_ID, FIND_RECIPES, FIND_UNIT_BY_ID, GET_RECIPES, GET_TAGS, GET_UNITS } from './sql-read.ts';
 import { IResponse } from '../../model/data-model.ts';
 
 const DEBUG = 'db-read | ';
 
 class DBRead {
   // Recipes
-  public static findRecipeByID = async (req: Request, res: Response) => {
+  static findRecipeByID = async (req: Request, res: Response): Promise<void> => {
     const recipeId: number = parseInt(req.params['id']);
     log.info_lv2(`${DEBUG}findRecipeByID: ${recipeId}`);
     let recipe: ICard | undefined;
-    let res_code = 200;
-    let res_message: string | IRecipe = '';
+    let resCode = 200;
+    let resMessage: string | IRecipe = '';
     await db
       .get(FIND_RECIPE_BY_ID, recipeId)
       .then((data) => {
@@ -28,21 +28,21 @@ class DBRead {
 
     if (recipe !== undefined) {
       const cardDecode: IRecipe = JSON.parse(recipe.card as unknown as string);
-      res_code = 200;
-      res_message = cardDecode;
+      resCode = 200;
+      resMessage = cardDecode;
     } else {
-      res_code = 404;
-      res_message = 'Recipe not found';
+      resCode = 404;
+      resMessage = 'Recipe not found';
     }
 
-    res.status(res_code).json(res_message);
+    res.status(resCode).json(resMessage);
   };
 
-  public static getRecipes = async (req: Request, res: Response) => {
+  static getRecipes = async (req: Request, res: Response): Promise<void> => {
     log.info_lv2(`${DEBUG}getRecipes`);
     let recipes: IRecipe[] | undefined;
-    let res_code = 200;
-    let res_message: string | IRecipe[] = '';
+    let resCode = 200;
+    let resMessage: string | IRecipe[] = '';
     await db
       .all(GET_RECIPES)
       .then((data) => {
@@ -53,17 +53,17 @@ class DBRead {
       });
 
     if (recipes !== undefined) {
-      res_code = 200;
-      res_message = recipes;
+      resCode = 200;
+      resMessage = recipes;
     } else {
-      res_code = 404;
-      res_message = 'Recipe not found';
+      resCode = 404;
+      resMessage = 'Recipe not found';
     }
 
-    res.status(res_code).json(res_message);
+    res.status(resCode).json(resMessage);
   };
 
-  public static findRecipes = async (req: Request, res: Response) => {
+  static findRecipes = async (req: Request, res: Response): Promise<void> => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(422).json({ errors: errors.array() });
@@ -71,8 +71,8 @@ class DBRead {
       log.info_lv2(`${DEBUG}findRecipes: ${req.query.terms}`);
       let recipes: IRecipe[] | undefined;
       const terms = '%' + req.query.terms + '%';
-      let res_code = 200;
-      let res_message: string | IRecipe[] = '';
+      let resCode = 200;
+      let resMessage: string | IRecipe[] = '';
       await db
         .all(FIND_RECIPES, terms)
         .then((data) => {
@@ -83,24 +83,24 @@ class DBRead {
         });
 
       if (recipes !== undefined) {
-        res_code = 200;
-        res_message = recipes;
+        resCode = 200;
+        resMessage = recipes;
       } else {
-        res_code = 404;
-        res_message = 'Recipes not found';
+        resCode = 404;
+        resMessage = 'Recipes not found';
       }
 
-      res.status(res_code).json(res_message);
+      res.status(resCode).json(resMessage);
     }
   };
 
   // Units
-  public static findUnitByID = async (req: Request, res: Response) => {
+  static findUnitByID = async (req: Request, res: Response): Promise<void> => {
     const unitId: number = parseInt(req.params['id']);
     log.info_lv2(`${DEBUG}findUnitByID: ${unitId}`);
     let unit: IUnit | undefined;
-    let res_code = 200;
-    let res_message: IResponse | IUnit;
+    let resCode = 200;
+    let resMessage: IResponse | IUnit;
     await db
       .get(FIND_UNIT_BY_ID, unitId)
       .then((data) => {
@@ -111,21 +111,21 @@ class DBRead {
       });
 
     if (unit !== undefined) {
-      res_code = 200;
-      res_message = unit;
+      resCode = 200;
+      resMessage = unit;
     } else {
-      res_code = 404;
-      res_message = { message: 'No unit found' };
+      resCode = 404;
+      resMessage = { message: 'No unit found' };
     }
 
-    res.status(res_code).json(res_message);
+    res.status(resCode).json(resMessage);
   };
 
-  public static getUnits = async (req: Request, res: Response) => {
+  static getUnits = async (req: Request, res: Response): Promise<void> => {
     log.info_lv2(`${DEBUG}getUnits`);
     let units: IUnit[] | undefined;
-    let res_code = 200;
-    let res_message: IResponse | IUnit[];
+    let resCode = 200;
+    let resMessage: IResponse | IUnit[];
     await db
       .all(GET_UNITS)
       .then((data) => {
@@ -136,23 +136,23 @@ class DBRead {
       });
 
     if (units !== undefined) {
-      res_code = 200;
-      res_message = units;
+      resCode = 200;
+      resMessage = units;
     } else {
-      res_code = 404;
-      res_message = { message: 'No units found' };
+      resCode = 404;
+      resMessage = { message: 'No units found' };
     }
 
-    res.status(res_code).json(res_message);
+    res.status(resCode).json(resMessage);
   };
 
   // Tags
-  public static findTagByID = async (req: Request, res: Response) => {
+  static findTagByID = async (req: Request, res: Response): Promise<void> => {
     const tagId: number = parseInt(req.params['id']);
     log.info_lv2(`${DEBUG}findTagByID: ${tagId}`);
     let tag: ITags | undefined;
-    let res_code = 200;
-    let res_message: IResponse | ITags;
+    let resCode = 200;
+    let resMessage: IResponse | ITags;
     await db
       .get(FIND_UNIT_BY_ID, tagId)
       .then((data) => {
@@ -163,21 +163,21 @@ class DBRead {
       });
 
     if (tag !== undefined) {
-      res_code = 200;
-      res_message = tag;
+      resCode = 200;
+      resMessage = tag;
     } else {
-      res_code = 404;
-      res_message = { message: 'No tag found' };
+      resCode = 404;
+      resMessage = { message: 'No tag found' };
     }
 
-    res.status(res_code).json(res_message);
+    res.status(resCode).json(resMessage);
   };
 
-  public static getTags = async (req: Request, res: Response) => {
+  static getTags = async (req: Request, res: Response): Promise<void> => {
     log.info_lv2(`${DEBUG}getTags`);
     let tags: ITags[] | undefined;
-    let res_code = 200;
-    let res_message: IResponse | ITags[];
+    let resCode = 200;
+    let resMessage: IResponse | ITags[];
     await db
       .all(GET_TAGS)
       .then((data) => {
@@ -188,14 +188,14 @@ class DBRead {
       });
 
     if (tags !== undefined) {
-      res_code = 200;
-      res_message = tags;
+      resCode = 200;
+      resMessage = tags;
     } else {
-      res_code = 404;
-      res_message = { message: 'No tags found' };
+      resCode = 404;
+      resMessage = { message: 'No tags found' };
     }
 
-    res.status(res_code).json(res_message);
+    res.status(resCode).json(resMessage);
   };
 }
 

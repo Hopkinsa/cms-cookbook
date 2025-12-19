@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { recipeBody, tagBody, searchQuery } from '../validation/api.validation.ts';
+import { recipeBody, searchQuery, tagBody } from '../validation/api.validation.ts';
 
 import DefaultResponse from './default-response.ts';
 import DBCreate from '../db-api/db-create/db-create.ts';

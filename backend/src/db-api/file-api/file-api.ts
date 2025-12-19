@@ -10,40 +10,40 @@ const UPLOAD_PATH = path.resolve('../backend/images/uploaded');
 
 class FileApi {
   // POST route for file upload
-  public static uploadImageFiles = async (req: Request, res: Response) => {
+  static uploadImageFiles = async (req: Request, res: Response): Promise<void> => {
     const file: string = !req.file ? 'No File' : req.file?.originalname;
     log.info_lv2(`${DEBUG}uploadImageFiles: ${file}`);
-    let res_code = 200;
-    let res_message = '';
+    let resCode = 200;
+    let resMessage = '';
 
     if (!req.file) {
-      res_code = 400;
-      res_message = 'No file uploaded or invalid file type!';
+      resCode = 400;
+      resMessage = 'No file uploaded or invalid file type!';
     } else {
-      res_code = 200;
-      res_message = 'File uploaded successfully!';
+      resCode = 200;
+      resMessage = 'File uploaded successfully!';
     }
-    res.status(res_code).json(res_message);
+    res.status(resCode).json(resMessage);
   };
 
-  public static deleteImageFiles = async (req: Request, res: Response) => {
+  static deleteImageFiles = async (req: Request, res: Response): Promise<void> => {
     const file: string = req.params['name'];
     log.info_lv2(`${DEBUG}deleteImageFiles: ${file}`);
-    let res_code = 200;
-    let res_message = '';
+    let resCode = 200;
+    let resMessage = '';
     const filepath = `${UPLOAD_PATH}/${file}`;
 
     if (fs.existsSync(filepath)) {
       fs.unlinkSync(filepath);
     } else {
-      res_code = 404;
-      res_message = 'Image not found';
+      resCode = 404;
+      resMessage = 'Image not found';
     }
 
-    res.status(res_code).json(res_message);
+    res.status(resCode).json(resMessage);
   };
 
-  public static getImageFiles = async (req: Request, res: Response) => {
+  static getImageFiles = async (req: Request, res: Response): Promise<void> => {
     log.info_lv2(`${DEBUG}getImageFiles`);
     const filenames = fs.readdirSync(UPLOAD_PATH);
 

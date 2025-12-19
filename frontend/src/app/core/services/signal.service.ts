@@ -11,7 +11,10 @@ export class SignalService {
   private router: Router = inject(Router);
 
   // Signal that controls access to editing
-  readonly editEnabled: WritableSignal<boolean> = storageSignal('editEnabled', false, {storage: localStorage, crossTabSync: true});
+  readonly editEnabled: WritableSignal<boolean> = storageSignal('editEnabled', false, {
+    storage: localStorage,
+    crossTabSync: true,
+  });
 
   // Signal that controls feedback
   readonly feedbackMessage: WritableSignal<IFeedback | null> = signal(null);
@@ -49,4 +52,3 @@ export class SignalService {
     }
   }
 }
-

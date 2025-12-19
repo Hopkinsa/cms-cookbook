@@ -8,45 +8,45 @@ const DEBUG = 'db-delete | ';
 
 class DBDelete {
   // Recipes
-  public static deleteRecipe = async (req: Request, res: Response) => {
+  static deleteRecipe = async (req: Request, res: Response): Promise<void> => {
     const recipeId: number = parseInt(req.params['id']);
-    let res_code = 200;
-    let res_message: IResponse = { completed: true };
+    let resCode = 200;
+    let resMessage: IResponse = { completed: true };
     log.info_lv2(`${DEBUG}deleteRecipe: ${recipeId}`);
 
     if (isNaN(recipeId)) {
-      res_code = 500;
-      res_message = { message: 'IDs missing or invalid' };
+      resCode = 500;
+      resMessage = { message: 'IDs missing or invalid' };
     } else {
       await db.run(DELETE_RECIPE_DATA, recipeId).catch((err) => {
         log.error(`${DEBUG}deleteRecipe - Error: `, err.message);
-        res_code = 500;
-        res_message = { message: 'remove failed' };
+        resCode = 500;
+        resMessage = { message: 'remove failed' };
       });
     }
 
-    res.status(res_code).json(res_message);
+    res.status(resCode).json(resMessage);
   };
 
   // Tags
-  public static deleteTag = async (req: Request, res: Response) => {
+  static deleteTag = async (req: Request, res: Response): Promise<void> => {
     const tagId: number = parseInt(req.params['id']);
-    let res_code = 200;
-    let res_message: IResponse = { completed: true };
+    let resCode = 200;
+    let resMessage: IResponse = { completed: true };
     log.info_lv2(`${DEBUG}deleteTag: ${tagId}`);
 
     if (isNaN(tagId)) {
-      res_code = 500;
-      res_message = { message: 'IDs missing or invalid' };
+      resCode = 500;
+      resMessage = { message: 'IDs missing or invalid' };
     } else {
       await db.run(DELETE_TAG_DATA, tagId).catch((err) => {
         log.error(`${DEBUG}deleteTag - Error: `, err.message);
-        res_code = 500;
-        res_message = { message: 'remove failed' };
+        resCode = 500;
+        resMessage = { message: 'remove failed' };
       });
     }
 
-    res.status(res_code).json(res_message);
+    res.status(resCode).json(resMessage);
   };
 }
 

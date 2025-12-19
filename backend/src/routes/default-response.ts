@@ -4,7 +4,7 @@ import { log } from '../utility/helpers.ts';
 const DEBUG = 'default-response | ';
 
 class DefaultResponse {
-  public static site_root = (req: Request, res: Response) => {
+  static site_root = (req: Request, res: Response): void => {
     try {
       log.info_lv2(`${DEBUG}site_root`);
 

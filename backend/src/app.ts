@@ -1,4 +1,4 @@
-import express, { Express, Request, Response, NextFunction } from 'express';
+import express, { Express, NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 
 import { FILE_ROUTES } from './routes/file.routes.ts';
@@ -19,7 +19,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use(
   express.urlencoded({
     extended: true,
-  })
+  }),
 );
 
 // parse requests of content-type - application/json
@@ -29,7 +29,7 @@ app.use(
     limit: '100kb',
     strict: true,
     type: 'application/json',
-  })
+  }),
 );
 
 app.use(cors());
