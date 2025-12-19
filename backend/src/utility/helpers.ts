@@ -1,4 +1,4 @@
-const CRAYONS = (...args: Array<string>) => ({
+const CRAYONS = (...args: string[]) => ({
   default: '\x1b[0m',
   black: `\x1b[30m${args.join(' ')}`,
   red: `\x1b[31m${args.join(' ')}`,
@@ -15,23 +15,38 @@ const CRAYONS = (...args: Array<string>) => ({
   bgBlue: `\x1b[44m${args.join(' ')}\x1b[0m`,
   bgMagenta: `\x1b[45m${args.join(' ')}\x1b[0m`,
   bgCyan: `\x1b[46m${args.join(' ')}\x1b[0m`,
-  bgWhite: `\x1b[47m${args.join(' ')}\x1b[0m`
+  bgWhite: `\x1b[47m${args.join(' ')}\x1b[0m`,
 });
 
 export const log = {
-  title: (...args: Array<string>) => { args = [' ', ...args, ' ']; console.info(CRAYONS(CRAYONS(...args).blue).bgWhite) },
-  info_lv1: (...args: Array<string>) => { console.info(CRAYONS(...args).yellow, CRAYONS().default) },
-  info_lv2: (...args: Array<string>) => { args = ['  ', ...args]; console.info(CRAYONS(...args).cyan, CRAYONS().default) },
-  info_lv3: (...args: Array<string>) => { args = ['    ', ...args]; console.info(CRAYONS(...args).magenta, CRAYONS().default) },
-  error: (...args: Array<string>) => console.info(CRAYONS(...args).red, CRAYONS().default),
-}
+  title: (...args: string[]) => {
+    args = [' ', ...args, ' '];
+    console.info(CRAYONS(CRAYONS(...args).blue).bgWhite);
+  },
+  info_lv1: (...args: string[]) => {
+    console.info(CRAYONS(...args).yellow, CRAYONS().default);
+  },
+  info_lv2: (...args: string[]) => {
+    args = ['  ', ...args];
+    console.info(CRAYONS(...args).cyan, CRAYONS().default);
+  },
+  info_lv3: (...args: string[]) => {
+    args = ['    ', ...args];
+    console.info(CRAYONS(...args).magenta, CRAYONS().default);
+  },
+  error: (...args: string[]) => console.info(CRAYONS(...args).red, CRAYONS().default),
+};
 
-export function num2Bool(x: number): Boolean {
-  if (x === 1) { return true; }
+export function num2Bool(x: number): boolean {
+  if (x === 1) {
+    return true;
+  }
   return false;
 }
 
 export function bool2Num(x: boolean): number {
-  if (x) { return 1; }
+  if (x) {
+    return 1;
+  }
   return 0;
 }

@@ -23,13 +23,13 @@ export interface ICard {
 export interface IRecipe {
   title: string;
   description: string;
-  tags: Array<string>;
+  tags: string[];
   img_url: string;
   prep_time: number;
   cook_time: number;
   serves: number;
-  ingredients?: Array<IIngredients>;
-  steps?: Array<IStep>;
+  ingredients?: IIngredients[];
+  steps?: IStep[];
   notes: string;
 }
 

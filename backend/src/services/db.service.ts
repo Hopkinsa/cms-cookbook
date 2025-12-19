@@ -1,7 +1,7 @@
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
 
-import { log } from '../utility/helpers.ts'
+import { log } from '../utility/helpers.ts';
 import { createDatabase, populateDatabase } from '../db-api/db-init/db-init.ts';
 import * as fs from 'fs';
 

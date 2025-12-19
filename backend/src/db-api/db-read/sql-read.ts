@@ -4,7 +4,6 @@ const RECIPE_COLUMNS = 'id, card';
 
 const RECIPE_LIST_COLUMNS = `id, json_extract(card, '$.title') as title, json_extract(card, '$.img_url') as img_url, json_extract(card, '$.tags') as tags`;
 
-
 export const FIND_RECIPE_BY_ID = `SELECT ${RECIPE_COLUMNS} FROM recipe WHERE id = ?`;
 export const FIND_RECIPE_BY_TITLE = `SELECT ${RECIPE_COLUMNS} FROM recipe WHERE json_extract(card, '$.title') = ?`;
 export const FIND_RECIPES = `SELECT ${RECIPE_LIST_COLUMNS} FROM recipe WHERE json_extract(card, '$.title') LIKE ? ORDER BY title ASC`;
