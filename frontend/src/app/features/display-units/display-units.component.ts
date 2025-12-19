@@ -1,5 +1,5 @@
 import { KeyValuePipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -11,12 +11,8 @@ import { GroupByPipe } from '@server/shared/pipes/group-by.pipe';
   templateUrl: './display-units.component.html',
   styleUrls: ['./display-units.component.scss'],
   standalone: true,
-  imports: [
-    MatButtonModule,
-    GroupByPipe,
-    KeyValuePipe
-  ],
-  animations: [],
+  imports: [MatButtonModule, GroupByPipe, KeyValuePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DisplayUnitsComponent {
   private router: Router = inject(Router);

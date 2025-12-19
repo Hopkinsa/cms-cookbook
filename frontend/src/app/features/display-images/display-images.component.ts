@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,18 +15,12 @@ import { crudResponse } from '@server/core/interface';
   templateUrl: './display-images.component.html',
   styleUrls: ['./display-images.component.scss'],
   standalone: true,
-  imports: [
-    MatButtonModule,
-    MatIconModule,
-    SortArrayPipe,
-    FeedbackComponent,
-    ImageUploadComponent,
-  ],
-  animations: [],
+  imports: [MatButtonModule, MatIconModule, SortArrayPipe, FeedbackComponent, ImageUploadComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DisplayImagesComponent {
   private router: Router = inject(Router);
-  protected imgURL = `${ environment.baseImgURL }image/`;
+  protected imgURL = `${environment.baseImgURL}image/`;
   protected fileService: FileService = inject(FileService);
   protected signalService: SignalService = inject(SignalService);
 
@@ -38,7 +32,7 @@ export class DisplayImagesComponent {
             this.signalService.feedbackMessage.set({ type: 'success', message: 'Image deleted' });
           }
         }
-        this.fileService.getImages.set(Date.now())
+        this.fileService.getImages.set(Date.now());
       });
     }
   }

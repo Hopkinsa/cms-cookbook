@@ -1,11 +1,10 @@
-import { signal, WritableSignal } from "@angular/core";
-import { IIngredients, IStep } from "./";
+import { IIngredients, IStep } from './';
 
 export interface IRecipeList {
   id: number;
   title: string;
   img_url: string;
-  tags: Array<string>;
+  tags: string[];
 }
 
 export const recipeListInitialState: IRecipeList = {
@@ -13,26 +12,26 @@ export const recipeListInitialState: IRecipeList = {
   title: '',
   img_url: '',
   tags: [],
-}
+};
 
 export interface IRecipeTagForm {
   tag: string;
 }
 
 export const recipeTagFormInitialState: IRecipeTagForm = {
-  tag: ''
-}
+  tag: '',
+};
 
 export interface IRecipe {
   title: string;
   description: string;
-  tags: Array<string>;
+  tags: string[];
   img_url: string;
   prep_time: number;
   cook_time: number;
   serves: number;
-  ingredients?: Array<IIngredients>;
-  steps?: Array<IStep>;
+  ingredients?: IIngredients[];
+  steps?: IStep[];
   notes: string;
 }
 
@@ -47,4 +46,4 @@ export const recipeInitialState: IRecipe = {
   ingredients: [],
   steps: [],
   notes: '',
-}
+};

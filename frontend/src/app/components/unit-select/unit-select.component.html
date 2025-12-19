@@ -2,13 +2,13 @@
   <option value="">Select a unit</option>
   <option [value]="0">- - -</option>
   @for (unit of signalService.units() | groupBy:'title' | keyvalue; track unit.key) {
-    @if(unit.key !== "") {
-      <optgroup [label]="unit.key">
-        @for (item of unit.value; track item) {
-          <option [value]="item.id">{{ item.unit }}</option>
-        }
-      </optgroup>
+  @if(unit.key !== "") {
+  <optgroup [label]="unit.key">
+    @for (item of unit.value; track item) {
+    <option [value]="item.id">{{ item.unit }}</option>
     }
+  </optgroup>
+  }
   }
   @empty {
   <div class="text-row">

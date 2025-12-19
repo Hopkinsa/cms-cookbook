@@ -1,9 +1,9 @@
 <header>
-  <a href="/" class="logo">
-    <img width="75" height="75" src="{{ imgURL }}logo.svg" alt="Cookbook" decoding="async">
+  <a class="logo" href="/">
+    <img alt="Cookbook" decoding="async" height="75" ngSrc="{{ imgURL }}logo.svg" width="75">
   </a>
   <h1>Cookbook</h1>
-  <button class="lock" type="button" matIconButton (click)="toggleEdit()">
+  <button class="lock" matIconButton type="button" (click)="toggleEdit()">
     @if(signalService.editEnabled()) {
       <mat-icon>lock_open</mat-icon>
     }

@@ -1,8 +1,8 @@
 import { inject } from '@angular/core';
-import { UrlTree, Router } from '@angular/router';
+import { Router, UrlTree } from '@angular/router';
 import { SignalService } from '@server/core/services';
 
-export const AuthGuard = (): Boolean | UrlTree => {
+export const AuthGuard = (): boolean | UrlTree => {
     const router: Router = inject(Router);
     const signalService: SignalService = inject(SignalService);
 

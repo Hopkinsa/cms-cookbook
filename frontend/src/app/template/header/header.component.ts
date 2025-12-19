@@ -1,4 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { NgOptimizedImage } from "@angular/common";
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { environment } from 'src/environment/environment';
@@ -9,14 +10,12 @@ import { SignalService } from '@server/core/services/signal.service';
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  imports: [
-    MatButtonModule,
-    MatIconModule
-  ],
+  imports: [MatButtonModule, MatIconModule, NgOptimizedImage],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
-  protected imgURL = `${ environment.baseImgURL }template/`;
+  protected imgURL = `${environment.baseImgURL}template/`;
   protected signalService: SignalService = inject(SignalService);
 
   toggleEdit(): void {

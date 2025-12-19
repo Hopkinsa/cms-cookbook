@@ -6,6 +6,6 @@ export interface ITags {
 
 export const tagsInitialState: ITags = {
   id: -1,
-  type: "",
-  tag: ""
-}
+  type: '',
+  tag: '',
+};

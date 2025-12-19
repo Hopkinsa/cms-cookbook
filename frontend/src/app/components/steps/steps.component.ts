@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { SignalService } from '@server/core/services/signal.service';
 
@@ -8,7 +8,7 @@ import { SignalService } from '@server/core/services/signal.service';
   styleUrls: ['./steps.component.scss'],
   standalone: true,
   imports: [],
-  animations: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StepsComponent {
   protected signalService: SignalService = inject(SignalService);

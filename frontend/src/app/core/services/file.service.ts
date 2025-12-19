@@ -1,5 +1,5 @@
-import { Injectable, WritableSignal, effect, inject, signal } from '@angular/core';
-import { httpResource, HttpClient } from '@angular/common/http';
+import { effect, inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { HttpClient, httpResource } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environment/environment';
@@ -14,16 +14,16 @@ export class FileService {
   private error: ErrorHandlerService = inject(ErrorHandlerService);
   private apiUrl = environment.baseApiURL;
 
-  public imageList: WritableSignal<Array<string> | null> = signal(null);
+  readonly imageList: WritableSignal<string[] | null> = signal(null);
 
 
   // Signals only trigger if the new value is different to current value
   // to ensure this signal triggers use getTags.set(Date.now())
-  public getImages: WritableSignal<number | null> = signal(null);
+  readonly getImages: WritableSignal<number | null> = signal(null);
 
   private imageRequestResolved = effect(() => {
     if (this.imagesRequest.status() === 'resolved') {
-      this.imageList.set(this.imagesRequest.value() as Array<string>);
+      this.imageList.set(this.imagesRequest.value() as string[]);
     }
   })
 
@@ -33,11 +33,11 @@ export class FileService {
     }
   })
 
-  private imagesRequest = httpResource<Array<string>>(() => {
+  private imagesRequest = httpResource<string[]>(() => {
     return this.getImages() ? `${this.apiUrl}images` : undefined
   });
 
-  public uploadImage(data: any): Observable<any> {
+  uploadImage(data: any): Observable<any> {
     return this.http
       .post<any>(`${this.apiUrl}images/upload`, data, {
         reportProgress: true,
@@ -46,7 +46,7 @@ export class FileService {
       .pipe(catchError(this.error.handleError('uploadImage', 'Unable to upload file', [])));
   }
 
-  public deleteImage(imgName: string): Observable<any> {
+  deleteImage(imgName: string): Observable<any> {
     return this.http
       .delete<any>(`${this.apiUrl}images/${imgName}`)
       .pipe(catchError(this.error.handleError('deleteImage', 'Unable to remove file', [])));

@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Field, form } from '@angular/forms/signals';
@@ -11,16 +11,12 @@ import { SignalService, TagService } from '@server/core/services';
   templateUrl: './tag-amend.component.html',
   styleUrls: ['./tag-amend.component.scss'],
   standalone: true,
-  imports: [
-    Field,
-    MatButtonModule,
-    MatIconModule,
-  ],
-  animations: [],
+  imports: [Field, MatButtonModule, MatIconModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TagAmendComponent {
   signalTag = input<any>(tagsInitialState, {
-    alias: "tag",
+    alias: 'tag',
   });
 
   protected signalService: SignalService = inject(SignalService);
@@ -41,7 +37,7 @@ export class TagAmendComponent {
           id: tagSignal.id,
           type: tagSignal.type,
           tag: tagSignal.tag,
-        }
+        };
       } else {
         initForm = tagsInitialState;
       }
@@ -58,17 +54,17 @@ export class TagAmendComponent {
       id: tagId,
       type: tagType,
       tag: tagText,
-    }
+    };
     if (tagId === -1) {
       this.enableSave = false;
       this.tagService.createTag(tagObj).subscribe((res) => {
         if (res !== null && res !== undefined) {
           if ((res as unknown as crudResponse).completed) {
             this.signalService.feedbackMessage.set({ type: 'success', message: 'Tag added' });
-
           }
         }
-        this.tagService.getTags.set(Date.now()); this.enableSave = true;
+        this.tagService.getTags.set(Date.now());
+        this.enableSave = true;
       });
     }
     if (tagId >= 0) {
@@ -77,10 +73,10 @@ export class TagAmendComponent {
         if (res !== null && res !== undefined) {
           if ((res as unknown as crudResponse).completed) {
             this.signalService.feedbackMessage.set({ type: 'success', message: 'Tag saved' });
-
           }
         }
-        this.tagService.getTags.set(Date.now()); this.enableSave = true;
+        this.tagService.getTags.set(Date.now());
+        this.enableSave = true;
       });
     }
   }

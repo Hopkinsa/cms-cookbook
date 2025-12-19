@@ -1,7 +1,7 @@
-import { Injectable, inject, signal, computed, WritableSignal } from '@angular/core';
+import { computed, inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { IRecipe, IRecipeList, ITags, IUnits, IFeedback } from '@server/core/interface';
+import { IFeedback, IRecipe, IRecipeList, ITags, IUnits } from '@server/core/interface';
 import { storageSignal } from './signal-storage.service';
 
 @Injectable({
@@ -11,35 +11,35 @@ export class SignalService {
   private router: Router = inject(Router);
 
   // Signal that controls access to editing
-  editEnabled: WritableSignal<Boolean> = storageSignal('editEnabled', false, {storage: localStorage, crossTabSync: true});
+  readonly editEnabled: WritableSignal<boolean> = storageSignal('editEnabled', false, {storage: localStorage, crossTabSync: true});
 
   // Signal that controls feedback
-  feedbackMessage: WritableSignal<IFeedback | null> = signal(null);
+  readonly feedbackMessage: WritableSignal<IFeedback | null> = signal(null);
 
   // Signal that contains the Recipe List data
-  recipeList: WritableSignal<Array<IRecipeList> | null> = signal(null);
+  readonly recipeList: WritableSignal<IRecipeList[] | null> = signal(null);
 
   // Signals that contains the Recipe data
-  recipe: WritableSignal<IRecipe | null> = signal(null);
-  recipeServes: WritableSignal<number | null> = signal(null);
+  readonly recipe: WritableSignal<IRecipe | null> = signal(null);
+  readonly recipeServes: WritableSignal<number | null> = signal(null);
 
-  recipeServesAdjustment = computed(() => {
+  readonly recipeServesAdjustment = computed(() => {
     if (this.recipe() && this.recipeServes()) {
       return this.recipeServes()! / this.recipe()!.serves;
     }
     return 1;
   });
-  ingredients = computed(() => this.recipe()?.ingredients);
-  steps = computed(() => this.recipe()?.steps);
+  readonly ingredients = computed(() => this.recipe()?.ingredients);
+  readonly steps = computed(() => this.recipe()?.steps);
 
   // Signal that contains the Unit data
-  units: WritableSignal<Array<IUnits> | null> = signal(null);
+  readonly units: WritableSignal<IUnits[] | null> = signal(null);
 
   // Signal that contains the Tag data
-  tags: WritableSignal<Array<ITags> | null> = signal(null);
+  readonly tags: WritableSignal<ITags[] | null> = signal(null);
 
   // Signal that contains previous page
-  returnTo: WritableSignal<string | null> = signal(null);
+  readonly returnTo: WritableSignal<string | null> = signal(null);
 
   // simple function for use as additional check on restricted pages
   // all effects trigger on signal changes, add call to the init page effect

@@ -1,4 +1,4 @@
-import { Injectable, WritableSignal, effect, inject, signal } from '@angular/core';
+import { effect, inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { httpResource } from '@angular/common/http';
 import { environment } from 'src/environment/environment';
 
@@ -14,11 +14,11 @@ export class UnitsService {
 
   // Signals only trigger if the new value is different to current value
   // to ensure this signal triggers use getUnits.set(Date.now())
-  public getUnits: WritableSignal<number | null> = signal(null);
+  readonly getUnits: WritableSignal<number | null> = signal(null);
 
   private unitRequestResolved = effect(() => {
     if (this.unitRequest.status() === 'resolved') {
-      this.signalService.units.set(this.unitRequest.value() as Array<IUnits>);
+      this.signalService.units.set(this.unitRequest.value() as IUnits[]);
     }
   })
 
@@ -28,7 +28,7 @@ export class UnitsService {
     }
   })
 
-  private unitRequest = httpResource<Array<IUnits>>(() => {
+  private unitRequest = httpResource<IUnits[]>(() => {
     return this.getUnits() ? `${this.apiUrl}units` : undefined
   });
 }

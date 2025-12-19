@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -16,15 +16,8 @@ import { Title } from '@angular/platform-browser';
   templateUrl: './display-recipe.component.html',
   styleUrls: ['./display-recipe.component.scss'],
   standalone: true,
-  imports: [
-    MatButtonModule,
-    MatChipsModule,
-    MatIconModule,
-    IngredientsComponent,
-    StepsComponent,
-    HoursMinutesPipe,
-  ],
-  animations: [],
+  imports: [MatButtonModule, MatChipsModule, MatIconModule, IngredientsComponent, StepsComponent, HoursMinutesPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DisplayRecipeComponent {
   private title: Title = inject(Title);
@@ -33,18 +26,18 @@ export class DisplayRecipeComponent {
   protected imgURL = `${environment.baseImgURL}image/`;
   protected imgPlaceholderURL = `${environment.baseImgURL}template/`;
   protected signalService: SignalService = inject(SignalService);
-  protected recipeTitle = ''
+  protected recipeTitle = '';
   protected totalTime = 0;
 
   constructor() {
     this.recipeTitle = this.signalService.recipe()!.title || 'Unknown';
-    this.title.setTitle(`${this.recipeTitle} | Cookbook`)
-    this.totalTime = (+this.signalService.recipe()!.prep_time) + (+this.signalService.recipe()!.cook_time);
-    this.signalService.recipeServes.set((this.signalService.recipe()!.serves as number))
+    this.title.setTitle(`${this.recipeTitle} | Cookbook`);
+    this.totalTime = +this.signalService.recipe()!.prep_time + +this.signalService.recipe()!.cook_time;
+    this.signalService.recipeServes.set(this.signalService.recipe()!.serves as number);
   }
 
   servingUp(): void {
-    let serve: number | null = this.signalService.recipeServes();
+    const serve: number | null = this.signalService.recipeServes();
     if (serve !== null) {
       if (serve < 10) {
         // Because can be <number | null> cast as <number> to avoid error
@@ -55,7 +48,7 @@ export class DisplayRecipeComponent {
   }
 
   servingDown(): void {
-    let serve: number | null = this.signalService.recipeServes();
+    const serve: number | null = this.signalService.recipeServes();
     if (serve !== null) {
       if (serve > 1) {
         // Because can be <number | null> cast as <number> to avoid error

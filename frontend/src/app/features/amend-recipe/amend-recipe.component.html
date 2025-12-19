@@ -1,20 +1,21 @@
-<app-feedback></app-feedback>
+<app-feedback />
 <h1>Amend Recipe</h1>
 
 @if (signalService.recipe()) {
 <form>
   <label><b>Title:</b> <input type="text" [field]="recipeForm.title"></label>
-  <label class="label-textarea"><b>Description:</b> <textarea rows="5" [field]="recipeForm.description"></textarea></label>
+  <label class="label-textarea"><b>Description:</b> <textarea rows="5"
+      [field]="recipeForm.description"></textarea></label>
   <label><b>Image:</b></label>
   <div class="image-select">
     <div class="image-preview-container">
       @if(recipeForm.img_url().value() !== "") {
-        <div class="image-preview" style="background-image: url('{{imgURL}}{{ recipeForm.img_url().value() }}')"></div>
+      <div class="image-preview" style="background-image: url('{{imgURL}}{{ recipeForm.img_url().value() }}')"></div>
       }
     </div>
     <div class="image-select-options">
-      <app-image-select [formField]="recipeForm.img_url" (fieldChange)="imageSelected($event)"> </app-image-select>
-      <app-image-upload [variant]="'icon'" (fileUploaded)="imageSelected($event)"></app-image-upload>
+      <app-image-select [formField]="recipeForm.img_url" (fieldChange)="imageSelected($event)" />
+      <app-image-upload [variant]="'icon'" (fileUploaded)="imageSelected($event)" />
     </div>
   </div>
 
@@ -24,53 +25,54 @@
   <label><b>Categories:</b></label>
   <mat-chip-grid>
     @for (recipe_tag of recipeForm.tags; track recipe_tag; let i = $index) {
-      <app-recipe-tag-amend [tag]="recipe_tag" (recipeTagChange)="tagUpdate($event, i)" (recipeTagRemove)="removeTag(i)"></app-recipe-tag-amend>
+    <app-recipe-tag-amend [tag]="recipe_tag" (recipeTagChange)="tagUpdate($event, i)"
+      (recipeTagRemove)="removeTag(i)" />
     }
-    <button type="button" matIconButton (click)="addTag()"><mat-icon>add_circle</mat-icon></button>
+    <button matIconButton type="button" (click)="addTag()"><mat-icon>add_circle</mat-icon></button>
   </mat-chip-grid>
   <label><b>Ingredients:</b></label>
   <div cdkDropList class="drag-list" (cdkDropListDropped)="dropIngredient($event)">
     @for (recipe_ingredient of recipeForm.ingredients; track recipe_ingredient; let i = $index) {
-    <div class="drag-box" cdkDrag>
-      <div class="drag-placeholder" *cdkDragPlaceholder></div>
+    <div cdkDrag class="drag-box">
+      <div *cdkDragPlaceholder class="drag-placeholder"></div>
       <app-ingredient-amend [ingredient]="recipe_ingredient"
-        (ingredientChange)="ingredientUpdate($event, i)"></app-ingredient-amend>
-      <button type="button" matIconButton (click)="removeIngredient(i)"><mat-icon>delete</mat-icon></button>
+        (ingredientChange)="ingredientUpdate($event, i)" />
+      <button matIconButton type="button" (click)="removeIngredient(i)"><mat-icon>delete</mat-icon></button>
     </div>
     }
     @empty {
     <p>There are no ingredients</p>
     }
   </div>
-  <button type="button" matIconButton (click)="addIngredient()"><mat-icon>add_circle</mat-icon></button>
+  <button matIconButton type="button" (click)="addIngredient()"><mat-icon>add_circle</mat-icon></button>
   <label><b>Steps:</b></label>
   <div cdkDropList class="drag-list" (cdkDropListDropped)="dropStep($event)">
     @for (stepItem of recipeForm.steps; track stepItem; let i = $index) {
-    <div class="drag-box" cdkDrag>
-      <div class="drag-placeholder" *cdkDragPlaceholder></div>
-      <app-step-amend [step]="stepItem" (stepChange)="stepUpdate($event, i)"></app-step-amend>
-      <button type="button" matIconButton (click)="removeStep(i)"><mat-icon>delete</mat-icon></button>
+    <div cdkDrag class="drag-box">
+      <div *cdkDragPlaceholder class="drag-placeholder"></div>
+      <app-step-amend [step]="stepItem" (stepChange)="stepUpdate($event, i)" />
+      <button matIconButton type="button" (click)="removeStep(i)"><mat-icon>delete</mat-icon></button>
     </div>
     } @empty {
     <p>There are no steps</p>
     }
   </div>
-  <button type="button" matIconButton (click)="addStep()"><mat-icon>add_circle</mat-icon></button>
+  <button matIconButton type="button" (click)="addStep()"><mat-icon>add_circle</mat-icon></button>
 
   <label class="label-textarea"><b>Notes:</b> <textarea rows="5" [field]="recipeForm.notes"></textarea></label>
 
 </form>
 
 <div class="row">
-  <button matButton="filled" (click)="save()" [disabled]="!enableSave">Save</button>
+  <button matButton="filled" [disabled]="!enableSave" (click)="save()">Save</button>
   <button matButton="filled" (click)="back()">Back</button>
 </div>
 }
 @else {
-  <div class="row">
-    <p>No recipe found</p>
-  </div>
-  <div class="row">
-    <button matButton="filled" (click)="back()">Back</button>
-  </div>
+<div class="row">
+  <p>No recipe found</p>
+</div>
+<div class="row">
+  <button matButton="filled" (click)="back()">Back</button>
+</div>
 }
