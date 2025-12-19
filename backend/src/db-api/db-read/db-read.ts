@@ -4,14 +4,7 @@ import { validationResult } from 'express-validator';
 import { log } from '../../utility/helpers.ts';
 import { db } from '../../services/db.service.ts';
 import { ICard, IRecipe, ITags, IUnit } from '../../model/data-model.ts';
-import {
-  FIND_RECIPE_BY_ID,
-  GET_RECIPES,
-  FIND_RECIPES,
-  FIND_UNIT_BY_ID,
-  GET_UNITS,
-  GET_TAGS,
-} from './sql-read.ts';
+import { FIND_RECIPE_BY_ID, GET_RECIPES, FIND_RECIPES, FIND_UNIT_BY_ID, GET_UNITS, GET_TAGS } from './sql-read.ts';
 import { IResponse } from '../../model/data-model.ts';
 
 const DEBUG = 'db-read | ';
@@ -34,7 +27,7 @@ class DBRead {
       });
 
     if (recipe !== undefined) {
-      const cardDecode: IRecipe = JSON.parse(recipe.card as unknown as string)
+      const cardDecode: IRecipe = JSON.parse(recipe.card as unknown as string);
       res_code = 200;
       res_message = cardDecode;
     } else {
@@ -47,13 +40,13 @@ class DBRead {
 
   public static getRecipes = async (req: Request, res: Response) => {
     log.info_lv2(`${DEBUG}getRecipes`);
-    let recipes: Array<IRecipe> | undefined;
+    let recipes: IRecipe[] | undefined;
     let res_code = 200;
-    let res_message: string | Array<IRecipe> = '';
+    let res_message: string | IRecipe[] = '';
     await db
       .all(GET_RECIPES)
       .then((data) => {
-        recipes = data as unknown as Array<IRecipe>;
+        recipes = data as unknown as IRecipe[];
       })
       .catch((err) => {
         log.error(`${DEBUG}getRecipes - Error: `, err.message);
@@ -74,17 +67,16 @@ class DBRead {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(422).json({ errors: errors.array() });
-    }
-    else {
+    } else {
       log.info_lv2(`${DEBUG}findRecipes: ${req.query.terms}`);
-      let recipes: Array<IRecipe> | undefined;
-      let terms = '%'+req.query.terms+'%';
+      let recipes: IRecipe[] | undefined;
+      const terms = '%' + req.query.terms + '%';
       let res_code = 200;
-      let res_message: string | Array<IRecipe> = '';
+      let res_message: string | IRecipe[] = '';
       await db
         .all(FIND_RECIPES, terms)
         .then((data) => {
-          recipes = data as unknown as Array<IRecipe>;
+          recipes = data as unknown as IRecipe[];
         })
         .catch((err) => {
           log.error(`${DEBUG}findRecipes - Error: `, err.message);
@@ -131,13 +123,13 @@ class DBRead {
 
   public static getUnits = async (req: Request, res: Response) => {
     log.info_lv2(`${DEBUG}getUnits`);
-    let units: Array<IUnit> | undefined;
+    let units: IUnit[] | undefined;
     let res_code = 200;
-    let res_message: IResponse | Array<IUnit>;
+    let res_message: IResponse | IUnit[];
     await db
       .all(GET_UNITS)
       .then((data) => {
-        units = data as unknown as Array<IUnit>;
+        units = data as unknown as IUnit[];
       })
       .catch((err) => {
         log.error(`${DEBUG}getUnits - Error: `, err.message);
@@ -183,13 +175,13 @@ class DBRead {
 
   public static getTags = async (req: Request, res: Response) => {
     log.info_lv2(`${DEBUG}getTags`);
-    let tags: Array<ITags> | undefined;
+    let tags: ITags[] | undefined;
     let res_code = 200;
-    let res_message: IResponse | Array<ITags>;
+    let res_message: IResponse | ITags[];
     await db
       .all(GET_TAGS)
       .then((data) => {
-        tags = data as unknown as Array<ITags>;
+        tags = data as unknown as ITags[];
       })
       .catch((err) => {
         log.error(`${DEBUG}getTags - Error: `, err.message);

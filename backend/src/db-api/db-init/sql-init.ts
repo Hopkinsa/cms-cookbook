@@ -26,14 +26,14 @@ CREATE TABLE IF NOT EXISTS recipe (
 
 let jsonCards = '';
 data.forEach((line) => {
-    jsonCards += `('${JSON.stringify(line)}'),`;
+  jsonCards += `('${JSON.stringify(line)}'),`;
 });
 
 export const RECIPE_DATA = `
 INSERT INTO "recipe" (
     "card"
 )
-VALUES ${jsonCards.replace(/,$/,'')};
+VALUES ${jsonCards.replace(/,$/, '')};
 `;
 
 export const UNIT_DATA = `

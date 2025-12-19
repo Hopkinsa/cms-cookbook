@@ -11,8 +11,8 @@ import * as path from 'path';
 const UPLOAD_PATH = path.resolve('../backend/images/uploaded');
 
 // Define allowed file types (MIME types and extensions)
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif']
-const ALLOWED_EXT = /\.(jpg|jpeg|png|gif)$/i // Case-insensitive check
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
+const ALLOWED_EXT = /\.(jpg|jpeg|png|gif)$/i; // Case-insensitive check
 
 /**
  * Configure multer disk storage
@@ -28,7 +28,7 @@ const storage = multer.diskStorage({
   destination: function (
     req: Express.Request,
     file: Express.Multer.File,
-    cb: (error: Error | null, destination: string) => void,
+    cb: (error: Error | null, destination: string) => void
   ) {
     cb(null, UPLOAD_PATH);
   },
@@ -43,7 +43,7 @@ const storage = multer.diskStorage({
   filename: function (
     req: Express.Request,
     file: Express.Multer.File,
-    cb: (error: Error | null, filename: string) => void,
+    cb: (error: Error | null, filename: string) => void
   ) {
     // const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
     // cb(null, file.fieldname + '-' + uniqueSuffix);
@@ -51,23 +51,20 @@ const storage = multer.diskStorage({
   },
 });
 
-const fileFilter = (req: Express.Request,
-  file: Express.Multer.File,
-  cb: multer.FileFilterCallback,
-) => {
+const fileFilter = (req: Express.Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
   // Validate MIME type
-  const mimeTypeValid = ALLOWED_TYPES.includes(file.mimetype)
+  const mimeTypeValid = ALLOWED_TYPES.includes(file.mimetype);
   // Validate file extension
-  const extValid = ALLOWED_EXT.test(path.extname(file.originalname).toLowerCase())
+  const extValid = ALLOWED_EXT.test(path.extname(file.originalname).toLowerCase());
 
   if (mimeTypeValid && extValid) {
     // Accept the file
-    cb(null, true)
+    cb(null, true);
   } else {
     // Reject the file with a specific error message
-    cb(new Error('Invalid file type. Only JPEG, PNG, and GIF images are allowed.'))
+    cb(new Error('Invalid file type. Only JPEG, PNG, and GIF images are allowed.'));
   }
-}
+};
 
 /**
  * Initialize multer with configured storage and filters

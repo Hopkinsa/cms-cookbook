@@ -29,4 +29,3 @@ API_ROUTES.get('/tags', DBRead.getTags);
 
 // Catch-all
 API_ROUTES.get('/{*splat}', DefaultResponse.site_root);
-
