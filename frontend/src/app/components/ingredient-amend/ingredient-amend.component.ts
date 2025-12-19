@@ -62,13 +62,6 @@ export class IngredientAmendComponent {
     }
   });
 
-  protected test = linkedSignal({
-    source: () => ({ imodel: this.ingredientModel }),
-    computation: (source, previous) => {
-      console.log(source.imodel()); if (source.imodel().is_title !== this.signalIngredient().is_title) { console.log('CHANGE'); }
-    }
-  })
-
   qtyUnitSelectUpdate(event: number): void {
     // update form model, to trigger signals change detection and processes
     this.ingredientModel.update((val) => ({ ...val, quantity_unit: event }));
