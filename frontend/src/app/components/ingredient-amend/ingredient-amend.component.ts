@@ -1,4 +1,4 @@
-import { Component, effect, input, output, signal } from '@angular/core';
+import { Component, effect, input, linkedSignal, output, signal } from '@angular/core';
 import { Field, form } from '@angular/forms/signals';
 
 import { IIngredients, ingredientInitialState } from '@server/core/interface';
@@ -49,60 +49,25 @@ export class IngredientAmendComponent {
     }
   });
 
-  private isTitleUpdate = effect(() => {
-    // update on change
-    const ingredientSignal = this.signalIngredient();
-    const isTitleField = this.ingredientForm.is_title().value();
-
-    // prevent update if new value is equal to old value - stops update when form initialised
-    if ((isTitleField && ingredientSignal === undefined) || (isTitleField && isTitleField !== ingredientSignal.is_title().value())) {
-      this.ingredientChange.emit({ is_title: isTitleField });
+  // Update parent via output signal if value has changed
+  private updateEffect = effect(() => {
+    let updateData = null;
+    if (this.ingredientModel().is_title !== this.signalIngredient().is_title().value()) { updateData = { is_title: this.ingredientModel().is_title }; }
+    if (this.ingredientModel().ingredient !== this.signalIngredient().ingredient().value()) { updateData = { ingredient: this.ingredientModel().ingredient }; }
+    if (this.ingredientModel().preparation !== this.signalIngredient().preparation().value()) { updateData = { preparation: this.ingredientModel().preparation }; }
+    if (this.ingredientModel().quantity !== this.signalIngredient().quantity().value()) { updateData = { quantity: this.ingredientModel().quantity }; }
+    if (this.ingredientModel().quantity_unit !== this.signalIngredient().quantity_unit().value()) { updateData = { quantity_unit: this.ingredientModel().quantity_unit }; }
+    if (updateData !== null) {
+      this.ingredientChange.emit(updateData);
     }
   });
 
-  private isIngredient = effect(() => {
-    // update on change
-    const ingredientSignal = this.signalIngredient();
-    const ingredientField = this.ingredientForm.ingredient().value();
-
-    // prevent update if new value is equal to old value - stops update when form initialised
-    if ((ingredientField && ingredientSignal === undefined) || (ingredientField && ingredientField !== ingredientSignal.ingredient().value())) {
-      this.ingredientChange.emit({ ingredient: ingredientField });
+  protected test = linkedSignal({
+    source: () => ({ imodel: this.ingredientModel }),
+    computation: (source, previous) => {
+      console.log(source.imodel()); if (source.imodel().is_title !== this.signalIngredient().is_title) { console.log('CHANGE'); }
     }
-  });
-
-  private isPreparation = effect(() => {
-    // update on change
-    const ingredientSignal = this.signalIngredient();
-    const preparationField = this.ingredientForm.preparation().value();
-
-    // prevent update if new value is equal to old value - stops update when form initialised
-    if ((preparationField && ingredientSignal === undefined) || (preparationField && preparationField !== ingredientSignal.preparation().value())) {
-      this.ingredientChange.emit({ preparation: preparationField });
-    }
-  });
-
-  private qtyUpdate = effect(() => {
-    // update on change
-    const ingredientSignal = this.signalIngredient();
-    const qtyField = this.ingredientForm.quantity().value();
-
-    // prevent update if new value is equal to old value - stops update when form initialised
-    if ((qtyField && ingredientSignal === undefined) || (qtyField && qtyField !== ingredientSignal.quantity().value())) {
-      this.ingredientChange.emit({ quantity: qtyField });
-    }
-  });
-
-  private qtyUnitUpdate = effect(() => {
-    // update on change
-    const ingredientSignal = this.signalIngredient();
-    const qtyUnitField = this.ingredientForm.quantity_unit().value();
-
-    // prevent update if new value is equal to old value - stops update when form initialised
-    if ((qtyUnitField && ingredientSignal === undefined) || (qtyUnitField && qtyUnitField !== ingredientSignal.quantity_unit().value())) {
-      this.ingredientChange.emit({ quantity_unit: qtyUnitField });
-    }
-  });
+  })
 
   qtyUnitSelectUpdate(event: number): void {
     // update form model, to trigger signals change detection and processes

@@ -69,4 +69,13 @@ export class ImageSelectComponent {
       this.fieldChange.emit(imageForm.value());
     }
   });
+
+  // Update parent via output signal if value has changed
+  private updateEffect = effect(() => {
+    let updateData = null;
+    if (this.fieldModel() !== this.signalField()) { updateData = this.fieldModel(); }
+    if (updateData !== null) {
+      this.fieldChange.emit(updateData);
+    }
+  });
 }

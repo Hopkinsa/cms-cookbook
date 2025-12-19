@@ -44,24 +44,13 @@ export class StepAmendComponent {
     }
   });
 
-  private isTitleUpdate = effect(() => {
-    // update on change
-    const stepSignal = this.signalStep();
-    const isTitleField = this.stepForm.is_title().value();
-
-    // prevent update if new value is equal to old value - stops update when form initialised
-    if ((isTitleField && stepSignal === undefined) || (isTitleField && isTitleField !== stepSignal.is_title().value())) {
-      this.stepChange.emit({ is_title: isTitleField });
-    }
-  });
-
-  private stepUpdate = effect(() => {
-    // update on change
-    const stepSignal = this.signalStep();
-    const stepField = this.stepForm.step().value();
-
-    if ((stepField && stepSignal === undefined) || (stepField && stepField !== stepSignal.step().value())) {
-      this.stepChange.emit({ step: stepField });
+  // Update parent via output signal if value has changed
+  private updateEffect = effect(() => {
+    let updateData = null;
+    if (this.stepModel().is_title !== this.signalStep().is_title().value()) { updateData = { is_title: this.stepModel().is_title }; }
+    if (this.stepModel().step !== this.signalStep().step().value()) { updateData = { step: this.stepModel().step }; }
+    if (updateData !== null) {
+      this.stepChange.emit(updateData);
     }
   });
 }
