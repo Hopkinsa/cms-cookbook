@@ -1,14 +1,14 @@
 <mat-form-field>
   <mat-label>Images</mat-label>
-  <mat-select [field]="fieldForm" >
+  <mat-select [field]="fieldForm">
     <mat-option>-- None --</mat-option>
-      @if (fileService.imageList()) {
-        @for (image of fileService.imageList() | sortArrays:'image':'asc'; track image; let i = $index ) {
-          <mat-option class="image-select-option" [value]="image">
-            <div class="image-select-box" style="background-image: url('{{ imgURL }}{{ image }}')"></div>
-            {{image | truncate:12 }}
-          </mat-option>
-        }
-      }
+    @if (fileService.imageList()) {
+    @for (image of fileService.imageList() | sortArrays:'image':'asc'; track image; let i = $index ) {
+    <mat-option class="image-select-option" [value]="image">
+      <div class="image-select-box" style="background-image: url('{{ imgURL }}{{ image }}')"></div>
+      {{image | truncate:12 }}
+    </mat-option>
+    }
+    }
   </mat-select>
 </mat-form-field>

@@ -1,4 +1,4 @@
-import { Component, effect, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
 import { Field, form } from '@angular/forms/signals';
 
 import { IStep, stepInitialState } from '@server/core/interface';
@@ -8,14 +8,12 @@ import { IStep, stepInitialState } from '@server/core/interface';
   templateUrl: './step-amend.component.html',
   styleUrls: ['./step-amend.component.scss'],
   standalone: true,
-  imports: [
-    Field,
-  ],
-  animations: [],
+  imports: [Field],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StepAmendComponent {
   signalStep = input<any>(stepInitialState, {
-    alias: "step",
+    alias: 'step',
   });
   stepChange = output<any>();
 
@@ -34,8 +32,8 @@ export class StepAmendComponent {
       if (stepSignal !== undefined) {
         initForm = {
           is_title: stepSignal.is_title().value(),
-          step: stepSignal.step().value()
-        }
+          step: stepSignal.step().value(),
+        };
       } else {
         initForm = stepInitialState;
       }
@@ -47,8 +45,12 @@ export class StepAmendComponent {
   // Update parent via output signal if value has changed
   private updateEffect = effect(() => {
     let updateData = null;
-    if (this.stepModel().is_title !== this.signalStep().is_title().value()) { updateData = { is_title: this.stepModel().is_title }; }
-    if (this.stepModel().step !== this.signalStep().step().value()) { updateData = { step: this.stepModel().step }; }
+    if (this.stepModel().is_title !== this.signalStep().is_title().value()) {
+      updateData = { is_title: this.stepModel().is_title };
+    }
+    if (this.stepModel().step !== this.signalStep().step().value()) {
+      updateData = { step: this.stepModel().step };
+    }
     if (updateData !== null) {
       this.stepChange.emit(updateData);
     }

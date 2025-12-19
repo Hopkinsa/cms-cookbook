@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class HoursMinutesPipe implements PipeTransform {
   // "any" used to account for key value pairs
-  transform(minutes: any) {
+  transform(minutes: any): string {
     const timeStart: number = parseInt(minutes);
     const hrs = Math.floor(timeStart / 60);
     const min = timeStart % 60;

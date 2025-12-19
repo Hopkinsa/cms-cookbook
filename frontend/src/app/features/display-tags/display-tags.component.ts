@@ -1,5 +1,5 @@
 import { KeyValuePipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -11,13 +11,8 @@ import { GroupByPipe } from '@server/shared/pipes/group-by.pipe';
   templateUrl: './display-tags.component.html',
   styleUrls: ['./display-tags.component.scss'],
   standalone: true,
-  imports: [
-    MatButtonModule,
-    RouterLink,
-    GroupByPipe,
-    KeyValuePipe,
-  ],
-  animations: [],
+  imports: [MatButtonModule, RouterLink, GroupByPipe, KeyValuePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DisplayTagsComponent {
   private router: Router = inject(Router);

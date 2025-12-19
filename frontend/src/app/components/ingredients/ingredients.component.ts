@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 
 import { SignalService } from '@server/core/services/signal.service';
@@ -9,7 +9,7 @@ import { SignalService } from '@server/core/services/signal.service';
   styleUrls: ['./ingredients.component.scss'],
   standalone: true,
   imports: [DecimalPipe],
-  animations: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IngredientsComponent {
   protected signalService: SignalService = inject(SignalService);

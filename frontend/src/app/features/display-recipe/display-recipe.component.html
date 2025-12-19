@@ -7,16 +7,16 @@
   <h2>{{ signalService.recipe()?.title }}</h2>
   @if (signalService.editEnabled()) {
   <div class="recipe-amend">
-    <button type="button" matIconButton (click)="amend()"><mat-icon>edit</mat-icon></button>
+    <button matIconButton type="button" (click)="amend()"><mat-icon>edit</mat-icon></button>
   </div>
   }
 </div>
 
 @if (signalService.recipe()?.img_url !== '') {
-  <div class="recipe-banner" style="background-image: url('{{imgURL}}{{signalService.recipe()?.img_url}}')"></div>
+<div class="recipe-banner" style="background-image: url('{{imgURL}}{{signalService.recipe()?.img_url}}')"></div>
 }
 @else {
-  <div class="recipe-banner" style="background-image: url('{{imgPlaceholderURL}}spice.jpg')"></div>
+<div class="recipe-banner" style="background-image: url('{{imgPlaceholderURL}}spice.jpg')"></div>
 }
 
 <div class="recipe-description">
@@ -26,8 +26,8 @@
 <div class="recipe-info">
   <div class="recipe-serve">
     <b>Serves:</b> {{ signalService.recipeServes() }}
-    <button type="button" matIconButton (click)="servingUp()"><mat-icon>keyboard_arrow_up</mat-icon></button>
-    <button type="button" matIconButton (click)="servingDown()"><mat-icon>keyboard_arrow_down</mat-icon></button>
+    <button matIconButton type="button" (click)="servingUp()"><mat-icon>keyboard_arrow_up</mat-icon></button>
+    <button matIconButton type="button" (click)="servingDown()"><mat-icon>keyboard_arrow_down</mat-icon></button>
 
   </div>
   <div class="recipe-time">
@@ -46,27 +46,27 @@
 <div class="recipe-tags">
   <mat-chip-set>
     @for (recipe_tag of signalService.recipe()?.tags; track i; let i = $index) {
-      <mat-chip>{{ recipe_tag }}</mat-chip>
+    <mat-chip>{{ recipe_tag }}</mat-chip>
     }
   </mat-chip-set>
 </div>
 
 <div class="recipe-ingredients">
   <b>Ingredients:</b>
-  <app-ingredients></app-ingredients>
+  <app-ingredients />
 </div>
 
 <div class="recipe-steps">
   <b>Steps:</b>
-  <app-steps></app-steps>
+  <app-steps />
 </div>
 
 @if (signalService.recipe()?.notes !== ''){
-  <div class="recipe-notes">
-    <b>Notes:</b>
-    {{ signalService.recipe()?.notes }}
-  </div>
-  }
+<div class="recipe-notes">
+  <b>Notes:</b>
+  {{ signalService.recipe()?.notes }}
+</div>
+}
 }
 @else {
 <div class="row">

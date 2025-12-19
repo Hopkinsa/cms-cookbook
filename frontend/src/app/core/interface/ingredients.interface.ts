@@ -16,8 +16,8 @@ export interface IIngredientsUpdate {
 
 export const ingredientInitialState: IIngredients = {
   is_title: false,
-  ingredient: "",
-  preparation: "",
+  ingredient: '',
+  preparation: '',
   quantity: 0,
-  quantity_unit: 0
-}
+  quantity_unit: 0,
+};

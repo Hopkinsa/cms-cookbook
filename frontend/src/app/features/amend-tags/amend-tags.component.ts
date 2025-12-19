@@ -1,5 +1,5 @@
 import { KeyValuePipe } from '@angular/common';
-import { Component, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { form } from '@angular/forms/signals';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { SignalService, TagService } from '@server/core/services';
 import { GroupByPipe, RemoveCharactersPipe } from '@server/shared/pipes';
-import { ITags, tagsInitialState, crudResponse } from '@server/core/interface';
+import { crudResponse, ITags, tagsInitialState } from '@server/core/interface';
 import { FeedbackComponent } from '@server/components/feedback/feedback.component';
 import { TagAmendComponent } from '@server/components/tag-amend/tag-amend.component';
 
@@ -25,14 +25,14 @@ import { TagAmendComponent } from '@server/components/tag-amend/tag-amend.compon
     RemoveCharactersPipe,
     TagAmendComponent,
   ],
-  animations: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AmendTagsComponent {
   private router: Router = inject(Router);
   protected signalService: SignalService = inject(SignalService);
   protected tagService: TagService = inject(TagService);
 
-  protected tagModel = signal<ITags[]>([tagsInitialState]);
+  protected readonly tagModel = signal<ITags[]>([tagsInitialState]);
   protected tagForm = form(this.tagModel);
 
   private initPage = effect(() => {
@@ -44,7 +44,7 @@ export class AmendTagsComponent {
     if (tags !== null) {
       this.tagModel.set(tags);
     }
-  })
+  });
 
   addTag(): void {
     const x = this.signalService.tags() as ITags[];
@@ -67,13 +67,13 @@ export class AmendTagsComponent {
             this.signalService.feedbackMessage.set({ type: 'success', message: 'Tag deleted' });
           }
         }
-        this.tagService.getTags.set(Date.now())
+        this.tagService.getTags.set(Date.now());
       });
     }
     if (id === -1) {
       const x = this.signalService.tags() as ITags[];
       if (x !== undefined) {
-        const index = x.map(item => item.id).indexOf(-1);
+        const index = x.map((item) => item.id).indexOf(-1);
         x.splice(index, 1);
         this.signalService.tags.set(x.slice());
         this.signalService.feedbackMessage.set({ type: 'success', message: 'Tag deleted' });

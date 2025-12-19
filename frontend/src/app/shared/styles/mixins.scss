@@ -1,4 +1,4 @@
-@use "sass:map";
+@use 'sass:map';
 
 $fontSize: 0.9rem;
 $fontColour: #333;
@@ -46,8 +46,7 @@ $breakpoints: (
     @media ($range: $value) {
       @content;
     }
-  }
-  @else {
+  } @else {
     @warn 'Unable to find `#{$breakpoint}` breakpoint.';
   }
 }

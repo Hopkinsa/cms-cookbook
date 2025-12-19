@@ -1,4 +1,4 @@
-<app-feedback></app-feedback>
+<app-feedback />
 <h1>Category Tags</h1>
 <form>
   @for (tags of tagModel() | groupBy:'type' | keyvalue; track tags.key) {
@@ -6,8 +6,8 @@
   <ul>
     @for (item of tags.value; track item) {
     <li>
-      <app-tag-amend [tag]="item"></app-tag-amend>
-      <button type="button" matIconButton (click)="delete(item.id)"><mat-icon>delete</mat-icon></button>
+      <app-tag-amend [tag]="item" />
+      <button matIconButton type="button" (click)="delete(item.id)"><mat-icon>delete</mat-icon></button>
     </li>
     }
   </ul>

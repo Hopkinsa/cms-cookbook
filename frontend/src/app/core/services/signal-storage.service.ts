@@ -1,4 +1,4 @@
-import { signal, effect, WritableSignal } from '@angular/core';
+import { effect, signal, WritableSignal } from '@angular/core';
 
 /*
 ------ EXAMPLES -------
@@ -18,17 +18,17 @@ const sessionCounter = storageSignal('counter', 0, {
 });
 */
 
-export interface StorageSignalOptions<T> {
+export type StorageSignalOptions<T> = {
   storage?: Storage;
   serializer?: (v: T) => string;
   deserializer?: (raw: string) => T;
   crossTabSync?: boolean;
-}
+};
 
 export function storageSignal<T>(
   key: string,
   defaultValue: T,
-  options: StorageSignalOptions<T> = {}
+  options: StorageSignalOptions<T> = {},
 ): WritableSignal<T> {
   const {
     storage = localStorage,
@@ -39,8 +39,12 @@ export function storageSignal<T>(
   let initial = defaultValue;
   try {
     const raw = storage.getItem(key);
-    if (raw !== null) initial = deserializer(raw);
-  } catch {}
+    if (raw !== null) {
+      initial = deserializer(raw);
+    }
+  } catch {
+    // ignore
+  }
   const state = signal<T>(initial);
   effect(() => {
     try {
@@ -51,8 +55,12 @@ export function storageSignal<T>(
   });
   if (crossTabSync && typeof window !== 'undefined') {
     window.addEventListener('storage', (ev: StorageEvent) => {
-      if (ev.key !== key || ev.storageArea !== storage) return;
-      if (ev.newValue === null) return;
+      if (ev.key !== key || ev.storageArea !== storage) {
+        return;
+      }
+      if (ev.newValue === null) {
+        return;
+      }
       try {
         state.set(deserializer(ev.newValue));
       } catch {

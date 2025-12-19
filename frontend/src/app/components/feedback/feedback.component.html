@@ -1,7 +1,7 @@
 <div class="feedback-container">
   @if(signalService.feedbackMessage()) {
-    <div class="feedback-message" [class]="signalService.feedbackMessage()!.type">
-      <p>{{ signalService.feedbackMessage()!.message }}</p>
-    </div>
+  <div class="feedback-message" [class]="signalService.feedbackMessage()!.type">
+    <p>{{ signalService.feedbackMessage()!.message }}</p>
+  </div>
   }
 </div>

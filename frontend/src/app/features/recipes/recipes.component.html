@@ -6,8 +6,8 @@
 </div>
 <div class="row search-bar">
   <form (submit)="search($event)">
-    <label><b>Search:</b><input type="text" [field]="searchForm"></label><button type="button" matIconButton (click)="search($event)"><mat-icon>search</mat-icon></button>
-  </form><button type="button" matIconButton (click)="reset()"><mat-icon>close_small</mat-icon></button>
+    <label><b>Search:</b><input type="text" [field]="searchForm"></label><button matIconButton type="button" (click)="search($event)"><mat-icon>search</mat-icon></button>
+  </form><button matIconButton type="button" (click)="reset()"><mat-icon>close_small</mat-icon></button>
 </div>
 <div class="row">
   @if (signalService.recipeList()) {
@@ -24,8 +24,8 @@
           </a>
           @if (signalService.editEnabled()) {
             <div class="recipe-amend">
-              <button type="button" matIconButton (click)="amend(recipe.id)"><mat-icon>edit</mat-icon></button>
-              <button type="button" matIconButton (click)="delete(recipe.id)"><mat-icon>delete</mat-icon></button>
+              <button matIconButton type="button" (click)="amend(recipe.id)"><mat-icon>edit</mat-icon></button>
+              <button matIconButton type="button" (click)="delete(recipe.id)"><mat-icon>delete</mat-icon></button>
             </div>
           }
           <div class="recipe-name"><a [routerLink]="['/recipe', recipe.id]">{{ recipe.title }}</a></div>
@@ -39,5 +39,5 @@
   }
 </div>
 <div class="row">
-  <button type="button" matButton="filled" (click)="back()">Back</button>
+  <button matButton="filled" type="button" (click)="back()">Back</button>
 </div>

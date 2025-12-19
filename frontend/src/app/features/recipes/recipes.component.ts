@@ -1,8 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { form, Field } from '@angular/forms/signals';
+import { Field, form } from '@angular/forms/signals';
 import { environment } from 'src/environment/environment';
 
 import { RecipeListService, RecipeService, SignalService } from '@server/core/services';
@@ -20,7 +20,7 @@ import { FilterArrayPipe } from '@server/shared/pipes';
     Field,
     FilterArrayPipe
   ],
-  animations: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipesComponent {
   private router: Router = inject(Router);
@@ -29,7 +29,7 @@ export class RecipesComponent {
   private recipeService: RecipeService = inject(RecipeService);
 
   protected imgURL = `${ environment.baseImgURL }image/`;
-  protected fieldModel = signal<string>('');
+  protected readonly fieldModel = signal<string>('');
   protected searchForm = form(this.fieldModel);
 
   search(e: Event): void {

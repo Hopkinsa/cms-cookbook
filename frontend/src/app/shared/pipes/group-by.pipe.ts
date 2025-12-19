@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class GroupByPipe implements PipeTransform {
-  transform(collection: Array<any> | null, field: string) {
+  transform(collection: any[] | null, field: string): any[] | null {
     if (!collection) {
       return null;
     }

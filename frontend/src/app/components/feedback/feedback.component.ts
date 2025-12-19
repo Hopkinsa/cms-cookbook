@@ -1,4 +1,4 @@
-import { Component, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
 
 import { SignalService } from '@server/core/services/signal.service';
 
@@ -8,7 +8,7 @@ import { SignalService } from '@server/core/services/signal.service';
   styleUrls: ['./feedback.component.scss'],
   standalone: true,
   imports: [],
-  animations: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FeedbackComponent {
   protected signalService: SignalService = inject(SignalService);
@@ -19,15 +19,15 @@ export class FeedbackComponent {
       const elm = document.getElementsByClassName('feedback-container')![0] as HTMLElement;
       this.fade(elm, 1000);
     }
-  })
+  });
 
-  fade(element: HTMLElement, duration: number) {
+  fade(element: HTMLElement, duration: number): void {
     element.style.display = 'flex';
     element.style.opacity = '0';
-    this.fadeIncrement(element, duration)
-  };
+    this.fadeIncrement(element, duration);
+  }
 
-  fadeIncrement(element: HTMLElement, duration: number) {
+  fadeIncrement(element: HTMLElement, duration: number): void {
     element.style.opacity = String(parseFloat(element.style.opacity) + 0.1);
 
     if (parseFloat(element.style.opacity) < 1) {
@@ -42,16 +42,16 @@ export class FeedbackComponent {
     }
   }
 
-  fadeDecrement(element: HTMLElement, duration: number) {
+  fadeDecrement(element: HTMLElement, duration: number): void {
     element.style.opacity = String(parseFloat(element.style.opacity) - 0.1);
     if (parseFloat(element.style.opacity) <= 0) {
       element.style.opacity = '0';
-      element.style.display = 'none'
+      element.style.display = 'none';
       this.signalService.feedbackMessage.set(null);
     } else {
       setTimeout(() => {
         this.fadeDecrement(element, duration);
       }, duration / 10);
     }
-  };
+  }
 }

@@ -10,5 +10,5 @@ export interface IStepUpdate {
 
 export const stepInitialState: IStep = {
   is_title: false,
-  step: "",
-}
+  step: '',
+};

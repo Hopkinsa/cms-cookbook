@@ -1,4 +1,4 @@
-import { Component, effect, input, linkedSignal, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
 import { Field, form } from '@angular/forms/signals';
 
 import { IIngredients, ingredientInitialState } from '@server/core/interface';
@@ -9,15 +9,12 @@ import { UnitSelectComponent } from '@server/components/unit-select/unit-select.
   templateUrl: './ingredient-amend.component.html',
   styleUrls: ['./ingredient-amend.component.scss'],
   standalone: true,
-  imports: [
-    Field,
-    UnitSelectComponent,
-  ],
-  animations: [],
+  imports: [Field, UnitSelectComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IngredientAmendComponent {
   signalIngredient = input<any>(ingredientInitialState, {
-    alias: "ingredient",
+    alias: 'ingredient',
   });
   ingredientChange = output<any>();
 
@@ -39,8 +36,8 @@ export class IngredientAmendComponent {
           ingredient: ingredientSignal.ingredient().value(),
           preparation: ingredientSignal.preparation().value(),
           quantity: ingredientSignal.quantity().value(),
-          quantity_unit: ingredientSignal.quantity_unit().value()
-        }
+          quantity_unit: ingredientSignal.quantity_unit().value(),
+        };
       } else {
         initForm = ingredientInitialState;
       }
@@ -52,11 +49,21 @@ export class IngredientAmendComponent {
   // Update parent via output signal if value has changed
   private updateEffect = effect(() => {
     let updateData = null;
-    if (this.ingredientModel().is_title !== this.signalIngredient().is_title().value()) { updateData = { is_title: this.ingredientModel().is_title }; }
-    if (this.ingredientModel().ingredient !== this.signalIngredient().ingredient().value()) { updateData = { ingredient: this.ingredientModel().ingredient }; }
-    if (this.ingredientModel().preparation !== this.signalIngredient().preparation().value()) { updateData = { preparation: this.ingredientModel().preparation }; }
-    if (this.ingredientModel().quantity !== this.signalIngredient().quantity().value()) { updateData = { quantity: this.ingredientModel().quantity }; }
-    if (this.ingredientModel().quantity_unit !== this.signalIngredient().quantity_unit().value()) { updateData = { quantity_unit: this.ingredientModel().quantity_unit }; }
+    if (this.ingredientModel().is_title !== this.signalIngredient().is_title().value()) {
+      updateData = { is_title: this.ingredientModel().is_title };
+    }
+    if (this.ingredientModel().ingredient !== this.signalIngredient().ingredient().value()) {
+      updateData = { ingredient: this.ingredientModel().ingredient };
+    }
+    if (this.ingredientModel().preparation !== this.signalIngredient().preparation().value()) {
+      updateData = { preparation: this.ingredientModel().preparation };
+    }
+    if (this.ingredientModel().quantity !== this.signalIngredient().quantity().value()) {
+      updateData = { quantity: this.ingredientModel().quantity };
+    }
+    if (this.ingredientModel().quantity_unit !== this.signalIngredient().quantity_unit().value()) {
+      updateData = { quantity_unit: this.ingredientModel().quantity_unit };
+    }
     if (updateData !== null) {
       this.ingredientChange.emit(updateData);
     }

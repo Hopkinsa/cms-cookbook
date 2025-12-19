@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, output, signal } from '@angular/core';
 import { Field, form } from '@angular/forms/signals';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,23 +13,15 @@ import { GroupByPipe } from '@server/shared/pipes';
   templateUrl: './recipe-tag-amend.component.html',
   styleUrls: ['./recipe-tag-amend.component.scss'],
   standalone: true,
-  imports: [
-    Field,
-    MatIconModule,
-    MatChipsModule,
-    GroupByPipe,
-    KeyValuePipe,
-    TitleCasePipe
-  ],
-  animations: [],
+  imports: [Field, MatIconModule, MatChipsModule, GroupByPipe, KeyValuePipe, TitleCasePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeTagAmendComponent {
   signalRecipeTag = input<any>('', {
-    alias: "tag",
+    alias: 'tag',
   });
   recipeTagChange = output<any>();
   recipeTagRemove = output<any>();
-
 
   protected signalService: SignalService = inject(SignalService);
 
@@ -54,8 +46,8 @@ export class RecipeTagAmendComponent {
 
       if (recipeTagSignal !== undefined) {
         initForm = {
-          tag: recipeTagSignal().value()
-        }
+          tag: recipeTagSignal().value(),
+        };
       } else {
         initForm = { tag: '' };
       }
@@ -64,10 +56,12 @@ export class RecipeTagAmendComponent {
     }
   });
 
-   // Update parent via output signal if value has changed
+  // Update parent via output signal if value has changed
   private updateEffect = effect(() => {
     let updateData = null;
-    if (this.tagModel().tag !== this.signalRecipeTag()) { updateData = this.tagModel().tag ; }
+    if (this.tagModel().tag !== this.signalRecipeTag()) {
+      updateData = this.tagModel().tag;
+    }
     if (updateData !== null) {
       this.recipeTagChange.emit(updateData);
     }

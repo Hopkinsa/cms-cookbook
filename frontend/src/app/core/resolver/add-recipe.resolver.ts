@@ -5,8 +5,8 @@ import { SignalService } from '@server/core/services';
 import type { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from '@angular/router';
 
 export const addRecipeResolver: ResolveFn<any> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-   const id = -1;
-   const initialState = recipeInitialState;
-   inject(SignalService).recipe.set(initialState);
-   return id;
+  const id = -1;
+  const initialState = recipeInitialState;
+  inject(SignalService).recipe.set(initialState);
+  return id;
 };

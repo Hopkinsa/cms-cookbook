@@ -1,11 +1,11 @@
 @for (item of signalService.steps(); track item) {
-  @if (item.is_title) {
-    <div class="step-title">{{ item.step }}</div>
-  }
-  @else {
-    <div class="step-line">{{ item.step }}</div>
-  }
+@if (item.is_title) {
+<div class="step-title">{{ item.step }}</div>
+}
+@else {
+<div class="step-line">{{ item.step }}</div>
+}
 }
 @empty {
-  <p>There are no step</p>
+<p>There are no step</p>
 }

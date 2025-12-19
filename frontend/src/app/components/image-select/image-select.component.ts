@@ -1,4 +1,13 @@
-import { Component, effect, inject, input, output, signal, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+  ViewEncapsulation,
+} from '@angular/core';
 import { Field, form } from '@angular/forms/signals';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -14,15 +23,15 @@ import { SortArrayPipe, TruncatePipe } from '@server/shared/pipes';
   standalone: true,
   encapsulation: ViewEncapsulation.None,
   imports: [MatFormFieldModule, MatSelectModule, Field, TruncatePipe, SortArrayPipe],
-  animations: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImageSelectComponent {
   signalField = input<any>(null, {
-    alias: "formField",
+    alias: 'formField',
   });
   fieldChange = output<string>();
 
-  protected imgURL = `${ environment.baseImgURL }image/`;
+  protected imgURL = `${environment.baseImgURL}image/`;
   protected fileService: FileService = inject(FileService);
   protected fieldModel = signal<string>('');
   protected fieldForm = form(this.fieldModel);
@@ -31,7 +40,7 @@ export class ImageSelectComponent {
     if (this.fileService.imageList() === null || this.fileService.imageList() === undefined) {
       this.fileService.getImages.set(Date.now());
     }
-  })
+  });
 
   private fieldInit = effect(() => {
     // populate on change
@@ -40,7 +49,7 @@ export class ImageSelectComponent {
     if (fieldSignal !== null) {
       let initForm;
       if (fieldSignal !== undefined) {
-        initForm = fieldSignal
+        initForm = fieldSignal;
       } else {
         initForm = '';
       }
@@ -60,7 +69,9 @@ export class ImageSelectComponent {
   // Update parent via output signal if value has changed
   private updateEffect = effect(() => {
     let updateData = null;
-    if (this.fieldModel() !== this.signalField()) { updateData = this.fieldModel(); }
+    if (this.fieldModel() !== this.signalField()) {
+      updateData = this.fieldModel();
+    }
     if (updateData !== null) {
       this.fieldChange.emit(updateData);
     }

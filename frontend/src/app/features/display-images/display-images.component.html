@@ -1,8 +1,8 @@
-<app-feedback></app-feedback>
+<app-feedback />
 <div class="row">
   <h1>Available Images</h1>
   @if (signalService.editEnabled()) {
-    <app-image-upload [variant]="'text'"></app-image-upload>
+    <app-image-upload [variant]="'text'" />
   }
 </div>
 
@@ -14,7 +14,7 @@
           <div class="image-box" style="background-image: url('{{ imgURL }}{{ image }}')"></div>
             @if (signalService.editEnabled()) {
               <div class="image-amend">
-                <button type="button" matIconButton (click)="delete(image)"><mat-icon>delete</mat-icon></button>
+                <button matIconButton type="button" (click)="delete(image)"><mat-icon>delete</mat-icon></button>
               </div>
             }
           <div class="image-name">{{ image }}</div>
