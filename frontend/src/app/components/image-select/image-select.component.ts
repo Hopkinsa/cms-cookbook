@@ -48,25 +48,12 @@ export class ImageSelectComponent {
     }
   });
 
-  private selectionUpdate = effect(() => {
-    // update select on change from parent
-    const recipeImageSignal = this.signalField();
-    const imageForm = this.fieldForm();
-
-    // prevent update if new value is equal to old value - stops update when form initialised
-    if ((imageForm && recipeImageSignal !== null && recipeImageSignal !== undefined) || (imageForm && imageForm.value() !== recipeImageSignal().value())) {
-      this.fieldForm().value.set(recipeImageSignal().value());
-    }
-  });
-
-  private parentUpdate = effect(() => {
-    // update parent on change of select
-    const recipeImageSignal = this.signalField();
-    const imageForm = this.fieldForm();
-
-    // prevent update if new value is equal to old value - stops update when form initialised
-    if ((imageForm && recipeImageSignal === undefined) || (imageForm && imageForm.value() !== recipeImageSignal().value())) {
-      this.fieldChange.emit(imageForm.value());
+  // Update form if input signal value has changed
+  private selectUpdateEffect = effect(() => {
+    let updateData = null;
+    if (this.fieldModel() !== this.signalField()) { updateData = this.signalField(); }
+    if (updateData !== null) {
+      this.fieldModel.set(updateData);
     }
   });
 
