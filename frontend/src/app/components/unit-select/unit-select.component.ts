@@ -42,9 +42,12 @@ export class UnitSelectComponent {
     }
   });
 
-  private selectionUpdate = effect(() => {
-    // update on change
-    const fieldValue = this.fieldForm();
-    this.fieldChange.emit(parseInt(fieldValue.value()));
+  // Update parent via output signal if value has changed
+  private updateEffect = effect(() => {
+    let updateData = null;
+    if (this.fieldModel() !== this.signalField()) { updateData = parseInt(this.fieldModel()); }
+    if (updateData !== null) {
+      this.fieldChange.emit(updateData);
+    }
   });
 }

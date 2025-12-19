@@ -1,4 +1,4 @@
-import { Component, inject, effect } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -29,25 +29,19 @@ import { Title } from '@angular/platform-browser';
 export class DisplayRecipeComponent {
   private title: Title = inject(Title);
   private router: Router = inject(Router);
-  private formInit = true;
 
-  protected imgURL = `${ environment.baseImgURL }image/`;
-  protected imgPlaceholderURL = `${ environment.baseImgURL }template/`;
+  protected imgURL = `${environment.baseImgURL}image/`;
+  protected imgPlaceholderURL = `${environment.baseImgURL}template/`;
   protected signalService: SignalService = inject(SignalService);
+  protected recipeTitle = ''
+  protected totalTime = 0;
 
-  totalTime = 0;
-
-  private displayInit = effect(() => {
-    const data = this.signalService.recipe();
-
-    if (data !== null && this.formInit) {
-      const recipeTitle = data.title || 'Unknown';
-      this.title.setTitle(`${recipeTitle} | Cookbook`)
-      this.totalTime = data.prep_time + data.cook_time;
-      this.signalService.recipeServes.set((data.serves as number))
-      this.formInit = false;
-    }
-  });
+  constructor() {
+    this.recipeTitle = this.signalService.recipe()!.title || 'Unknown';
+    this.title.setTitle(`${this.recipeTitle} | Cookbook`)
+    this.totalTime = (+this.signalService.recipe()!.prep_time) + (+this.signalService.recipe()!.cook_time);
+    this.signalService.recipeServes.set((this.signalService.recipe()!.serves as number))
+  }
 
   servingUp(): void {
     let serve: number | null = this.signalService.recipeServes();

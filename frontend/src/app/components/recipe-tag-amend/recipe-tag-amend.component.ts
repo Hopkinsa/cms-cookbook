@@ -64,17 +64,14 @@ export class RecipeTagAmendComponent {
     }
   });
 
-  private isTagUpdate = effect(() => {
-    // update on change
-    const recipeTagSignal = this.signalRecipeTag();
-    const isTagForm = this.tagForm.tag().value();
-
-    // prevent update if new value is equal to old value - stops update when form initialised
-    if ((isTagForm && recipeTagSignal === undefined) || (isTagForm && isTagForm !== recipeTagSignal().value())) {
-      this.recipeTagChange.emit(isTagForm);
+   // Update parent via output signal if value has changed
+  private updateEffect = effect(() => {
+    let updateData = null;
+    if (this.tagModel().tag !== this.signalRecipeTag()) { updateData = this.tagModel().tag ; }
+    if (updateData !== null) {
+      this.recipeTagChange.emit(updateData);
     }
   });
-
 
   remove(): void {
     this.recipeTagRemove.emit(true);

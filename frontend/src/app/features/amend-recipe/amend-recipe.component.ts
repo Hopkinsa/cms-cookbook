@@ -148,6 +148,7 @@ export class AmendRecipeComponent {
   }
 
   stepUpdate(event: IStepUpdate, idx: number): void {
+    console.log(event);
     const x = this.recipeModel() as IRecipe;
     let y: IStep[] | undefined = x.steps?.slice();
     if (y !== undefined) {
