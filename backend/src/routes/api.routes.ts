@@ -7,6 +7,7 @@ import DBCreate from '../db-api/db-create/db-create.ts';
 import DBRead from '../db-api/db-read/db-read.ts';
 import DBUpdate from '../db-api/db-update/db-update.ts';
 import DBDelete from '../db-api/db-delete/db-delete.ts';
+import DBBackup from '../db-api/db-backup/db-backup.ts';
 
 export const API_ROUTES = Router();
 
@@ -26,6 +27,9 @@ API_ROUTES.patch('/tags/:id', tagBody, DBUpdate.updateTag); // By id
 API_ROUTES.post('/tags', tagBody, DBCreate.createTag);
 API_ROUTES.get('/tags/:id', DBRead.findTagByID); // By id
 API_ROUTES.get('/tags', DBRead.getTags);
+
+API_ROUTES.get('/backup', DBBackup.dbBackup);
+
 
 // Catch-all
 API_ROUTES.get('/{*splat}', DefaultResponse.site_root);

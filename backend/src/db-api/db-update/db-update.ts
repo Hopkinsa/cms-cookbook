@@ -1,11 +1,10 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 
-import { IRecipe, ITags } from '../../model/data-model.ts';
+import { IRecipe, IResponse, ITags } from '../../model/data-model.ts';
 import { log } from '../../utility/helpers.ts';
 import  DBService from '../../services/db.service.ts';
 import { UPDATE_RECIPE_DATA, UPDATE_TAG_DATA } from './sql-update.ts';
-import { IResponse } from '../../model/data-model.ts';
 
 const DEBUG = 'db-update | ';
 

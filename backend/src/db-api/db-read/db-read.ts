@@ -3,9 +3,8 @@ import { validationResult } from 'express-validator';
 
 import { log } from '../../utility/helpers.ts';
 import  DBService from '../../services/db.service.ts';
-import { ICard, IRecipe, ITags, IUnit } from '../../model/data-model.ts';
+import { ICard, IRecipe, IResponse, ITags, IUnit } from '../../model/data-model.ts';
 import { FIND_RECIPE_BY_ID, FIND_RECIPES, FIND_UNIT_BY_ID, GET_RECIPES, GET_TAGS, GET_UNITS } from './sql-read.ts';
-import { IResponse } from '../../model/data-model.ts';
 
 const DEBUG = 'db-read | ';
 
