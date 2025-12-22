@@ -64,6 +64,7 @@ vite.config.ts.timestamp-*
 /.ng/
 
 backend/data/*
+backend/backup/*
 backend/images/uploaded/*
 !backend/images/uploaded/barabrith.jpeg
 
