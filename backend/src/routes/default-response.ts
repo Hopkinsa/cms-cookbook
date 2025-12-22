@@ -9,8 +9,8 @@ class DefaultResponse {
       log.info_lv2(`${DEBUG}site_root`);
 
       res.status(200).send('Incorrect route');
-    } catch (err: any) {
-      log.error(`${DEBUG}site_root: `, err.message);
+    } catch (err: unknown) {
+      log.error(`${DEBUG}site_root: `, err as unknown as string);
     }
   };
 }
