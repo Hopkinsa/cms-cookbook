@@ -1,4 +1,24 @@
-const CRAYONS = (...args: string[]): any => ({
+type CrayonType = {
+  default: string;
+  black: string;
+  red: string;
+  green: string;
+  yellow: string;
+  blue: string;
+  magenta: string;
+  cyan: string;
+  white: string;
+  bgBlack: string;
+  bgRed: string;
+  bgGreen: string;
+  bgYellow: string;
+  bgBlue: string;
+  bgMagenta: string;
+  bgCyan: string;
+  bgWhite: string;
+};
+
+const CRAYONS = (...args: string[]): CrayonType => ({
   default: '\x1b[0m',
   black: `\x1b[30m${args.join(' ')}`,
   red: `\x1b[31m${args.join(' ')}`,

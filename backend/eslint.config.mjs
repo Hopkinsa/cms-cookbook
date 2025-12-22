@@ -49,7 +49,7 @@ export default defineConfig({
       'max-len': [
         'warn',
         {
-          code: 120,
+          code: 250,
           comments: 160,
         },
       ],
