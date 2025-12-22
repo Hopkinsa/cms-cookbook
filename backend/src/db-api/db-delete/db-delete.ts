@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { log } from '../../utility/helpers.ts';
-import { db } from '../../services/db.service.ts';
+import  DBService from '../../services/db.service.ts';
 import { DELETE_RECIPE_DATA, DELETE_TAG_DATA } from './sql-delete.ts';
 import { IResponse } from '../../model/data-model.ts';
 
@@ -18,7 +18,7 @@ class DBDelete {
       resCode = 500;
       resMessage = { message: 'IDs missing or invalid' };
     } else {
-      await db.run(DELETE_RECIPE_DATA, recipeId).catch((err) => {
+      await DBService.db.run(DELETE_RECIPE_DATA, recipeId).catch((err) => {
         log.error(`${DEBUG}deleteRecipe - Error: `, err.message);
         resCode = 500;
         resMessage = { message: 'remove failed' };
@@ -39,7 +39,7 @@ class DBDelete {
       resCode = 500;
       resMessage = { message: 'IDs missing or invalid' };
     } else {
-      await db.run(DELETE_TAG_DATA, tagId).catch((err) => {
+      await DBService.db.run(DELETE_TAG_DATA, tagId).catch((err) => {
         log.error(`${DEBUG}deleteTag - Error: `, err.message);
         resCode = 500;
         resMessage = { message: 'remove failed' };

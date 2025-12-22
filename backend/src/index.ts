@@ -1,13 +1,13 @@
 import { createServer } from 'http';
 
 import { log } from './utility/helpers.ts';
-import { connectToDatabase } from './services/db.service.ts';
+import  DBService from './services/db.service.ts';
 import { app } from './app.ts';
 
 const server = createServer(app);
 
 log.title(`Starting Cookbook backend server`);
-connectToDatabase()
+DBService.connectToDatabase()
   .then(() => {
     server.listen(3000, () => {
       log.info_lv2(`Server port: 3000`);
