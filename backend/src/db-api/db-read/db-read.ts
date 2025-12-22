@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 
 import { log } from '../../utility/helpers.ts';
-import { db } from '../../services/db.service.ts';
+import  DBService from '../../services/db.service.ts';
 import { ICard, IRecipe, ITags, IUnit } from '../../model/data-model.ts';
 import { FIND_RECIPE_BY_ID, FIND_RECIPES, FIND_UNIT_BY_ID, GET_RECIPES, GET_TAGS, GET_UNITS } from './sql-read.ts';
 import { IResponse } from '../../model/data-model.ts';
@@ -17,7 +17,7 @@ class DBRead {
     let recipe: ICard | undefined;
     let resCode = 200;
     let resMessage: string | IRecipe = '';
-    await db
+    await DBService.db
       .get(FIND_RECIPE_BY_ID, recipeId)
       .then((data) => {
         recipe = data as unknown as ICard;
@@ -43,7 +43,7 @@ class DBRead {
     let recipes: IRecipe[] | undefined;
     let resCode = 200;
     let resMessage: string | IRecipe[] = '';
-    await db
+    await DBService.db
       .all(GET_RECIPES)
       .then((data) => {
         recipes = data as unknown as IRecipe[];
@@ -73,7 +73,7 @@ class DBRead {
       const terms = '%' + req.query.terms + '%';
       let resCode = 200;
       let resMessage: string | IRecipe[] = '';
-      await db
+      await DBService.db
         .all(FIND_RECIPES, terms)
         .then((data) => {
           recipes = data as unknown as IRecipe[];
@@ -101,7 +101,7 @@ class DBRead {
     let unit: IUnit | undefined;
     let resCode = 200;
     let resMessage: IResponse | IUnit;
-    await db
+    await DBService.db
       .get(FIND_UNIT_BY_ID, unitId)
       .then((data) => {
         unit = data as unknown as IUnit;
@@ -126,7 +126,7 @@ class DBRead {
     let units: IUnit[] | undefined;
     let resCode = 200;
     let resMessage: IResponse | IUnit[];
-    await db
+    await DBService.db
       .all(GET_UNITS)
       .then((data) => {
         units = data as unknown as IUnit[];
@@ -153,7 +153,7 @@ class DBRead {
     let tag: ITags | undefined;
     let resCode = 200;
     let resMessage: IResponse | ITags;
-    await db
+    await DBService.db
       .get(FIND_UNIT_BY_ID, tagId)
       .then((data) => {
         tag = data as unknown as ITags;
@@ -178,7 +178,7 @@ class DBRead {
     let tags: ITags[] | undefined;
     let resCode = 200;
     let resMessage: IResponse | ITags[];
-    await db
+    await DBService.db
       .all(GET_TAGS)
       .then((data) => {
         tags = data as unknown as ITags[];

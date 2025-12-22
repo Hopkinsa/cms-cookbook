@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 
-import { IRecipe, ITags } from '../../model/data-model';
+import { IRecipe, ITags } from '../../model/data-model.ts';
 import { log } from '../../utility/helpers.ts';
-import { db } from '../../services/db.service.ts';
+import  DBService from '../../services/db.service.ts';
 import { UPDATE_RECIPE_DATA, UPDATE_TAG_DATA } from './sql-update.ts';
 import { IResponse } from '../../model/data-model.ts';
 
@@ -26,7 +26,7 @@ class DBUpdate {
         resCode = 500;
         resMessage = { message: 'IDs missing or invalid' };
       } else {
-        await db.run(UPDATE_RECIPE_DATA, JSON.stringify(recipeData), recipeId).catch((err) => {
+        await DBService.db.run(UPDATE_RECIPE_DATA, JSON.stringify(recipeData), recipeId).catch((err) => {
           log.error(`${DEBUG}updateRecipe - Error: `, err.message);
           resCode = 500;
           resMessage = { message: 'update failed' };
@@ -53,7 +53,7 @@ class DBUpdate {
         resCode = 500;
         resMessage = { message: 'IDs missing or invalid' };
       } else {
-        await db.run(UPDATE_TAG_DATA, tagData.type, tagData.tag, tagId).catch((err) => {
+        await DBService.db.run(UPDATE_TAG_DATA, tagData.type, tagData.tag, tagId).catch((err) => {
           log.error(`${DEBUG}updateTag - Error: `, err.message);
           resCode = 500;
           resMessage = { message: 'update failed' };
