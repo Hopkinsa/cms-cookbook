@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { recipeBody, searchQuery, tagBody } from '../validation/api.validation.ts';
+import { recipeBody, searchQuery, sortQuery, tagBody } from '../validation/api.validation.ts';
 
 import DefaultResponse from './default-response.ts';
 import DBCreate from '../db-api/db-create/db-create.ts';
@@ -18,7 +18,7 @@ API_ROUTES.post('/recipe', recipeBody, DBCreate.createRecipe);
 API_ROUTES.get('/recipe/:id', DBRead.findRecipeByID); // By id
 
 API_ROUTES.get('/search', searchQuery, DBRead.findRecipes);
-API_ROUTES.get('/recipes', DBRead.getRecipes);
+API_ROUTES.get('/recipes', sortQuery, DBRead.getRecipes);
 
 API_ROUTES.get('/units/:id', DBRead.findUnitByID); // By id
 API_ROUTES.get('/units', DBRead.getUnits);
@@ -29,7 +29,7 @@ API_ROUTES.post('/tags', tagBody, DBCreate.createTag);
 API_ROUTES.get('/tags/:id', DBRead.findTagByID); // By id
 API_ROUTES.get('/tags', DBRead.getTags);
 
-API_ROUTES.post('/restore', DBRestore.dbRestore);
+// API_ROUTES.post('/restore', DBRestore.dbRestore);
 API_ROUTES.post('/backup', DBBackup.dbBackup);
 
 // Catch-all

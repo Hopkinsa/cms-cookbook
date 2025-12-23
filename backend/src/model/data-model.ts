@@ -31,6 +31,8 @@ export type IRecipe = {
   ingredients?: IIngredients[];
   steps?: IStep[];
   notes: string;
+  date_created?: number;
+  date_updated?: number;
 };
 
 export type IIngredients = {

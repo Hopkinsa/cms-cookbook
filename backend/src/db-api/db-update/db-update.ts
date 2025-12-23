@@ -17,6 +17,7 @@ class DBUpdate {
     } else {
       const recipeId: number = parseInt(req.params['id']);
       const recipeData: IRecipe = req.body;
+      recipeData.date_updated = Date.now();
       let resCode = 200;
       let resMessage: IResponse = { completed: true };
 

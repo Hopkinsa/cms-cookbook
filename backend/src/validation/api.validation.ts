@@ -23,3 +23,8 @@ export const tagBody = [
 ];
 
 export const searchQuery = [query('terms').trim().escape().notEmpty().withMessage('There must be a search term')];
+
+export const sortQuery = [
+  query('t').optional().trim().escape().matches('title|created|updated').withMessage('There must be a target to sort by'),
+  query('d').optional().trim().escape().matches('asc|desc').withMessage('There must be a direction (asc or desc)')
+];
