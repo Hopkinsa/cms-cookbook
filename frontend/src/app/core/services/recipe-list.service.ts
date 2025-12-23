@@ -3,7 +3,7 @@ import { httpResource } from '@angular/common/http';
 import { environment } from 'src/environment/environment';
 
 import { SignalService } from '@server/core/services/signal.service';
-import { IRecipeList } from '@server/core/interface/recipe.interface';
+import { IRecipeList, ISearchResults } from '@server/core/interface/recipe.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +19,7 @@ export class RecipeListService {
 
   private recipeListRequestResolved = effect(() => {
     if (this.recipeListRequest.status() === 'resolved') {
-      this.signalService.recipeList.set(this.recipeListRequest.value() as IRecipeList[]);
+      this.signalService.recipeList.set(this.recipeListRequest.value()?.results as IRecipeList[]);
     }
   });
 
@@ -31,7 +31,7 @@ export class RecipeListService {
 
   private recipeSearchRequestResolved = effect(() => {
     if (this.recipeSearchRequest.status() === 'resolved') {
-      this.signalService.recipeList.set(this.recipeSearchRequest.value() as IRecipeList[]);
+      this.signalService.recipeList.set(this.recipeSearchRequest.value()?.results as IRecipeList[]);
     }
   });
 
@@ -41,7 +41,7 @@ export class RecipeListService {
     }
   });
 
-  private recipeSearchRequest = httpResource<IRecipeList[]>(() => {
+  private recipeSearchRequest = httpResource<ISearchResults>(() => {
     const terms = this.findRecipes();
     if (terms !== null && terms.trim() !== '') {
       return `${this.apiUrl}search?terms=${terms}`;
@@ -49,7 +49,7 @@ export class RecipeListService {
     return undefined;
   });
 
-  private recipeListRequest = httpResource<IRecipeList[]>(() => {
+  private recipeListRequest = httpResource<ISearchResults>(() => {
     const sortOn = 'title';
     const sortDir = 'asc';
     return this.getRecipeList() ? `${this.apiUrl}recipes?t=${sortOn}&d=${sortDir}` : undefined;

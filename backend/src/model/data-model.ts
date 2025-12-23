@@ -2,6 +2,7 @@ export type IResponse = {
   completed?: boolean;
   message?: string;
 };
+
 export type ITags = {
   id: number;
   type: string;
@@ -46,4 +47,12 @@ export type IIngredients = {
 export type IStep = {
   is_title: boolean;
   step: string;
+};
+
+export type ISearchResults = {
+  total: number;
+  page?: { offset: number; quantity: number };
+  sort?: { target: string; direction: string };
+  terms?: string;
+  results: IRecipe[];
 };

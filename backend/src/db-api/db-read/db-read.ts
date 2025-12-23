@@ -1,14 +1,78 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
+import QueryString from 'qs';
 
 import { log } from '../../utility/helpers.ts';
 import DBService from '../../services/db.service.ts';
-import { ICard, IRecipe, IResponse, ITags, IUnit } from '../../model/data-model.ts';
-import { FIND_RECIPE_BY_ID, FIND_RECIPES, FIND_UNIT_BY_ID, GET_RECIPES, GET_TAGS, GET_UNITS } from './sql-read.ts';
+import { ICard, IRecipe, IResponse, ISearchResults, ITags, IUnit } from '../../model/data-model.ts';
+import {
+  FIND_RECIPE_BY_ID,
+  FIND_RECIPES,
+  FIND_RECIPES_TOTAL,
+  FIND_UNIT_BY_ID,
+  GET_RECIPES,
+  GET_RECIPES_TOTAL,
+  GET_TAGS,
+  GET_UNITS,
+} from './sql-read.ts';
 
 const DEBUG = 'db-read | ';
 
+type paramPrep = {
+  sort: { target: string; direction: string };
+  sortBy: string;
+  page: { offset: number; quantity: number };
+  terms: string;
+  total: number;
+};
+
 class DBRead {
+  static prepParemeters(queryString: QueryString.ParsedQs): paramPrep {
+    // default values if nothing passed in query string
+    const response: paramPrep = {
+      sort: { target: 'title', direction: 'ASC' },
+      sortBy: '',
+      page: { offset: 0, quantity: 0 },
+      terms: '',
+      total: 0,
+    };
+
+    // Sorting parameters
+    if (queryString.t) {
+      // title
+      let tmpTarget = queryString.t as string;
+      if (tmpTarget === 'created' || tmpTarget === 'updated') {
+        tmpTarget = `date_${tmpTarget}`;
+      }
+      response.sort.target = tmpTarget;
+    }
+    if (queryString.d) {
+      // direction
+      const tmpDirection = (queryString.d as string).toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
+      response.sort.direction = tmpDirection;
+    }
+    response.sortBy = `${response.sort.target} ${response.sort.direction}`;
+
+    // Pagination parameters
+    if (queryString.o) {
+      // offset
+      const tmpOffset = 0;
+      response.page.offset = tmpOffset;
+    }
+    if (queryString.q) {
+      // quantity per page
+      const tmpQuantity = 0;
+      response.page.quantity = tmpQuantity;
+    }
+
+    if (queryString.terms) {
+      //search terms
+      const tmpTerms = queryString.terms as string;
+      response.terms = tmpTerms;
+    }
+    return response;
+  }
+
   // Recipes
   static findRecipeByID = async (req: Request, res: Response): Promise<void> => {
     const recipeId: number = parseInt(req.params['id']);
@@ -43,25 +107,25 @@ class DBRead {
       res.status(422).json({ errors: errors.array() });
     } else {
       log.info_lv2(`${DEBUG}getRecipes`);
-      const queryString = req.query;
-      // default values if nothing passed in query string
-      let target = 'title';
-      let direction = 'ASC';
-      if (queryString.t) {
-        target = queryString.t as string;
-        if (target === 'created' || target === 'updated') {
-          target = `date_${target}`;
-        }
-      }
-      if (queryString.d) {
-        direction = ((queryString.d as string).toUpperCase() === 'ASC') ? ' ASC' : ' DESC';
-      }
+      const param = DBRead.prepParemeters(req.query);
 
       let recipes: IRecipe[] | undefined;
       let resCode = 200;
-      let resMessage: string | IRecipe[] = '';
+      let resMessage: string | ISearchResults = '';
       await DBService.db
-        .all(GET_RECIPES, `${target} ${direction}`)
+        .all(GET_RECIPES_TOTAL)
+        .then((data) => {
+          if (data !== null && data !== undefined) {
+            if (data[0] !== null && data[0] !== undefined) {
+              param.total = data[0].total;
+            }
+          }
+        })
+        .catch((err) => {
+          log.error(`${DEBUG}getRecipes - Error: `, err.message);
+        });
+      await DBService.db
+        .all(GET_RECIPES, `${param.sortBy}`)
         .then((data) => {
           recipes = data as unknown as IRecipe[];
         })
@@ -70,7 +134,15 @@ class DBRead {
         });
       if (recipes !== undefined) {
         resCode = 200;
-        resMessage = recipes;
+        resMessage = {
+          total: param.total,
+          page: param.page,
+          results: recipes,
+        };
+        if (param.sortBy !== 'title ASC') {
+          // only return if not default
+          resMessage.sort = param.sort;
+        }
       } else {
         resCode = 404;
         resMessage = 'Recipe not found';
@@ -86,12 +158,24 @@ class DBRead {
       res.status(422).json({ errors: errors.array() });
     } else {
       log.info_lv2(`${DEBUG}findRecipes: ${req.query.terms}`);
+      const param = DBRead.prepParemeters(req.query);
       let recipes: IRecipe[] | undefined;
-      const terms = '%' + req.query.terms + '%';
       let resCode = 200;
-      let resMessage: string | IRecipe[] = '';
+      let resMessage: string | ISearchResults = '';
       await DBService.db
-        .all(FIND_RECIPES, terms)
+        .all(FIND_RECIPES_TOTAL, `%${param.terms}%`)
+        .then((data) => {
+          if (data !== null && data !== undefined) {
+            if (data[0] !== null && data[0] !== undefined) {
+              param.total = data[0].total;
+            }
+          }
+        })
+        .catch((err) => {
+          log.error(`${DEBUG}getRecipes - Error: `, err.message);
+        });
+      await DBService.db
+        .all(FIND_RECIPES, `%${param.terms}%`)
         .then((data) => {
           recipes = data as unknown as IRecipe[];
         })
@@ -101,7 +185,16 @@ class DBRead {
 
       if (recipes !== undefined) {
         resCode = 200;
-        resMessage = recipes;
+        resMessage = {
+          total: param.total,
+          page: param.page,
+          terms: param.terms,
+          results: recipes,
+        };
+        if (param.sortBy !== 'title ASC') {
+          // only return if not default
+          resMessage.sort = param.sort;
+        }
       } else {
         resCode = 404;
         resMessage = 'Recipes not found';
