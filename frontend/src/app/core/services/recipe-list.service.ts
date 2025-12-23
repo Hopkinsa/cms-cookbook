@@ -50,6 +50,8 @@ export class RecipeListService {
   });
 
   private recipeListRequest = httpResource<IRecipeList[]>(() => {
-    return this.getRecipeList() ? `${this.apiUrl}recipes` : undefined;
+    const sortOn = 'title';
+    const sortDir = 'asc';
+    return this.getRecipeList() ? `${this.apiUrl}recipes?t=${sortOn}&d=${sortDir}` : undefined;
   });
 }

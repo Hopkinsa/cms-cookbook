@@ -26,5 +26,7 @@ export const data = [
       },
     ],
     notes: '',
+    date_created: Date.now(),
+    date_updated: Date.now()
   },
 ];

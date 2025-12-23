@@ -16,6 +16,9 @@ class DBCreate {
       res.status(422).json({ errors: errors.array() });
     } else {
       const recipeData: IRecipe = req.body;
+      recipeData.date_created = Date.now();
+      recipeData.date_updated = Date.now();
+
       let resCode = 200;
       let resMessage: IResponse = { completed: true };
       log.info_lv2(`${DEBUG}createRecipe`);

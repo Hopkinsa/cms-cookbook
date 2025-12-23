@@ -5,6 +5,8 @@ export interface IRecipeList {
   title: string;
   img_url: string;
   tags: string[];
+  date_created: number;
+  date_updated: number;
 }
 
 export const recipeListInitialState: IRecipeList = {
@@ -12,6 +14,8 @@ export const recipeListInitialState: IRecipeList = {
   title: '',
   img_url: '',
   tags: [],
+  date_created: 0,
+  date_updated: 0,
 };
 
 export interface IRecipeTagForm {
@@ -33,6 +37,8 @@ export interface IRecipe {
   ingredients?: IIngredients[];
   steps?: IStep[];
   notes: string;
+  date_created: number;
+  date_updated: number;
 }
 
 export const recipeInitialState: IRecipe = {
@@ -46,4 +52,6 @@ export const recipeInitialState: IRecipe = {
   ingredients: [],
   steps: [],
   notes: '',
+  date_created: 0,
+  date_updated: 0,
 };

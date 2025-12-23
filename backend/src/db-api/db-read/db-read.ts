@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 
 import { log } from '../../utility/helpers.ts';
-import  DBService from '../../services/db.service.ts';
+import DBService from '../../services/db.service.ts';
 import { ICard, IRecipe, IResponse, ITags, IUnit } from '../../model/data-model.ts';
 import { FIND_RECIPE_BY_ID, FIND_RECIPES, FIND_UNIT_BY_ID, GET_RECIPES, GET_TAGS, GET_UNITS } from './sql-read.ts';
 
@@ -38,28 +38,46 @@ class DBRead {
   };
 
   static getRecipes = async (req: Request, res: Response): Promise<void> => {
-    log.info_lv2(`${DEBUG}getRecipes`);
-    let recipes: IRecipe[] | undefined;
-    let resCode = 200;
-    let resMessage: string | IRecipe[] = '';
-    await DBService.db
-      .all(GET_RECIPES)
-      .then((data) => {
-        recipes = data as unknown as IRecipe[];
-      })
-      .catch((err) => {
-        log.error(`${DEBUG}getRecipes - Error: `, err.message);
-      });
-
-    if (recipes !== undefined) {
-      resCode = 200;
-      resMessage = recipes;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(422).json({ errors: errors.array() });
     } else {
-      resCode = 404;
-      resMessage = 'Recipe not found';
-    }
+      log.info_lv2(`${DEBUG}getRecipes`);
+      const queryString = req.query;
+      // default values if nothing passed in query string
+      let target = 'title';
+      let direction = 'ASC';
+      if (queryString.t) {
+        target = queryString.t as string;
+        if (target === 'created' || target === 'updated') {
+          target = `date_${target}`;
+        }
+      }
+      if (queryString.d) {
+        direction = ((queryString.d as string).toUpperCase() === 'ASC') ? ' ASC' : ' DESC';
+      }
 
-    res.status(resCode).json(resMessage);
+      let recipes: IRecipe[] | undefined;
+      let resCode = 200;
+      let resMessage: string | IRecipe[] = '';
+      await DBService.db
+        .all(GET_RECIPES, `${target} ${direction}`)
+        .then((data) => {
+          recipes = data as unknown as IRecipe[];
+        })
+        .catch((err) => {
+          log.error(`${DEBUG}getRecipes - Error: `, err.message);
+        });
+      if (recipes !== undefined) {
+        resCode = 200;
+        resMessage = recipes;
+      } else {
+        resCode = 404;
+        resMessage = 'Recipe not found';
+      }
+
+      res.status(resCode).json(resMessage);
+    }
   };
 
   static findRecipes = async (req: Request, res: Response): Promise<void> => {
