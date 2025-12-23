@@ -1,5 +1,12 @@
 import { IIngredients, IStep } from './';
 
+export interface ISearchResults {
+  total: number;
+  page?: { offset: number; quantity: number };
+  sort?: { target: string; direction: string };
+  results: IRecipeList[];
+}
+
 export interface IRecipeList {
   id: number;
   title: string;
@@ -17,6 +24,21 @@ export const recipeListInitialState: IRecipeList = {
   date_created: 0,
   date_updated: 0,
 };
+
+export interface ISearchResults {
+  total: number;
+  page?: { offset: number; quantity: number };
+  sort?: { target: string; direction: string };
+  terms?: string;
+  results: IRecipeList[];
+}
+
+export const ISearchResultsInit: ISearchResults = {
+  total: 0,
+  page: { offset: 0, quantity: 0 },
+  sort: { target: '', direction: '' },
+  results: []
+}
 
 export interface IRecipeTagForm {
   tag: string;
