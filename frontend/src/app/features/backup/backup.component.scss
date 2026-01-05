@@ -1,0 +1,14 @@
+h1 {
+  display: inline-block;
+}
+h1 + a {
+  margin-left: 1rem;
+}
+h2 {
+  text-transform: capitalize;
+}
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}

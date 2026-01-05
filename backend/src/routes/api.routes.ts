@@ -29,7 +29,7 @@ API_ROUTES.post('/tags', tagBody, DBCreate.createTag);
 API_ROUTES.get('/tags/:id', DBRead.findTagByID); // By id
 API_ROUTES.get('/tags', DBRead.getTags);
 
-// API_ROUTES.post('/restore', DBRestore.dbRestore);
+API_ROUTES.post('/restore', DBRestore.dbRestore);
 API_ROUTES.post('/backup', DBBackup.dbBackup);
 
 // Catch-all

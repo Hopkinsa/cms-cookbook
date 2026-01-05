@@ -18,7 +18,7 @@ export type IUnit = {
 
 export type ICard = {
   id: number;
-  card: Text;
+  card: string;
 };
 
 export type IRecipe = {
