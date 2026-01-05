@@ -20,7 +20,6 @@ const DEBUG = 'db-read | ';
 
 type paramPrep = {
   sort: { target: string; direction: string };
-  sortBy: string;
   page: { offset: number; quantity: number };
   terms: string;
   total: number;
@@ -31,7 +30,6 @@ class DBRead {
     // default values if nothing passed in query string
     const response: paramPrep = {
       sort: { target: 'title', direction: 'ASC' },
-      sortBy: '',
       page: { offset: 0, quantity: 0 },
       terms: '',
       total: 0,
@@ -51,7 +49,6 @@ class DBRead {
       const tmpDirection = (queryString.d as string).toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
       response.sort.direction = tmpDirection;
     }
-    response.sortBy = `${response.sort.target} ${response.sort.direction}`;
 
     // Pagination parameters
     if (queryString.o) {
@@ -106,8 +103,8 @@ class DBRead {
     if (!errors.isEmpty()) {
       res.status(422).json({ errors: errors.array() });
     } else {
-      log.info_lv2(`${DEBUG}getRecipes`);
       const param = DBRead.prepParemeters(req.query);
+      log.info_lv2(`${DEBUG}getRecipes - ${param.sort.target} ${param.sort.direction}`);
 
       let recipes: IRecipe[] | undefined;
       let resCode = 200;
@@ -124,8 +121,10 @@ class DBRead {
         .catch((err) => {
           log.error(`${DEBUG}getRecipes - Error: `, err.message);
         });
-      await DBService.db
-        .all(GET_RECIPES, `${param.sortBy}`)
+
+      const dbData = await DBService.db.prepare(`${GET_RECIPES} ${param.sort.target} ${param.sort.direction}`);
+      await dbData
+        .all()
         .then((data) => {
           recipes = data as unknown as IRecipe[];
         })
@@ -137,12 +136,9 @@ class DBRead {
         resMessage = {
           total: param.total,
           page: param.page,
+          sort: param.sort,
           results: recipes,
         };
-        if (param.sortBy !== 'title ASC') {
-          // only return if not default
-          resMessage.sort = param.sort;
-        }
       } else {
         resCode = 404;
         resMessage = 'Recipe not found';
@@ -157,8 +153,9 @@ class DBRead {
     if (!errors.isEmpty()) {
       res.status(422).json({ errors: errors.array() });
     } else {
-      log.info_lv2(`${DEBUG}findRecipes: ${req.query.terms}`);
       const param = DBRead.prepParemeters(req.query);
+      log.info_lv2(`${DEBUG}findRecipes - ${param.sort.target} ${param.sort.direction}`);
+      log.info_lv3(`${req.query.terms}`);
       let recipes: IRecipe[] | undefined;
       let resCode = 200;
       let resMessage: string | ISearchResults = '';
@@ -174,8 +171,10 @@ class DBRead {
         .catch((err) => {
           log.error(`${DEBUG}getRecipes - Error: `, err.message);
         });
-      await DBService.db
-        .all(FIND_RECIPES, `%${param.terms}%`)
+
+      const dbData = await DBService.db.prepare(`${FIND_RECIPES} ${param.sort.target} ${param.sort.direction}`);
+      await dbData
+        .all(`%${param.terms}%`)
         .then((data) => {
           recipes = data as unknown as IRecipe[];
         })
@@ -188,13 +187,10 @@ class DBRead {
         resMessage = {
           total: param.total,
           page: param.page,
+          sort: param.sort,
           terms: param.terms,
           results: recipes,
         };
-        if (param.sortBy !== 'title ASC') {
-          // only return if not default
-          resMessage.sort = param.sort;
-        }
       } else {
         resCode = 404;
         resMessage = 'Recipes not found';

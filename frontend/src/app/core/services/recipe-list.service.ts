@@ -5,6 +5,11 @@ import { environment } from 'src/environment/environment';
 import { SignalService } from '@server/core/services/signal.service';
 import { IRecipeList, ISearchResults } from '@server/core/interface/recipe.interface';
 
+interface ISortSignal {
+  sortOn: string;
+  sortDir: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -16,6 +21,7 @@ export class RecipeListService {
   // to get a recipe pass the recipe id by using getRecipe.set(<id>)
   readonly getRecipeList: WritableSignal<number | null> = signal(null);
   readonly findRecipes: WritableSignal<string | null> = signal(null);
+  readonly recipeSort: WritableSignal<ISortSignal> = signal({ sortOn: 'title', sortDir: 'asc' });
 
   private recipeListRequestResolved = effect(() => {
     if (this.recipeListRequest.status() === 'resolved') {
@@ -29,29 +35,16 @@ export class RecipeListService {
     }
   });
 
-  private recipeSearchRequestResolved = effect(() => {
-    if (this.recipeSearchRequest.status() === 'resolved') {
-      this.signalService.recipeList.set(this.recipeSearchRequest.value()?.results as IRecipeList[]);
-    }
-  });
-
-  private recipeSearchRequestError = effect(() => {
-    if (this.recipeSearchRequest.error()) {
-      console.error('Recipe search error', this.recipeSearchRequest.error()?.message);
-    }
-  });
-
-  private recipeSearchRequest = httpResource<ISearchResults>(() => {
-    const terms = this.findRecipes();
-    if (terms !== null && terms.trim() !== '') {
-      return `${this.apiUrl}search?terms=${terms}`;
-    }
-    return undefined;
-  });
-
   private recipeListRequest = httpResource<ISearchResults>(() => {
-    const sortOn = 'title';
-    const sortDir = 'asc';
-    return this.getRecipeList() ? `${this.apiUrl}recipes?t=${sortOn}&d=${sortDir}` : undefined;
+    const terms = this.findRecipes();
+    const sorting = this.recipeSort();
+    const sortOn = sorting.sortOn;
+    const sortDir = sorting.sortDir;
+
+    let targetResource = `${this.apiUrl}recipes?t=${sortOn}&d=${sortDir}`;
+    if (terms !== null && terms.trim() !== '') {
+      targetResource = `${this.apiUrl}search??t=${sortOn}&d=${sortDir}&terms=${terms}`;
+    }
+    return this.getRecipeList() ? targetResource : undefined;
   });
 }

@@ -4,15 +4,18 @@
     <a matButton="tonal" routerLink="/recipe/add">Add</a>
   }
 </div>
-<div class="row search-bar">
-  <form (submit)="search($event)">
-    <label><b>Search:</b><input type="text" [field]="searchForm"></label><button matIconButton type="button" (click)="search($event)"><mat-icon>search</mat-icon></button>
-  </form><button matIconButton type="button" (click)="reset()"><mat-icon>close_small</mat-icon></button>
+<div class="row search-bar"><form (submit)="search($event)">
+    <label><b>Order by:</b>
+
+  <select title="Sort" [field]="searchForm.sortSelect" (change)="sortOption()"><option value="t1">Title (A - Z)</option><option value="t2">Title (Z - A)</option></select>
+</label>
+    <label><b>Search:</b><input type="text" [field]="searchForm.terms"></label><button matIconButton type="button" (click)="search($event)"><mat-icon>search</mat-icon></button>
+  <button matIconButton type="button" (click)="reset()"><mat-icon>close_small</mat-icon></button></form>
 </div>
 <div class="row">
   @if (signalService.recipeList()) {
     <div class="column">
-      @for (recipe of signalService.recipeList() | filterArray:'':''; track recipe.id) {
+      @for (recipe of signalService.recipeList(); track recipe.id) {
         <div class="recipe">
           <a [routerLink]="['/recipe', recipe.id]">
             @if (recipe.img_url !== '') {
