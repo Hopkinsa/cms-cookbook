@@ -3,7 +3,7 @@ import * as fs from 'fs';
 
 import { log } from '../../utility/helpers.ts';
 import DBService from '../../services/db.service.ts';
-import { IRecipe, ITags, IUnit } from '../../model/data-model.ts';
+import { IRecipe, IResponse, ITags, IUnit } from '../../model/data-model.ts';
 import { GET_RECIPES, GET_TAGS, GET_UNITS } from './sql-backup.ts';
 
 const DEBUG = 'db-backup | ';
@@ -67,44 +67,53 @@ class DBBackup {
   static dbBackup = async (req: Request, res: Response): Promise<void> => {
     log.info_lv2(`${DEBUG}dbBackup`);
     if (!fs.existsSync(BACKUP_DIR)) {
-      log.info_lv2(`${DEBUG}Database folder does not exist.`);
+      log.info_lv2(`${DEBUG}Database backup folder does not exist.`);
       fs.mkdirSync(BACKUP_DIR);
     }
 
     const tags = await DBBackup.getTags();
     if (tags) {
-      fs.writeFileSync(`${BACKUP_DIR}/tags.ts`, 'export const tagData = [\n', 'utf-8');
+      let last = tags.length;
+      fs.writeFileSync(`${BACKUP_DIR}/tags.json`, '[\n', 'utf-8');
       tags.forEach((tag) => {
+        last--;
         const stringify = JSON.stringify(tag);
-        fs.appendFileSync(`${BACKUP_DIR}/tags.ts`, stringify + ',\n', 'utf-8');
+        const terminator = last > 0 ? ',\n' : '\n';
+        fs.appendFileSync(`${BACKUP_DIR}/tags.json`, stringify + terminator, 'utf-8');
       });
-      fs.appendFileSync(`${BACKUP_DIR}/tags.ts`, '];\n', 'utf-8');
+      fs.appendFileSync(`${BACKUP_DIR}/tags.json`, ']\n', 'utf-8');
       log.info_lv2(`${DEBUG} Tags and Categories backed up`);
     }
 
     const units = await DBBackup.getUnits();
     if (units) {
-      fs.writeFileSync(`${BACKUP_DIR}/units.ts`, 'export const unitData = [\n', 'utf-8');
+      let last = units.length;
+      fs.writeFileSync(`${BACKUP_DIR}/units.json`, '[\n', 'utf-8');
       units.forEach((unit) => {
+        last--;
         const stringify = JSON.stringify(unit);
-        fs.appendFileSync(`${BACKUP_DIR}/units.ts`, stringify + ',\n', 'utf-8');
+        const terminator = last > 0 ? ',\n' : '\n';
+        fs.appendFileSync(`${BACKUP_DIR}/units.json`, stringify + terminator, 'utf-8');
       });
-      fs.appendFileSync(`${BACKUP_DIR}/units.ts`, '];\n', 'utf-8');
+      fs.appendFileSync(`${BACKUP_DIR}/units.json`, ']\n', 'utf-8');
       log.info_lv2(`${DEBUG} Units backed up`);
     }
 
     const recipes = await DBBackup.getRecipes();
     if (recipes) {
-      fs.writeFileSync(`${BACKUP_DIR}/recipes.ts`, 'export const recipeData = [\n', 'utf-8');
+      let last = recipes.length;
+      fs.writeFileSync(`${BACKUP_DIR}/recipes.json`, '[\n', 'utf-8');
       recipes.forEach((recipe) => {
+        last--;
         const stringify = JSON.stringify(recipe);
-        fs.appendFileSync(`${BACKUP_DIR}/recipes.ts`, stringify + ',\n', 'utf-8');
+        const terminator = last > 0 ? ',\n' : '\n';
+        fs.appendFileSync(`${BACKUP_DIR}/recipes.json`, stringify + terminator , 'utf-8');
       });
-      fs.appendFileSync(`${BACKUP_DIR}/recipes.ts`, '];\n', 'utf-8');
+      fs.appendFileSync(`${BACKUP_DIR}/recipes.json`, ']\n', 'utf-8');
       log.info_lv2(`${DEBUG} Recipes backed up`);
     }
     const resCode = 200;
-    const resMessage = 'OK';
+    const resMessage: IResponse = { completed: true };
 
     res.status(resCode).json(resMessage);
   };

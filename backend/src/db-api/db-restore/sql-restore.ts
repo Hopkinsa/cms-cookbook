@@ -1,8 +1,3 @@
-import { ICard, ITags, IUnit } from '../../model/data-model.ts';
-// import { unitData } from './units.ts';
-//import { tagData } from './tags.ts';
-//import { recipeData } from './recipes.ts';
-
 export const TAG_TABLE = `
 CREATE TABLE IF NOT EXISTS tags (
     id INTEGER PRIMARY KEY,
@@ -27,10 +22,9 @@ CREATE TABLE IF NOT EXISTS recipe (
 );
 `;
 
-let jsonCards = '';
-//recipeData.forEach((recipe: ICard) => {
-//  jsonCards += `( ${recipe.id}, ${recipe.card}),`;
-//});
+export const RECIPE_CLEAR_DATA = `DELETE FROM recipe;`;
+export const UNIT_CLEAR_DATA = `DELETE FROM units;`;
+export const TAG_CLEAR_DATA = `DELETE FROM tags;`;
 
 export const RECIPE_DATA = `
 INSERT INTO "recipe" (
@@ -38,13 +32,9 @@ INSERT INTO "recipe" (
     "card"
 )
 VALUES
- ${jsonCards};
 `;
 
-let jsonUnits = '';
-//unitData.forEach((unit: IUnit) => {
-//  jsonUnits += `( ${unit.id}, '${unit.title}', '${unit.unit}, '${unit.abbreviation}'),`;
-//});
+
 
 export const UNIT_DATA = `
 INSERT INTO "units" (
@@ -54,13 +44,10 @@ INSERT INTO "units" (
     "abbreviation"
     )
 VALUES
- ${jsonUnits};
+
  `;
 
-let jsonTags = '';
-//tagData.forEach((tag: ITags) => {
-//  jsonTags += `( ${tag.id}, '${tag.type}', '${tag.tag}'),`;
-//});
+
 
 export const TAG_DATA = `
 INSERT INTO "tags" (
@@ -69,5 +56,4 @@ INSERT INTO "tags" (
     "tag"
     )
 VALUES
- ${jsonTags};
- `;
+`;

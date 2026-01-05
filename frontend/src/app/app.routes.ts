@@ -25,6 +25,13 @@ export const routes: Routes = [
         },
       },
       {
+        path: 'backup',
+        title: 'Backup / Restore | Cookbook',
+        loadComponent: () =>
+          import('./features/backup/backup.component').then((m) => m.BackupComponent),
+        canActivate: [AuthGuard],
+      },
+      {
         path: 'recipe/add',
         title: 'Add Recipe | Cookbook',
         loadComponent: () =>
