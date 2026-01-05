@@ -6,14 +6,14 @@ import { Field, form } from '@angular/forms/signals';
 import { environment } from 'src/environment/environment';
 
 import { RecipeListService, RecipeService, SignalService } from '@server/core/services';
-import { FilterArrayPipe } from '@server/shared/pipes';
+import { IRecipeSearch, IRecipeSearchInit } from '@server/core/interface';
 
 @Component({
   selector: 'app-recipes',
   templateUrl: './recipes.component.html',
   styleUrls: ['./recipes.component.scss'],
   standalone: true,
-  imports: [RouterLink, MatButtonModule, MatIconModule, Field, FilterArrayPipe],
+  imports: [RouterLink, MatButtonModule, MatIconModule, Field],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipesComponent {
@@ -23,19 +23,31 @@ export class RecipesComponent {
   private recipeService: RecipeService = inject(RecipeService);
 
   protected imgURL = `${environment.baseImgURL}image/`;
-  protected readonly fieldModel = signal<string>('');
+  protected readonly fieldModel = signal<IRecipeSearch>(IRecipeSearchInit);
   protected searchForm = form(this.fieldModel);
+
+  sortOption(): void {
+      if (this.fieldModel().sortSelect === 't1') {
+        this.recipeListService.recipeSort.set({ sortOn: 'title', sortDir: 'asc' });
+        this.fieldModel().sort = { target: 'title', direction: 'asc' };
+      }
+      if (this.fieldModel().sortSelect === 't2') {
+        this.recipeListService.recipeSort.set({ sortOn: 'title', sortDir: 'desc' });
+        this.fieldModel().sort = { target: 'title', direction: 'desc' };
+      }
+      this.recipeListService.getRecipeList.set(Date.now());
+    }
 
   search(e: Event): void {
     e.preventDefault();
-    const terms = this.searchForm().value();
+    const terms = this.fieldModel().terms;
     if (terms !== null && terms !== undefined && terms.trim() !== '') {
       this.recipeListService.findRecipes.set(terms);
     }
   }
 
   reset(): void {
-    this.searchForm().value.set('');
+    this.fieldModel.set(IRecipeSearchInit);
     this.recipeListService.getRecipeList.set(Date.now());
   }
 

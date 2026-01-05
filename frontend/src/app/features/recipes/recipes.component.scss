@@ -27,6 +27,9 @@ h2 {
         b {
           margin-right: 0.5rem;
         }
+        & + label {
+          margin-left: 0.5rem;
+        }
       }
     }
   }

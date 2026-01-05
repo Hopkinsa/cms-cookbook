@@ -1,10 +1,17 @@
 import { IIngredients, IStep } from './';
 
-export interface ISearchResults {
-  total: number;
+export interface IRecipeSearch {
+  total?: number;
   page?: { offset: number; quantity: number };
+  sortSelect: string;
   sort?: { target: string; direction: string };
-  results: IRecipeList[];
+  terms: string;
+}
+
+export const IRecipeSearchInit: IRecipeSearch = {
+  sortSelect: 't1',
+  sort: { target: 'title', direction: 'asc' },
+  terms: '',
 }
 
 export interface IRecipeList {

@@ -1,7 +1,7 @@
 import { ICard, ITags, IUnit } from '../../model/data-model.ts';
-import { unitData } from './units.ts';
-import { tagData } from './tags.ts';
-import { recipeData } from './recipes.ts';
+// import { unitData } from './units.ts';
+//import { tagData } from './tags.ts';
+//import { recipeData } from './recipes.ts';
 
 export const TAG_TABLE = `
 CREATE TABLE IF NOT EXISTS tags (
@@ -28,9 +28,9 @@ CREATE TABLE IF NOT EXISTS recipe (
 `;
 
 let jsonCards = '';
-recipeData.forEach((recipe: ICard) => {
-  jsonCards += `( ${recipe.id}, ${recipe.card}),`;
-});
+//recipeData.forEach((recipe: ICard) => {
+//  jsonCards += `( ${recipe.id}, ${recipe.card}),`;
+//});
 
 export const RECIPE_DATA = `
 INSERT INTO "recipe" (
@@ -42,9 +42,9 @@ VALUES
 `;
 
 let jsonUnits = '';
-unitData.forEach((unit: IUnit) => {
-  jsonUnits += `( ${unit.id}, '${unit.title}', '${unit.unit}, '${unit.abbreviation}'),`;
-});
+//unitData.forEach((unit: IUnit) => {
+//  jsonUnits += `( ${unit.id}, '${unit.title}', '${unit.unit}, '${unit.abbreviation}'),`;
+//});
 
 export const UNIT_DATA = `
 INSERT INTO "units" (
@@ -58,9 +58,9 @@ VALUES
  `;
 
 let jsonTags = '';
-tagData.forEach((tag: ITags) => {
-  jsonTags += `( ${tag.id}, '${tag.type}', '${tag.tag}'),`;
-});
+//tagData.forEach((tag: ITags) => {
+//  jsonTags += `( ${tag.id}, '${tag.type}', '${tag.tag}'),`;
+//});
 
 export const TAG_DATA = `
 INSERT INTO "tags" (
