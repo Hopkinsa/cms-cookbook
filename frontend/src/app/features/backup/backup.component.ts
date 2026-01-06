@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,33 +19,33 @@ export class BackupComponent {
   private router: Router = inject(Router);
   protected signalService: SignalService = inject(SignalService);
   private backupService: BackupService = inject(BackupService);
-  protected enableBtn = true;
+  protected readonly enableBtn = signal(true);
 
   private initPage = effect(() => {
     this.signalService.canEdit();
   });
 
   backup(): void {
-    this.enableBtn = false;
+    this.enableBtn.set(false);
     this.backupService.backupDB().subscribe((res) => {
       if (res !== null && res !== undefined) {
         if ((res as unknown as crudResponse).completed) {
           this.signalService.feedbackMessage.set({ type: 'success', message: 'Database backed up' });
         }
       }
-      this.enableBtn = true;
+      this.enableBtn.set(true);
     });
   }
 
   restore(): void {
-    this.enableBtn = false;
+    this.enableBtn.set(false);
     this.backupService.restoreDB().subscribe((res) => {
       if (res !== null && res !== undefined) {
         if ((res as unknown as crudResponse).completed) {
           this.signalService.feedbackMessage.set({ type: 'success', message: 'Database restored' });
         }
       }
-      this.enableBtn = true;
+      this.enableBtn.set(true);
     });
   }
 

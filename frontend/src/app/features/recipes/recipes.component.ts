@@ -27,16 +27,17 @@ export class RecipesComponent {
   protected searchForm = form(this.fieldModel);
 
   sortOption(): void {
-      if (this.fieldModel().sortSelect === 't1') {
-        this.recipeListService.recipeSort.set({ sortOn: 'title', sortDir: 'asc' });
-        this.fieldModel().sort = { target: 'title', direction: 'asc' };
-      }
-      if (this.fieldModel().sortSelect === 't2') {
-        this.recipeListService.recipeSort.set({ sortOn: 'title', sortDir: 'desc' });
-        this.fieldModel().sort = { target: 'title', direction: 'desc' };
-      }
-      this.recipeListService.getRecipeList.set(Date.now());
+    let sortValue = { target: 'title', direction: 'asc' };
+    if (this.fieldModel().sortSelect === 't1') {
+      sortValue = { target: 'title', direction: 'asc' };
     }
+    if (this.fieldModel().sortSelect === 't2') {
+      sortValue = { target: 'title', direction: 'desc' };
+    }
+    this.recipeListService.recipeSort.set(sortValue);
+    this.fieldModel().sort = sortValue;
+    this.recipeListService.getRecipeList.set(Date.now());
+  }
 
   search(e: Event): void {
     e.preventDefault();
@@ -48,7 +49,7 @@ export class RecipesComponent {
 
   reset(): void {
     this.fieldModel.set(IRecipeSearchInit);
-    this.recipeListService.getRecipeList.set(Date.now());
+    this.recipeListService.findRecipes.set(null);
   }
 
   delete(id: number): void {

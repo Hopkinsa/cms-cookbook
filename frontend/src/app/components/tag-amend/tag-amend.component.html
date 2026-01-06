@@ -6,5 +6,5 @@
     <option value="cuisine">Cuisine</option>
   </select></label>
   <label><b>Tag:</b> <input type="text" [field]="tagForm.tag"></label>
-  <button matIconButton type="button" [disabled]="!enableSave" (click)="save($event)"><mat-icon>check_circle</mat-icon></button>
+  <button matIconButton type="button" [disabled]="!enableSave()" (click)="save($event)"><mat-icon>check_circle</mat-icon></button>
 </form>
