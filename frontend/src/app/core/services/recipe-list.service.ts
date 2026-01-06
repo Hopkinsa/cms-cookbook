@@ -6,8 +6,8 @@ import { SignalService } from '@server/core/services/signal.service';
 import { IRecipeList, ISearchResults } from '@server/core/interface/recipe.interface';
 
 interface ISortSignal {
-  sortOn: string;
-  sortDir: string;
+  target: string;
+  direction: string;
 }
 
 @Injectable({
@@ -18,14 +18,18 @@ export class RecipeListService {
   private apiUrl = environment.baseApiURL;
 
   // Signals only trigger if the new value is different to current value
-  // to get a recipe pass the recipe id by using getRecipe.set(<id>)
+  // to get the list of recipes pass a unique number to getRecipeList using getRecipeList.set(<number>)
+  // or a string to findRecipes using findRecipes.set(<string>)
+  // or an ISortSignal object to recipeSort using recipeSort.set(<ISortSignal>)
   readonly getRecipeList: WritableSignal<number | null> = signal(null);
   readonly findRecipes: WritableSignal<string | null> = signal(null);
-  readonly recipeSort: WritableSignal<ISortSignal> = signal({ sortOn: 'title', sortDir: 'asc' });
+  readonly recipeSort: WritableSignal<ISortSignal> = signal({ target: 'title', direction: 'asc' });
 
   private recipeListRequestResolved = effect(() => {
     if (this.recipeListRequest.status() === 'resolved') {
-      this.signalService.recipeList.set(this.recipeListRequest.value()?.results as IRecipeList[]);
+      const resolvedData = this.recipeListRequest.value();
+      this.signalService.recipeList.set(resolvedData?.results as IRecipeList[]);
+      this.signalService.recipesFound.set(resolvedData?.total as number);
     }
   });
 
@@ -38,8 +42,8 @@ export class RecipeListService {
   private recipeListRequest = httpResource<ISearchResults>(() => {
     const terms = this.findRecipes();
     const sorting = this.recipeSort();
-    const sortOn = sorting.sortOn;
-    const sortDir = sorting.sortDir;
+    const sortOn = sorting.target;
+    const sortDir = sorting.direction;
 
     let targetResource = `${this.apiUrl}recipes?t=${sortOn}&d=${sortDir}`;
     if (terms !== null && terms.trim() !== '') {

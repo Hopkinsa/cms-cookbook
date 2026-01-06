@@ -21,6 +21,7 @@ export class SignalService {
 
   // Signal that contains the Recipe List data
   readonly recipeList: WritableSignal<IRecipeList[] | null> = signal(null);
+  readonly recipesFound: WritableSignal<number | null> = signal(null);
 
   // Signals that contains the Recipe data
   readonly recipe: WritableSignal<IRecipe | null> = signal(null);

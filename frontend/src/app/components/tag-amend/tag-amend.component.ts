@@ -23,7 +23,7 @@ export class TagAmendComponent {
   protected tagService: TagService = inject(TagService);
   protected tagModel = signal<ITags>(tagsInitialState);
   protected tagForm = form(this.tagModel);
-  protected enableSave = true;
+  protected readonly enableSave = signal(true);
 
   private tagInit = effect(() => {
     // populate on change
@@ -56,7 +56,7 @@ export class TagAmendComponent {
       tag: tagText,
     };
     if (tagId === -1) {
-      this.enableSave = false;
+      this.enableSave.set(false);
       this.tagService.createTag(tagObj).subscribe((res) => {
         if (res !== null && res !== undefined) {
           if ((res as unknown as crudResponse).completed) {
@@ -64,11 +64,11 @@ export class TagAmendComponent {
           }
         }
         this.tagService.getTags.set(Date.now());
-        this.enableSave = true;
+        this.enableSave.set(true);
       });
     }
     if (tagId >= 0) {
-      this.enableSave = false;
+      this.enableSave.set(false);
       this.tagService.updateTag(tagId, tagObj).subscribe((res) => {
         if (res !== null && res !== undefined) {
           if ((res as unknown as crudResponse).completed) {
@@ -76,7 +76,7 @@ export class TagAmendComponent {
           }
         }
         this.tagService.getTags.set(Date.now());
-        this.enableSave = true;
+        this.enableSave.set(true);
       });
     }
   }

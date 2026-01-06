@@ -29,7 +29,7 @@ class DBRead {
   static prepParemeters(queryString: QueryString.ParsedQs): paramPrep {
     // default values if nothing passed in query string
     const response: paramPrep = {
-      sort: { target: 'title', direction: 'ASC' },
+      sort: { target: 'title', direction: 'asc' },
       page: { offset: 0, quantity: 0 },
       terms: '',
       total: 0,
@@ -46,7 +46,7 @@ class DBRead {
     }
     if (queryString.d) {
       // direction
-      const tmpDirection = (queryString.d as string).toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
+      const tmpDirection = (queryString.d as string).toLowerCase() === 'asc' ? 'asc' : 'desc';
       response.sort.direction = tmpDirection;
     }
 
@@ -104,7 +104,7 @@ class DBRead {
       res.status(422).json({ errors: errors.array() });
     } else {
       const param = DBRead.prepParemeters(req.query);
-      log.info_lv2(`${DEBUG}getRecipes - ${param.sort.target} ${param.sort.direction}`);
+      log.info_lv2(`${DEBUG}getRecipes - ${param.sort.target} ${param.sort.direction.toUpperCase()}`);
 
       let recipes: IRecipe[] | undefined;
       let resCode = 200;
@@ -122,7 +122,7 @@ class DBRead {
           log.error(`${DEBUG}getRecipes - Error: `, err.message);
         });
 
-      const dbData = await DBService.db.prepare(`${GET_RECIPES} ${param.sort.target} ${param.sort.direction}`);
+      const dbData = await DBService.db.prepare(`${GET_RECIPES} ${param.sort.target} ${param.sort.direction.toUpperCase()}`);
       await dbData
         .all()
         .then((data) => {
@@ -154,7 +154,7 @@ class DBRead {
       res.status(422).json({ errors: errors.array() });
     } else {
       const param = DBRead.prepParemeters(req.query);
-      log.info_lv2(`${DEBUG}findRecipes - ${param.sort.target} ${param.sort.direction}`);
+      log.info_lv2(`${DEBUG}findRecipes - ${param.sort.target} ${param.sort.direction.toUpperCase()}`);
       log.info_lv3(`${req.query.terms}`);
       let recipes: IRecipe[] | undefined;
       let resCode = 200;
@@ -172,7 +172,7 @@ class DBRead {
           log.error(`${DEBUG}getRecipes - Error: `, err.message);
         });
 
-      const dbData = await DBService.db.prepare(`${FIND_RECIPES} ${param.sort.target} ${param.sort.direction}`);
+      const dbData = await DBService.db.prepare(`${FIND_RECIPES} ${param.sort.target} ${param.sort.direction.toUpperCase()}`);
       await dbData
         .all(`%${param.terms}%`)
         .then((data) => {

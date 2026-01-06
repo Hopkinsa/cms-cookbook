@@ -58,7 +58,7 @@ export class AmendRecipeComponent {
 
   protected imgURL = `${environment.baseImgURL}image/`;
   protected signalService: SignalService = inject(SignalService);
-  protected enableSave = true;
+  protected readonly enableSave = signal(true);
   protected readonly recipeModel = signal<IRecipe>(recipeInitialState);
   protected recipeForm = form(this.recipeModel);
 
@@ -181,7 +181,7 @@ export class AmendRecipeComponent {
 
   save(): void {
     if (this.id >= 0) {
-      this.enableSave = false;
+      this.enableSave.set(false);
       this.signalService.recipe.set(this.recipeModel());
       this.recipeService.updateRecipe(this.id).subscribe((res) => {
         if (res !== null && res !== undefined) {
@@ -189,11 +189,11 @@ export class AmendRecipeComponent {
             this.signalService.feedbackMessage.set({ type: 'success', message: 'Recipe saved' });
           }
         }
-        this.enableSave = true;
+        this.enableSave.set(true);
       });
     }
     if (this.id === -1) {
-      this.enableSave = false;
+      this.enableSave.set(false);
       const data = this.recipeModel();
       this.recipeService.createRecipe(data).subscribe((res) => {
         if (res !== null && res !== undefined) {
@@ -201,7 +201,7 @@ export class AmendRecipeComponent {
             this.signalService.feedbackMessage.set({ type: 'success', message: 'Recipe added' });
           }
         }
-        this.enableSave = true;
+        this.enableSave.set(true);
       });
     }
   }
