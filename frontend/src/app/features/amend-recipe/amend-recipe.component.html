@@ -1,7 +1,17 @@
 <app-feedback />
+@if (id === -1) {
+<h1>Add Recipe</h1>
+  @if (!showImportField()) {
+    <button matIconButton type="button" (click)="showImport()"><mat-icon fontSet="material-icons-outlined">note_add</mat-icon></button>
+  }
+}
+@else {
 <h1>Amend Recipe</h1>
-
+}
 @if (signalService.recipe()) {
+  @if (id === -1 && showImportField()) {
+    <app-import-recipe (recipeImport)="importedRecipe($event)" />
+  }
 <form>
   <label><b>Title:</b> <input type="text" [field]="recipeForm.title"></label>
   <label class="label-textarea"><b>Description:</b> <textarea rows="5"
@@ -28,36 +38,35 @@
     <app-recipe-tag-amend [tag]="recipe_tag" (recipeTagChange)="tagUpdate($event, i)"
       (recipeTagRemove)="removeTag(i)" />
     }
-    <button matIconButton type="button" (click)="addTag()"><mat-icon>add_circle</mat-icon></button>
+    <button matIconButton type="button" (click)="addTag()"><mat-icon fontSet="material-icons-outlined">add_circle_outlined</mat-icon></button>
   </mat-chip-grid>
   <label><b>Ingredients:</b></label>
   <div cdkDropList class="drag-list" (cdkDropListDropped)="dropIngredient($event)">
     @for (recipe_ingredient of recipeForm.ingredients; track recipe_ingredient; let i = $index) {
     <div cdkDrag class="drag-box">
       <div *cdkDragPlaceholder class="drag-placeholder"></div>
-      <app-ingredient-amend [ingredient]="recipe_ingredient"
-        (ingredientChange)="ingredientUpdate($event, i)" />
-      <button matIconButton type="button" (click)="removeIngredient(i)"><mat-icon>delete</mat-icon></button>
+      <app-ingredient-amend [ingredient]="recipe_ingredient" (ingredientChange)="ingredientUpdate($event, i)" />
+      <button matIconButton type="button" (click)="removeIngredient(i)"><mat-icon fontSet="material-icons-outlined">delete</mat-icon></button>
     </div>
     }
     @empty {
     <p>There are no ingredients</p>
     }
   </div>
-  <button matIconButton type="button" (click)="addIngredient()"><mat-icon>add_circle</mat-icon></button>
+  <button matIconButton type="button" (click)="addIngredient()"><mat-icon fontSet="material-icons-outlined">add_circle_outlined</mat-icon></button>
   <label><b>Steps:</b></label>
   <div cdkDropList class="drag-list" (cdkDropListDropped)="dropStep($event)">
     @for (stepItem of recipeForm.steps; track stepItem; let i = $index) {
     <div cdkDrag class="drag-box">
       <div *cdkDragPlaceholder class="drag-placeholder"></div>
       <app-step-amend [step]="stepItem" (stepChange)="stepUpdate($event, i)" />
-      <button matIconButton type="button" (click)="removeStep(i)"><mat-icon>delete</mat-icon></button>
+      <button matIconButton type="button" (click)="removeStep(i)"><mat-icon fontSet="material-icons-outlined">delete</mat-icon></button>
     </div>
     } @empty {
     <p>There are no steps</p>
     }
   </div>
-  <button matIconButton type="button" (click)="addStep()"><mat-icon>add_circle</mat-icon></button>
+  <button matIconButton type="button" (click)="addStep()"><mat-icon fontSet="material-icons-outlined">add_circle_outlined</mat-icon></button>
 
   <label class="label-textarea"><b>Notes:</b> <textarea rows="5" [field]="recipeForm.notes"></textarea></label>
 

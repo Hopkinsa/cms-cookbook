@@ -2,10 +2,10 @@
   <input #fileUpload class="file-input" id="file-upload" title="file upload" type="file"
     (change)="onFileSelected($event)" />
   @if (variant === 'icon') {
-  <button matIconButton type="button" (click)="fileUpload.click()"><mat-icon>add_circle</mat-icon></button>
+  <button matIconButton type="button" (click)="fileUpload.click()"><mat-icon>upload_file</mat-icon></button>
   }
   @else {
-  <button matButton="tonal" type="button" (click)="fileUpload.click()">Choose file</button>
+  <button matIconButton type="button" (click)="fileUpload.click()"><mat-icon>upload_file</mat-icon></button>
   }
   @if (uploadProgress) {
   <div class="progress-container">
