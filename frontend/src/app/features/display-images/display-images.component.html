@@ -14,7 +14,7 @@
           <div class="image-box" style="background-image: url('{{ imgURL }}{{ image }}')"></div>
             @if (signalService.editEnabled()) {
               <div class="image-amend">
-                <button matIconButton type="button" (click)="delete(image)"><mat-icon>delete</mat-icon></button>
+                <button matIconButton type="button" (click)="delete(image)"><mat-icon fontSet="material-icons-outlined">delete</mat-icon></button>
               </div>
             }
           <div class="image-name">{{ image }}</div>

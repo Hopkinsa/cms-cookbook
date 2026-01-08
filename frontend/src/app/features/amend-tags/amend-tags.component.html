@@ -7,7 +7,7 @@
     @for (item of tags.value; track item) {
     <li>
       <app-tag-amend [tag]="item" />
-      <button matIconButton type="button" (click)="delete(item.id)"><mat-icon>delete</mat-icon></button>
+      <button matIconButton type="button" (click)="delete(item.id)"><mat-icon fontSet="material-icons-outlined">delete</mat-icon></button>
     </li>
     }
   </ul>

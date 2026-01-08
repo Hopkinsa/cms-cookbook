@@ -4,7 +4,7 @@
 
 @if (signalService.recipe()) {
 <div class="recipe-title">
-  <h2>{{ signalService.recipe()?.title }}</h2>
+  <h2>{{ recipeTitle() }}</h2>
   @if (signalService.editEnabled()) {
   <div class="recipe-amend">
     <button matIconButton type="button" (click)="amend()"><mat-icon>edit</mat-icon></button>
@@ -38,7 +38,7 @@
       <b>Cook time:</b> {{ signalService.recipe()?.cook_time | hoursMinutes }}
     </div>
     <div class="recipe-total">
-      <b>Total time:</b> {{ totalTime | hoursMinutes }}
+      <b>Total time:</b> {{ totalTime() | hoursMinutes }}
     </div>
   </div>
 </div>

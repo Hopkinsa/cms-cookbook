@@ -21,6 +21,7 @@ import {
   stepInitialState,
 } from '@server/core/interface';
 import { FeedbackComponent } from '@server/components/feedback/feedback.component';
+import { ImportRecipeComponent } from '@server/components/import-recipe/import-recipe.component';
 import { RecipeTagAmendComponent } from '@server/components/recipe-tag-amend/recipe-tag-amend.component';
 import { IngredientAmendComponent } from '@server/components/ingredient-amend/ingredient-amend.component';
 import { StepAmendComponent } from '@server/components/step-amend/step-amend.component';
@@ -42,6 +43,7 @@ import { ImageUploadComponent } from '@server/components/image-upload/image-uplo
     MatIconModule,
     MatProgressBarModule,
     FeedbackComponent,
+    ImportRecipeComponent,
     ImageSelectComponent,
     ImageUploadComponent,
     RecipeTagAmendComponent,
@@ -54,10 +56,11 @@ export class AmendRecipeComponent {
   private router: Router = inject(Router);
   private route: ActivatedRoute = inject(ActivatedRoute);
   private recipeService: RecipeService = inject(RecipeService);
-  private id = this.route.snapshot.data['id'];
+  protected id = this.route.snapshot.data['id'];
 
   protected imgURL = `${environment.baseImgURL}image/`;
   protected signalService: SignalService = inject(SignalService);
+  protected readonly showImportField = signal(false);
   protected readonly enableSave = signal(true);
   protected readonly recipeModel = signal<IRecipe>(recipeInitialState);
   protected recipeForm = form(this.recipeModel);
@@ -73,10 +76,18 @@ export class AmendRecipeComponent {
     }
   });
 
+  showImport(): void {
+    this.showImportField.set(true);
+  }
+
   imageSelected(imageName: string): void {
     const x = this.recipeModel() as IRecipe;
     this.recipeForm.img_url().value.set(imageName);
     this.signalService.recipe.set({ ...x, img_url: imageName });
+  }
+
+  importedRecipe(event: IRecipe): void {
+    this.signalService.recipe.set({ ...event });
   }
 
   addTag(): void {
@@ -152,7 +163,6 @@ export class AmendRecipeComponent {
   }
 
   stepUpdate(event: IStepUpdate, idx: number): void {
-    console.log(event);
     const x = this.recipeModel() as IRecipe;
     const y: IStep[] | undefined = x.steps?.slice();
     if (y !== undefined) {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, linkedSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -26,13 +26,20 @@ export class DisplayRecipeComponent {
   protected imgURL = `${environment.baseImgURL}image/`;
   protected imgPlaceholderURL = `${environment.baseImgURL}template/`;
   protected signalService: SignalService = inject(SignalService);
-  protected recipeTitle = '';
-  protected totalTime = 0;
+  protected readonly recipeTitle = computed(() => {
+    if (this.signalService.recipe()) {
+      this.title.setTitle(`${this.signalService.recipe()!.title} | Cookbook`);
+    }
+    return this.signalService.recipe()!.title || 'Unknown';
+  });
+  protected readonly totalTime = computed(() => {
+    if (this.signalService.recipe()) {
+      return this.signalService.recipe()!.prep_time + this.signalService.recipe()!.cook_time;
+    }
+    return;
+  });
 
   constructor() {
-    this.recipeTitle = this.signalService.recipe()!.title || 'Unknown';
-    this.title.setTitle(`${this.recipeTitle} | Cookbook`);
-    this.totalTime = +this.signalService.recipe()!.prep_time + +this.signalService.recipe()!.cook_time;
     this.signalService.recipeServes.set(this.signalService.recipe()!.serves as number);
   }
 

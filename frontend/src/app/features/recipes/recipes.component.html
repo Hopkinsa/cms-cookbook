@@ -40,7 +40,7 @@
       @if (signalService.editEnabled()) {
       <div class="recipe-amend">
         <button matIconButton type="button" (click)="amend(recipe.id)"><mat-icon>edit</mat-icon></button>
-        <button matIconButton type="button" (click)="delete(recipe.id)"><mat-icon>delete</mat-icon></button>
+        <button matIconButton type="button" (click)="delete(recipe.id)"><mat-icon fontSet="material-icons-outlined">delete</mat-icon></button>
       </div>
       }
       <div class="recipe-name"><a [routerLink]="['/recipe', recipe.id]">{{ recipe.title }}</a></div>
