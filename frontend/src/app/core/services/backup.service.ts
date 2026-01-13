@@ -14,11 +14,19 @@ export class BackupService {
   private error: ErrorHandlerService = inject(ErrorHandlerService);
   private apiUrl = environment.baseApiURL;
 
-
   backupDB(): Observable<any> {
     return this.http
-      .post<any>(`${this.apiUrl}backup`,'')
+      .get(`${this.apiUrl}backup`, { responseType: 'blob' })
       .pipe(catchError(this.error.handleError('backupDB', 'Unable to create backup', [])));
+  }
+
+  uploadFile(data: any): Observable<any> {
+    return this.http
+      .post<any>(`${this.apiUrl}restore`, data, {
+        reportProgress: true,
+        observe: 'events',
+      })
+      .pipe(catchError(this.error.handleError('uploadFile', 'Unable to upload file', [])));
   }
 
   restoreDB(): Observable<any> {

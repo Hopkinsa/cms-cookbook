@@ -10,6 +10,8 @@ import DBDelete from '../db-api/db-delete/db-delete.ts';
 import DBBackup from '../db-api/db-backup/db-backup.ts';
 import DBRestore from '../db-api/db-restore/db-restore.ts';
 
+import uploadZip from '../db-api/db-restore/multer.middleware.ts';
+
 export const API_ROUTES = Router();
 
 API_ROUTES.delete('/recipe/:id', DBDelete.deleteRecipe); // By id
@@ -29,8 +31,8 @@ API_ROUTES.post('/tags', tagBody, DBCreate.createTag);
 API_ROUTES.get('/tags/:id', DBRead.findTagByID); // By id
 API_ROUTES.get('/tags', DBRead.getTags);
 
-API_ROUTES.post('/restore', DBRestore.dbRestore);
-API_ROUTES.post('/backup', DBBackup.dbBackup);
+API_ROUTES.post('/restore', uploadZip.single('file'), DBRestore.dbRestore);
+API_ROUTES.get('/backup', DBBackup.dbBackup);
 
 // Catch-all
 API_ROUTES.get('/{*splat}', DefaultResponse.site_root);
