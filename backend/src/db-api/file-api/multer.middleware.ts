@@ -72,6 +72,6 @@ const fileFilter = (req: Express.Request, file: Express.Multer.File, cb: multer.
  * // In routes file:
  * router.post('/images/upload', upload.single('file'), uploadImageFileControler);
  */
-const upload = multer({ storage, fileFilter });
+const uploadImage = multer({ storage, fileFilter });
 
-export default upload;
+export default uploadImage;

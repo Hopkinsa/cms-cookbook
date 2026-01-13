@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import * as fs from 'fs';
+import AdmZip from 'adm-zip';
 
 import DBService from '../../services/db.service.ts';
 import { log } from '../../utility/helpers.ts';
@@ -18,18 +18,7 @@ import {
 
 const DEBUG = 'db-restore | ';
 
-const BACKUP_DIR = './backup';
-
 class DBRestore {
-  private static readFile = (what: string): any => {
-    let jsonData = null;
-    const data = fs.readFileSync(what, 'utf-8');
-    console.log(JSON.parse(data));
-    jsonData = JSON.parse(data);
-
-    return jsonData;
-  };
-
   private static createDatabase = async (): Promise<void> => {
     await DBService.db
       .run(TAG_TABLE)
@@ -68,34 +57,32 @@ class DBRestore {
     }
   };
 
-  private static populateDatabase = async (): Promise<void> => {
-    const unitData = DBRestore.readFile(`${BACKUP_DIR}/units.json`);
-    let jsonUnits = '';
-    unitData.forEach((unit: IUnit) => {
-      jsonUnits += `(${unit.id}, '${unit.title}', '${unit.unit}', '${unit.abbreviation}'),`;
-    });
-
-    const tagData = DBRestore.readFile(`${BACKUP_DIR}/tags.json`);
+  private static populateTagDatabase = async (tagData: ITags[]): Promise<void> => {
     let jsonTags = '';
     tagData.forEach((tag: ITags) => {
       jsonTags += `(${tag.id}, '${tag.type}', '${tag.tag}'),`;
     });
-
-    const recipeData = DBRestore.readFile(`${BACKUP_DIR}/recipes.json`);
-    let jsonCards = '';
-    recipeData.forEach((recipe: ICard) => {
-      jsonCards += `(${recipe.id}, '${recipe.card}'),`;
-    });
-
     await DBService.db
       .run(`${TAG_DATA} ${jsonTags.replace(/,$/, '')}`)
       .then(() => log.info_lv3(`${DEBUG}Tag data restored successfully`))
       .catch((err: Error) => log.error(`${DEBUG}Error adding Tag data: `, err.message));
+  };
 
+  private static populateUnitDatabase = async (unitData: IUnit[]): Promise<void> => {
+    let jsonUnits = '';
+    unitData.forEach((unit: IUnit) => {
+      jsonUnits += `(${unit.id}, '${unit.title}', '${unit.unit}', '${unit.abbreviation}'),`;
+    });
     await DBService.db
       .run(`${UNIT_DATA} ${jsonUnits.replace(/,$/, '')}`)
       .then(() => log.info_lv3(`${DEBUG}Unit data restored successfully`))
       .catch((err: Error) => log.error(`${DEBUG}Error adding Unit data: `, err.message));
+  };
+  private static populateRecipeDatabase = async (recipeData: ICard[]): Promise<void> => {
+    let jsonCards = '';
+    recipeData.forEach((recipe: ICard) => {
+      jsonCards += `(${recipe.id}, '${recipe.card}'),`;
+    });
 
     try {
       await DBService.db
@@ -107,18 +94,53 @@ class DBRestore {
     }
   };
 
-  static dbRestore = async (req: Request, res: Response): Promise<void> => {
-    let resCode = 200;
-    let resMessage: IResponse = { completed: true };
+  static dbProcessUpload = async (req: Request): Promise<boolean> => {
     log.info_lv2(`${DEBUG}dbRestore`);
-    if (!fs.existsSync(BACKUP_DIR)) {
-      log.info_lv2(`${DEBUG}Database backup folder does not exist.`);
-      resCode = 404;
-      resMessage = { completed: false };
-    } else {
+
+    const zip = new AdmZip(req.file?.buffer);
+    const zipEntries = zip.getEntries();
+    if (zipEntries.length === 3) {
       await DBRestore.createDatabase();
       await DBRestore.truncateDatabase();
-      await DBRestore.populateDatabase();
+
+      zipEntries.forEach(async (zipEntry) => {
+        if (zipEntry.name === 'tags.json') {
+          const tagData = JSON.parse(zipEntry.getData().toString('utf8'));
+          await DBRestore.populateTagDatabase(tagData);
+        }
+        if (zipEntry.name === 'units.json') {
+          const unitData = JSON.parse(zipEntry.getData().toString('utf8'));
+          await DBRestore.populateUnitDatabase(unitData);
+        }
+        if (zipEntry.name === 'recipes.json') {
+          const recipeData = JSON.parse(zipEntry.getData().toString('utf8'));
+          await DBRestore.populateRecipeDatabase(recipeData);
+        }
+      });
+      return true;
+    }
+
+    return false;
+  };
+
+  static dbRestore = async (req: Request, res: Response): Promise<void> => {
+    const file: string = !req.file ? 'No File' : req.file?.originalname;
+    log.info_lv2(`${DEBUG}dbRestore: ${file}`);
+    let ok = true;
+    let resCode = 200;
+    let resMessage: IResponse = { completed: true };
+
+    if (!req.file) {
+      ok = false;
+    } else {
+      ok = await DBRestore.dbProcessUpload(req);
+    }
+    if (ok) {
+      resCode = 200;
+      resMessage = { completed: true };
+    } else {
+      resCode = 400;
+      resMessage = { completed: false };
     }
     res.status(resCode).json(resMessage);
   };
