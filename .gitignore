@@ -67,6 +67,8 @@ backend/data/*
 backend/backup/*
 backend/images/uploaded/*
 !backend/images/uploaded/barabrith.jpeg
+!backend/images/uploaded/barabrith-Icon.jpeg
+!backend/images/uploaded/barabrith-Banner.jpeg
 
 # OS Specific
 .DS_Store

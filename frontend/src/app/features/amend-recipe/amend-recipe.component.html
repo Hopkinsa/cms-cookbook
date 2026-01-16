@@ -73,8 +73,8 @@
 </form>
 
 <div class="row">
-  <button matButton="filled" [disabled]="!enableSave()" (click)="save()">Save</button>
-  <button matButton="filled" (click)="back()">Back</button>
+  <button matButton="filled" type="button" [disabled]="!enableSave()" (click)="save()">Save</button>
+  <button matButton="filled" type="button" (click)="back()">Back</button>
 </div>
 }
 @else {
@@ -82,6 +82,6 @@
   <p>No recipe found</p>
 </div>
 <div class="row">
-  <button matButton="filled" (click)="back()">Back</button>
+  <button matButton="filled" type="button" (click)="back()">Back</button>
 </div>
 }
