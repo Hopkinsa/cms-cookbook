@@ -31,7 +31,7 @@
     <div class="recipe">
       <a [routerLink]="['/recipe', recipe.id]">
         @if (recipe.img_url !== '') {
-        <div class="recipe-img" style="background-image: url('{{imgURL}}{{recipe.img_url}}')"></div>
+        <div class="recipe-img" style="background-image: url('{{icon(recipe.img_url)}}')"></div>
         }
         @else {
         <div class="recipe-img recipe-img-blank"></div>

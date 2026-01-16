@@ -13,7 +13,7 @@
 </div>
 
 @if (signalService.recipe()?.img_url !== '') {
-<div class="recipe-banner" style="background-image: url('{{imgURL}}{{signalService.recipe()?.img_url}}')"></div>
+<div class="recipe-banner" style="background-image: url('{{banner()}}')"></div>
 }
 @else {
 <div class="recipe-banner" style="background-image: url('{{imgPlaceholderURL}}spice.jpg')"></div>

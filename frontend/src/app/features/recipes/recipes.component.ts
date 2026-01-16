@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,6 +7,7 @@ import { environment } from 'src/environment/environment';
 
 import { RecipeListService, RecipeService, SignalService } from '@server/core/services';
 import { IRecipeSearch, IRecipeSearchInit } from '@server/core/interface';
+import { generateFilename } from '@server/shared/helper/filename.helper';
 
 @Component({
   selector: 'app-recipes',
@@ -25,6 +26,11 @@ export class RecipesComponent {
   protected imgURL = `${environment.baseImgURL}image/`;
   protected readonly fieldModel = signal<IRecipeSearch>(IRecipeSearchInit);
   protected searchForm = form(this.fieldModel);
+
+  icon(img_url: string): string {
+    const imgNames = generateFilename(img_url);
+    return this.imgURL + imgNames.icon;
+  }
 
   sortOption(): void {
     let sortValue = { target: 'title', direction: 'asc' };

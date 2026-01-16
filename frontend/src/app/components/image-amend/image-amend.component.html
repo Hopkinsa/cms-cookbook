@@ -1,0 +1,97 @@
+<div class="row">
+    <div class="column">
+        <div class="options">
+            <div class="preview">
+                <p>Preview</p>
+                <div class="optWrapper">
+                    <div class="previewImage"></div>
+                </div>
+            </div>
+            <div class="target">
+                <p>Image</p>
+                <div class="optWrapper">
+                    <form>
+                        <label>
+                            <input type="radio" value="icon" [field]="formTarget.targetImage" /> Icon
+                        </label>
+                        <label>
+                            <input type="radio" value="banner" [field]="formTarget.targetImage" /> Bannner
+                        </label>
+                    </form>
+                </div>
+            </div>
+            <div class="zoom">
+                <p>Zoom</p>
+                <div class="optWrapper">
+                    <button matIconButton type="button" (click)="zoomIn()">
+                        <mat-icon>zoom_in</mat-icon>
+                    </button>
+                    <button matIconButton type="button" (click)="zoomOut()">
+                        <mat-icon>zoom_out</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="rotate">
+                <p>Rotate</p>
+                <div class="optWrapper">
+                    <button matIconButton type="button" (click)="rotateLeft()">
+                        <mat-icon>rotate_left</mat-icon>
+                    </button>
+                    <button matIconButton type="button" (click)="rotateRight()">
+                        <mat-icon>rotate_right</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="flip">
+                <p>Flip</p>
+                <div class="optWrapper">
+                    <button matIconButton type="button" (click)="flipH()">
+                        <mat-icon>flip</mat-icon>
+                    </button>
+                    <button matIconButton type="button" (click)="flipV()">
+                        <mat-icon class="rotate-icon">flip</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="aspectRatio">
+                <p>Aspect Ratio</p>
+                <div class="optWrapper">
+                    <button class="optionBtnSqr" type="button" (click)="aspectRatio(0)">16:9</button>
+                    <button class="optionBtnSqr" type="button" (click)="aspectRatio(1)">4:3</button>
+                    <button class="optionBtnSqr" type="button" (click)="aspectRatio(2)">1:1</button><br />
+                    <button class="optionBtnSqr" type="button" (click)="aspectRatio(3)">Free</button>
+                    <button class="optionBtnSqr" type="button" (click)="aspectRatio(4)">Icon</button>
+                    <button class="optionBtnSqr" type="button" (click)="aspectRatio(5)">Hero</button>
+                </div>
+            </div>
+            <div class="dragMode">
+                <p>Mode</p>
+                <div class="optWrapper">
+                    <button matIconButton type="button" (click)="selectBox()">
+                        <mat-icon>crop_free</mat-icon>
+                    </button>
+                    <button matIconButton type="button" (click)="drag()">
+                        <mat-icon>image</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="controlCropper">
+                <p>Control Cropper</p>
+                <div class="optWrapper">
+                    <button matIconButton type="button" (click)="reset()">
+                        <mat-icon>replay</mat-icon>
+                    </button>
+                    <button matIconButton type="button" (click)="apply()">
+                        <mat-icon>check</mat-icon>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="column">
+        <div class="image-container">
+            <img #image alt="" />
+        </div>
+    </div>
+</div>
