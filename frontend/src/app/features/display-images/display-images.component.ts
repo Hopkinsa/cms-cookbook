@@ -24,6 +24,10 @@ export class DisplayImagesComponent {
   protected fileService: FileService = inject(FileService);
   protected signalService: SignalService = inject(SignalService);
 
+  amend(imageName: string): void {
+    this.router.navigate(['/images', imageName]);
+  }
+
   delete(imageName: string): void {
     if (imageName !== '') {
       this.fileService.deleteImage(imageName).subscribe((res) => {
