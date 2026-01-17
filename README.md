@@ -6,6 +6,17 @@ The backend was created to demonstrate creating APIs, validating and sanitizing 
 
 The frontend was created to demonstrate the use of Signals in templates, change detection, forms and HTTP requests.
 
+The following Angular Signals are used:
+
+- signal
+- effect
+- computed
+- httpResource
+- viewChild
+- input
+- output
+- form
+
 ## To install
 
 From the repository root, change to the `frontend` directory or `backend` directory.

@@ -111,6 +111,12 @@ export const routes: Routes = [
           imagesResolver,
         },
       },
+      {
+        path: 'images/:name',
+        title: 'Amend Image | Cookbook',
+        loadComponent: () =>
+          import('./features/amend-image/amend-image.component').then((m) => m.AmendImageComponent),
+      },
     ],
   },
 ];

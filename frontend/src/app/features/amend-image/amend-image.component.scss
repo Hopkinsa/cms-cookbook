@@ -1,0 +1,19 @@
+h1 {
+  display: inline-block;
+}
+h1 + h2 {
+  margin-left: 1rem;
+}
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.column {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: flex-start;
+  justify-content: center;
+}

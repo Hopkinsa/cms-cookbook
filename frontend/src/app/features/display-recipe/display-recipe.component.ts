@@ -10,6 +10,7 @@ import { HoursMinutesPipe } from '@server/shared/pipes';
 import { IngredientsComponent } from '@server/components/ingredients/ingredients.component';
 import { StepsComponent } from '@server/components/steps/steps.component';
 import { Title } from '@angular/platform-browser';
+import { generateFilename } from '@server/shared/helper/filename.helper';
 
 @Component({
   selector: 'app-display-recipe',
@@ -35,6 +36,14 @@ export class DisplayRecipeComponent {
   protected readonly totalTime = computed(() => {
     if (this.signalService.recipe()) {
       return this.signalService.recipe()!.prep_time + this.signalService.recipe()!.cook_time;
+    }
+    return;
+  });
+
+  protected readonly banner = computed(() => {
+    if (this.signalService.recipe()) {
+      const imgNames = generateFilename(this.signalService.recipe()!.img_url);
+      return this.imgURL + imgNames.banner;
     }
     return;
   });
