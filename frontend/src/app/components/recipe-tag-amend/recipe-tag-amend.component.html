@@ -1,0 +1,29 @@
+<form>
+  @if (tagForm.tag().value() !== '') {
+  <mat-chip-row (removed)="remove()">{{ tagForm.tag().value() }}
+    <button matChipRemove type="button">
+      <mat-icon>cancel</mat-icon>
+    </button>
+  </mat-chip-row>
+  }
+  @else {
+  <select title="Tags" [field]="tagForm.tag">
+    <option value="">Select a unit</option>
+    @for (tags of signalService.tags() | groupBy:'type' | keyvalue; track tags.key) {
+    <optgroup [label]="$any(tags.key) | titlecase">
+
+      @for (item of tags.value; track item) {
+      <option [value]="item.tag">{{ item.tag }}</option>
+      }
+    </optgroup>
+    }
+    @empty {
+    <div class="text-row">
+      <div class="text-block">
+        There are no tags
+      </div>
+    </div>
+    }
+  </select>
+  }
+</form>

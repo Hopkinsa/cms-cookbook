@@ -1,0 +1,15 @@
+<div class="link-bar">
+  @if (signalService.editEnabled()) {
+  <ul>
+    <li><a routerLink="/tags">Tags</a></li>
+    <li><a routerLink="/images">Images</a></li>
+    <li><a routerLink="/units">Units</a></li>
+    <li><a routerLink="/backup">Backup</a></li>
+  </ul>
+  }
+  @else {
+  <span class="pad"></span>
+  }
+</div>
+<div class="banner" style="background-image: url('{{ imgURL }}spice.jpg');"></div>
+<div class="entry"><a matButton="filled" routerLink="/recipes">Recipes</a></div>

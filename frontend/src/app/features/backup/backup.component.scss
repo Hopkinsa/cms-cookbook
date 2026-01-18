@@ -1,0 +1,51 @@
+h1 {
+  display: inline-block;
+}
+h1 + a {
+  margin-left: 1rem;
+}
+h2 {
+  text-transform: capitalize;
+}
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.options {
+  justify-content: center;
+}
+button + button {
+  margin-left: 2rem;
+}
+
+.file-upload-container-margin {
+  margin-left: 1rem;
+}
+
+.file-upload-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  /* Hide the default file input */
+  .file-input {
+    display: none;
+  }
+
+  /* Progress container */
+  .progress-container {
+    margin-left: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .progress-bar {
+      width: 10rem;
+    }
+    .progress-text {
+      margin-left: 1rem;
+      font-size: 1.3rem;
+      font-weight: 500;
+    }
+  }
+}

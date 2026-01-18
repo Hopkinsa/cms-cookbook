@@ -1,0 +1,18 @@
+h2 {
+  text-transform: capitalize;
+}
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+.column {
+  display: flex;
+  flex-direction: column;
+  margin-right: 2rem;
+
+  ul {
+    margin-left: 0;
+    padding-left: 1rem;
+  }
+}

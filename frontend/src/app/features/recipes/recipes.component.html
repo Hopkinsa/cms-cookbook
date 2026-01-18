@@ -1,0 +1,58 @@
+<div class="row">
+  <h1>Recipes</h1>
+  @if (signalService.editEnabled()) {
+  <a matButton="tonal" routerLink="/recipe/add">Add</a>
+  }
+</div>
+<div class="row result-top">
+  <div class="row info-bar">
+    @if (signalService.recipeList()) {
+    <b>Recipes:</b> {{ signalService.recipesFound() }}
+    }
+  </div>
+  <div class="row search-bar">
+    <form (submit)="search($event)">
+      <label><b>Order by:</b>
+        <select title="Sort" [field]="searchForm.sortSelect" (change)="sortOption()">
+          <option value="t1">Title (A - Z)</option>
+          <option value="t2">Title (Z - A)</option>
+        </select>
+      </label>
+      <label><b>Search:</b><input type="text" [field]="searchForm.terms"></label><button matIconButton type="button"
+        (click)="search($event)"><mat-icon>search</mat-icon></button>
+      <button matIconButton type="button" (click)="reset()"><mat-icon>close_small</mat-icon></button>
+    </form>
+  </div>
+</div>
+<div class="row">
+  @if (signalService.recipeList()) {
+  <div class="column">
+    @for (recipe of signalService.recipeList(); track recipe.id) {
+    <div class="recipe">
+      <a [routerLink]="['/recipe', recipe.id]">
+        @if (recipe.img_url !== '') {
+        <div class="recipe-img" style="background-image: url('{{icon(recipe.img_url)}}')"></div>
+        }
+        @else {
+        <div class="recipe-img recipe-img-blank"></div>
+        }
+      </a>
+      @if (signalService.editEnabled()) {
+      <div class="recipe-amend">
+        <button matIconButton type="button" (click)="amend(recipe.id)"><mat-icon>edit</mat-icon></button>
+        <button matIconButton type="button" (click)="delete(recipe.id)"><mat-icon fontSet="material-icons-outlined">delete</mat-icon></button>
+      </div>
+      }
+      <div class="recipe-name"><a [routerLink]="['/recipe', recipe.id]">{{ recipe.title }}</a></div>
+
+    </div>
+    }
+  </div>
+  }
+  @else {
+  <p>No recipes found</p>
+  }
+</div>
+<div class="row">
+  <button matButton="filled" type="button" (click)="back()">Back</button>
+</div>

@@ -1,0 +1,27 @@
+.sr-only:not(:focus):not(:active) {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+label {
+  display: inline-block;
+  margin: 0.25rem 0.5rem 0.25rem 0;
+  & + label {
+    margin-left: 1.5rem;
+  }
+  & b {
+    margin-right: 1rem;
+  }
+}
+input {
+  display: inline-block;
+  margin-right: 0.5rem;
+
+  &[type='text'] {
+    width: 15rem;
+  }
+}

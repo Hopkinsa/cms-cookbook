@@ -1,0 +1,40 @@
+.sr-only:not(:focus):not(:active) {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+form {
+    display: flex;
+    margin: 0;
+    margin-bottom: 1rem;
+    align-items: flex-end;
+    flex-direction: row;
+}
+label {
+  margin: 0;
+  margin-right: 0.5rem;
+  width: auto;
+  display: inline-block;
+  & b {
+    display: inline-block;
+    width: 6rem;
+  }
+}
+.label-textarea {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+textarea {
+  width: 21rem;
+}
+
+button {
+  display: inline-block;
+  margin-left: 0.5rem;
+}

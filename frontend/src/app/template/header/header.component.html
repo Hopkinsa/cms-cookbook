@@ -1,0 +1,14 @@
+<header>
+  <a class="logo" href="/">
+    <img alt="Cookbook" decoding="async" height="75" ngSrc="{{ imgURL }}logo.svg" width="75">
+  </a>
+  <h1>Cookbook</h1>
+  <button class="lock" matIconButton type="button" (click)="toggleEdit()">
+    @if(signalService.editEnabled()) {
+      <mat-icon>lock_open</mat-icon>
+    }
+    @else {
+      <mat-icon>lock</mat-icon>
+    }
+  </button>
+</header>

@@ -1,0 +1,78 @@
+<div class="recipe-heading">
+  <h1>Recipe</h1>
+</div>
+
+@if (signalService.recipe()) {
+<div class="recipe-title">
+  <h2>{{ recipeTitle() }}</h2>
+  @if (signalService.editEnabled()) {
+  <div class="recipe-amend">
+    <button matIconButton type="button" (click)="amend()"><mat-icon>edit</mat-icon></button>
+  </div>
+  }
+</div>
+
+@if (signalService.recipe()?.img_url !== '') {
+<div class="recipe-banner" style="background-image: url('{{banner()}}')"></div>
+}
+@else {
+<div class="recipe-banner" style="background-image: url('{{imgPlaceholderURL}}spice.jpg')"></div>
+}
+
+<div class="recipe-description">
+  {{ signalService.recipe()?.description }}
+</div>
+
+<div class="recipe-info">
+  <div class="recipe-serve">
+    <b>Serves:</b> {{ signalService.recipeServes() }}
+    <button matIconButton type="button" (click)="servingUp()"><mat-icon>keyboard_arrow_up</mat-icon></button>
+    <button matIconButton type="button" (click)="servingDown()"><mat-icon>keyboard_arrow_down</mat-icon></button>
+
+  </div>
+  <div class="recipe-time">
+    <div class="recipe-prep">
+      <b>Prep time:</b> {{ signalService.recipe()?.prep_time | hoursMinutes }}
+    </div>
+    <div class="recipe-cook">
+      <b>Cook time:</b> {{ signalService.recipe()?.cook_time | hoursMinutes }}
+    </div>
+    <div class="recipe-total">
+      <b>Total time:</b> {{ totalTime() | hoursMinutes }}
+    </div>
+  </div>
+</div>
+
+<div class="recipe-tags">
+  <mat-chip-set>
+    @for (recipe_tag of signalService.recipe()?.tags; track i; let i = $index) {
+    <mat-chip>{{ recipe_tag }}</mat-chip>
+    }
+  </mat-chip-set>
+</div>
+
+<div class="recipe-ingredients">
+  <b>Ingredients:</b>
+  <app-ingredients />
+</div>
+
+<div class="recipe-steps">
+  <b>Steps:</b>
+  <app-steps />
+</div>
+
+@if (signalService.recipe()?.notes !== ''){
+<div class="recipe-notes">
+  <b>Notes:</b>
+  {{ signalService.recipe()?.notes }}
+</div>
+}
+}
+@else {
+<div class="row">
+  <p>No recipe found</p>
+</div>
+}
+<div class="row">
+  <button matButton="filled" type="button" (click)="back()">Back</button>
+</div>

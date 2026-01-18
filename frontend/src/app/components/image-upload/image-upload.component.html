@@ -1,0 +1,16 @@
+<div class="file-upload-container" [class.file-upload-container-margin]="variant !== 'icon'">
+  <input #fileUpload class="file-input" id="file-upload" title="file upload" type="file"
+    (change)="onFileSelected($event)" />
+  @if (variant === 'icon') {
+  <button matIconButton type="button" (click)="fileUpload.click()"><mat-icon>upload_file</mat-icon></button>
+  }
+  @else {
+  <button matIconButton type="button" (click)="fileUpload.click()"><mat-icon>upload_file</mat-icon></button>
+  }
+  @if (uploadProgress) {
+  <div class="progress-container">
+    <mat-progress-bar class="progress-bar" mode="determinate" [value]="uploadProgress" />
+    <div class="progress-text">{{ uploadProgress }}%</div>
+  </div>
+  }
+</div>

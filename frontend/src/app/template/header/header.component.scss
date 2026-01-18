@@ -1,0 +1,28 @@
+header {
+  display: flex;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+
+  a.logo {
+    display: inline-flex;
+    text-decoration: none;
+    margin-right: 1rem;
+  }
+
+  h1 {
+    display: inline-flex;
+    width: auto;
+    height: auto;
+    font-size: 1.8em;
+    font-weight: 800;
+  }
+
+  .lock {
+    position: absolute;
+    display: inline-flex;
+    right: 1rem;
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "cms-cookbook",
+  "description": "Content management system cookbook",
+  "license": "ISC",
+  "author": "Andy Hopkins",
+  "version": "1.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "npm run start --prefix ./frontend & npm run start:dev --prefix ./backend"
+  },
+  "private": true
+}

@@ -1,0 +1,26 @@
+.step-title {
+  margin-top: 1rem;
+  margin-left: 1rem;
+  font-weight: 600;
+
+  & + .step-line {
+    counter-reset: stepnum;
+  }
+}
+.step-line {
+  margin-left: 2.5rem;
+  margin-top: 1rem;
+  display: list-item;
+  list-style-type: decimal;
+  counter-increment: stepnum;
+
+  &::marker {
+    content: counter(stepnum) '. ';
+    position: absolute;
+    display: inline-flex;
+    width: auto;
+    font-weight: 600;
+    font-size: 1.4em;
+    color: #cccccc;
+  }
+}

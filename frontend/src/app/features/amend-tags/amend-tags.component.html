@@ -1,0 +1,20 @@
+<app-feedback />
+<h1>Category Tags</h1>
+<form>
+  @for (tags of tagModel() | groupBy:'type' | keyvalue; track tags.key) {
+  <h2>{{ tags.key | removeChar:'|':''}}</h2>
+  <ul>
+    @for (item of tags.value; track item) {
+    <li>
+      <app-tag-amend [tag]="item" />
+      <button matIconButton type="button" (click)="delete(item.id)"><mat-icon fontSet="material-icons-outlined">delete</mat-icon></button>
+    </li>
+    }
+  </ul>
+  }
+  @empty {
+    <p>No categories found</p>
+  }
+  <button matButton="tonal" type="button" (click)="addTag()">Add tag</button>
+  <button matButton="filled" type="button" (click)="back()">Back</button>
+</form>

@@ -1,0 +1,26 @@
+<div class="row">
+  <h1>Categories and Tags</h1>
+  @if (signalService.editEnabled()) {
+  <a matButton="tonal" routerLink="/amend-tags">Amend</a>
+  }
+</div>
+<div class="row row__top">
+  @if (signalService.tags()) {
+  @for (tags of signalService.tags() | groupBy:'type' | keyvalue; track tags.key) {
+  <div class="column">
+    <h2>{{ tags.key }}</h2>
+    <ul>
+      @for (item of tags.value; track item) {
+      <li>{{ item.tag }}</li>
+      }
+    </ul>
+  </div>
+  }
+  }
+  @else {
+  <p>No categories found</p>
+  }
+</div>
+<div class="row">
+  <button matButton="filled" type="button" (click)="back()">Back</button>
+</div>

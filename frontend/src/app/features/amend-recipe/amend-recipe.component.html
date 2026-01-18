@@ -1,0 +1,87 @@
+<app-feedback />
+@if (id === -1) {
+<h1>Add Recipe</h1>
+  @if (!showImportField()) {
+    <button matIconButton type="button" (click)="showImport()"><mat-icon fontSet="material-icons-outlined">note_add</mat-icon></button>
+  }
+}
+@else {
+<h1>Amend Recipe</h1>
+}
+@if (signalService.recipe()) {
+  @if (id === -1 && showImportField()) {
+    <app-import-recipe (recipeImport)="importedRecipe($event)" />
+  }
+<form>
+  <label><b>Title:</b> <input type="text" [field]="recipeForm.title"></label>
+  <label class="label-textarea"><b>Description:</b> <textarea rows="5"
+      [field]="recipeForm.description"></textarea></label>
+  <label><b>Image:</b></label>
+  <div class="image-select">
+    <div class="image-preview-container">
+      @if(recipeForm.img_url().value() !== "") {
+      <div class="image-preview" style="background-image: url('{{imgURL}}{{ recipeForm.img_url().value() }}')"></div>
+      }
+    </div>
+    <div class="image-select-options">
+      <app-image-select [formField]="recipeForm.img_url" (fieldChange)="imageSelected($event)" />
+      <app-image-upload [variant]="'icon'" (fileUploaded)="imageSelected($event)" />
+    </div>
+  </div>
+
+  <label><b>Prep time:</b> <input type="number" [field]="recipeForm.prep_time"></label>
+  <label><b>Cook time:</b> <input type="number" [field]="recipeForm.cook_time"></label>
+  <label><b>Serves:</b> <input type="number" [field]="recipeForm.serves"></label>
+  <label><b>Categories:</b></label>
+  <mat-chip-grid>
+    @for (recipe_tag of recipeForm.tags; track recipe_tag; let i = $index) {
+    <app-recipe-tag-amend [tag]="recipe_tag" (recipeTagChange)="tagUpdate($event, i)"
+      (recipeTagRemove)="removeTag(i)" />
+    }
+    <button matIconButton type="button" (click)="addTag()"><mat-icon fontSet="material-icons-outlined">add_circle_outlined</mat-icon></button>
+  </mat-chip-grid>
+  <label><b>Ingredients:</b></label>
+  <div cdkDropList class="drag-list" (cdkDropListDropped)="dropIngredient($event)">
+    @for (recipe_ingredient of recipeForm.ingredients; track recipe_ingredient; let i = $index) {
+    <div cdkDrag class="drag-box">
+      <div *cdkDragPlaceholder class="drag-placeholder"></div>
+      <app-ingredient-amend [ingredient]="recipe_ingredient" (ingredientChange)="ingredientUpdate($event, i)" />
+      <button matIconButton type="button" (click)="removeIngredient(i)"><mat-icon fontSet="material-icons-outlined">delete</mat-icon></button>
+    </div>
+    }
+    @empty {
+    <p>There are no ingredients</p>
+    }
+  </div>
+  <button matIconButton type="button" (click)="addIngredient()"><mat-icon fontSet="material-icons-outlined">add_circle_outlined</mat-icon></button>
+  <label><b>Steps:</b></label>
+  <div cdkDropList class="drag-list" (cdkDropListDropped)="dropStep($event)">
+    @for (stepItem of recipeForm.steps; track stepItem; let i = $index) {
+    <div cdkDrag class="drag-box">
+      <div *cdkDragPlaceholder class="drag-placeholder"></div>
+      <app-step-amend [step]="stepItem" (stepChange)="stepUpdate($event, i)" />
+      <button matIconButton type="button" (click)="removeStep(i)"><mat-icon fontSet="material-icons-outlined">delete</mat-icon></button>
+    </div>
+    } @empty {
+    <p>There are no steps</p>
+    }
+  </div>
+  <button matIconButton type="button" (click)="addStep()"><mat-icon fontSet="material-icons-outlined">add_circle_outlined</mat-icon></button>
+
+  <label class="label-textarea"><b>Notes:</b> <textarea rows="5" [field]="recipeForm.notes"></textarea></label>
+
+</form>
+
+<div class="row">
+  <button matButton="filled" type="button" [disabled]="!enableSave()" (click)="save()">Save</button>
+  <button matButton="filled" type="button" (click)="back()">Back</button>
+</div>
+}
+@else {
+<div class="row">
+  <p>No recipe found</p>
+</div>
+<div class="row">
+  <button matButton="filled" type="button" (click)="back()">Back</button>
+</div>
+}
