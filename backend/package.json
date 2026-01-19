@@ -9,9 +9,10 @@
     "start:dev": "nodemon --config nodemon.json",
     "build": "rm -rf ./build && tsc",
     "start": "rm -rf ./build && tsc && node build/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "style": "prettier 'src/**/*.{ts, json}' --write",
-    "lint": "npx eslint"
+    "lint": "npx eslint",
+    "test": "jest",
+    "test:report": "jest --coverage"
   },
   "dependencies": {
     "adm-zip": "^0.5.16",
@@ -29,14 +30,19 @@
     "@types/adm-zip": "^0.5.7",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
     "@types/multer": "^2.0.0",
     "@types/node": "^25.0.2",
     "@types/socket.io": "^3.0.2",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
+    "jsdom": "^27.4.0",
     "nodemon": "^3.1.11",
     "prettier": "^3.7.4",
+    "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.50.0"

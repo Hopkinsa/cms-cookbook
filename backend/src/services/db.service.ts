@@ -24,11 +24,11 @@ class DBService {
   static connectToDatabase = async (): Promise<void> => {
     if (!fs.existsSync(pathToDB)) {
       this.newDB = true;
-    if (!fs.existsSync(dbFolder)) {
-      log.info_lv2(`${DEBUG}Database folder does not exist.`);
-      fs.mkdirSync(dbFolder);
-      log.info_lv2(`${DEBUG}Database folder created at '${dbFolder}'.`);
-    }
+      if (!fs.existsSync(dbFolder)) {
+        log.info_lv2(`${DEBUG}Database folder does not exist.`);
+        fs.mkdirSync(dbFolder);
+        log.info_lv2(`${DEBUG}Database folder created at '${dbFolder}'.`);
+      }
     }
     this.db = await this.openDatabase();
     if (this.newDB) {
