@@ -4,7 +4,7 @@ import { recipeListResolver } from './recipe-list.resolver';
 
 describe('recipeListResolver', () => {
   it('sets getRecipeList and does not throw', () => {
-    const getRecipeList: any = (() => null);
+    const getRecipeList: any = () => null;
     getRecipeList.set = jest.fn();
     const svc = { getRecipeList } as any;
     TestBed.configureTestingModule({ providers: [{ provide: RecipeListService, useValue: svc }] });

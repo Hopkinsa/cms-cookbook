@@ -24,8 +24,8 @@ export class DisplayRecipeComponent {
   private title: Title = inject(Title);
   private router: Router = inject(Router);
 
-  protected imgURL = `${environment.baseImgURL}image/`;
-  protected imgPlaceholderURL = `${environment.baseImgURL}template/`;
+  protected imgURL = `${environment.baseImgURL}`;
+  protected imgPlaceholderURL = `${environment.baseTemplateURL}`;
   protected signalService: SignalService = inject(SignalService);
   protected readonly recipeTitle = computed(() => {
     if (this.signalService.recipe()) {

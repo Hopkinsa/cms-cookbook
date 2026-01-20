@@ -1,3 +1,5 @@
+import * as path from 'path';
+
 type CrayonType = {
   default: string;
   black: string;
@@ -70,3 +72,8 @@ export function bool2Num(x: boolean): number {
   }
   return 0;
 }
+
+export const DIR_PATH = path.resolve('./');
+export const STATIC_PATH = path.join(DIR_PATH, 'static');
+export const IMAGE_PATH = path.join(DIR_PATH, 'images', 'uploaded');
+export const TEMPLATE_PATH = path.join(DIR_PATH, 'images', 'template');

@@ -14,6 +14,6 @@ import { SignalService } from '@server/core/services/signal.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
-  protected imgURL = `${environment.baseImgURL}template/`;
+  protected imgURL = `${environment.baseTemplateURL}`;
   protected signalService: SignalService = inject(SignalService);
 }

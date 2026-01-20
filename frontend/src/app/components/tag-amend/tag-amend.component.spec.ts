@@ -10,7 +10,13 @@ describe('TagAmendComponent', () => {
       getTags: { set: jest.fn() },
     };
 
-    TestBed.configureTestingModule({ imports: [TagAmendComponent], providers: [{ provide: SignalService, useValue: mockSignalService }, { provide: TagService, useValue: mockTagService }] });
+    TestBed.configureTestingModule({
+      imports: [TagAmendComponent],
+      providers: [
+        { provide: SignalService, useValue: mockSignalService },
+        { provide: TagService, useValue: mockTagService },
+      ],
+    });
 
     const fixture = TestBed.createComponent(TagAmendComponent);
     const comp = fixture.componentInstance;
@@ -33,7 +39,13 @@ describe('TagAmendComponent', () => {
       getTags: { set: jest.fn() },
     };
 
-    TestBed.configureTestingModule({ imports: [TagAmendComponent], providers: [{ provide: SignalService, useValue: mockSignalService }, { provide: TagService, useValue: mockTagService }] });
+    TestBed.configureTestingModule({
+      imports: [TagAmendComponent],
+      providers: [
+        { provide: SignalService, useValue: mockSignalService },
+        { provide: TagService, useValue: mockTagService },
+      ],
+    });
 
     const fixture = TestBed.createComponent(TagAmendComponent);
     const comp = fixture.componentInstance;

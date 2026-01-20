@@ -22,7 +22,7 @@ describe('UnitSelectComponent', () => {
   it('emits fieldChange when model changes', () => {
     const spy = jest.spyOn(comp['fieldChange'], 'emit');
     // initialize input so formInit becomes false
-    (comp as any).signalField = () => '1';
+    (comp as any).signalField = (): any => '1';
     fixture.detectChanges();
 
     // change the model to trigger updateEffect

@@ -9,11 +9,17 @@ describe('ImageUploadComponent', () => {
   it('handles upload progress and completion', () => {
     const mockSignalService: any = { feedbackMessage: { set: jest.fn() } };
     const mockFileService: any = {
-      uploadImage: jest.fn(() => ({ subscribe: (next: any) => next({ type: HttpEventType.Response }), }),),
+      uploadImage: jest.fn(() => ({ subscribe: (next: any) => next({ type: HttpEventType.Response }) })),
       getImages: { set: jest.fn() },
     };
 
-    TestBed.configureTestingModule({ imports: [ImageUploadComponent], providers: [{ provide: SignalService, useValue: mockSignalService }, { provide: FileService, useValue: mockFileService }] });
+    TestBed.configureTestingModule({
+      imports: [ImageUploadComponent],
+      providers: [
+        { provide: SignalService, useValue: mockSignalService },
+        { provide: FileService, useValue: mockFileService },
+      ],
+    });
 
     const fixture = TestBed.createComponent(ImageUploadComponent);
     const comp = fixture.componentInstance;
@@ -38,7 +44,13 @@ describe('ImageUploadComponent', () => {
     const mockSignalService: any = { feedbackMessage: { set: jest.fn() } };
     const mockFileService: any = { uploadImage: jest.fn(() => ({ subscribe: (next: any, err: any) => err('boom') })) };
 
-    TestBed.configureTestingModule({ imports: [ImageUploadComponent], providers: [{ provide: SignalService, useValue: mockSignalService }, { provide: FileService, useValue: mockFileService }] });
+    TestBed.configureTestingModule({
+      imports: [ImageUploadComponent],
+      providers: [
+        { provide: SignalService, useValue: mockSignalService },
+        { provide: FileService, useValue: mockFileService },
+      ],
+    });
 
     const fixture = TestBed.createComponent(ImageUploadComponent);
     const comp = fixture.componentInstance;
@@ -48,7 +60,10 @@ describe('ImageUploadComponent', () => {
 
     comp.onFileSelected(event);
 
-    expect(mockSignalService.feedbackMessage.set).toHaveBeenCalledWith({ type: 'error', message: 'Image upload failed' });
+    expect(mockSignalService.feedbackMessage.set).toHaveBeenCalledWith({
+      type: 'error',
+      message: 'Image upload failed',
+    });
     expect(comp.isUploading).toBe(false);
   });
 
@@ -68,7 +83,13 @@ describe('ImageUploadComponent', () => {
       getImages: { set: jest.fn() },
     };
 
-    TestBed.configureTestingModule({ imports: [ImageUploadComponent], providers: [{ provide: SignalService, useValue: mockSignalService }, { provide: FileService, useValue: mockFileService }] });
+    TestBed.configureTestingModule({
+      imports: [ImageUploadComponent],
+      providers: [
+        { provide: SignalService, useValue: mockSignalService },
+        { provide: FileService, useValue: mockFileService },
+      ],
+    });
 
     const fixture = TestBed.createComponent(ImageUploadComponent);
     const comp = fixture.componentInstance as any;
@@ -79,7 +100,9 @@ describe('ImageUploadComponent', () => {
     comp.onFileSelected(event);
 
     // invoke progress event (50/200 -> ~25%) and ensure it doesn't throw
-    expect(() => (mockFileService as any).__subscriber.next({ type: HttpEventType.UploadProgress, loaded: 50 })).not.toThrow();
+    expect(() =>
+      (mockFileService as any).__subscriber.next({ type: HttpEventType.UploadProgress, loaded: 50 }),
+    ).not.toThrow();
 
     // now simulate final response
     (mockFileService as any).__subscriber.next({ type: HttpEventType.Response });
@@ -93,7 +116,13 @@ describe('ImageUploadComponent', () => {
     const mockSignalService: any = { feedbackMessage: { set: jest.fn() } };
     const mockFileService: any = { uploadImage: jest.fn() };
 
-    TestBed.configureTestingModule({ imports: [ImageUploadComponent], providers: [{ provide: SignalService, useValue: mockSignalService }, { provide: FileService, useValue: mockFileService }] });
+    TestBed.configureTestingModule({
+      imports: [ImageUploadComponent],
+      providers: [
+        { provide: SignalService, useValue: mockSignalService },
+        { provide: FileService, useValue: mockFileService },
+      ],
+    });
 
     const fixture = TestBed.createComponent(ImageUploadComponent);
     const comp = fixture.componentInstance as any;

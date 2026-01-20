@@ -7,7 +7,10 @@ jest.useFakeTimers();
 describe('FeedbackComponent', () => {
   it('fadeInit sets display and triggers fade out eventually', () => {
     const mockSignal: any = { feedbackMessage: { set: jest.fn() } };
-    TestBed.configureTestingModule({ imports: [FeedbackComponent], providers: [{ provide: SignalService, useValue: mockSignal }] });
+    TestBed.configureTestingModule({
+      imports: [FeedbackComponent],
+      providers: [{ provide: SignalService, useValue: mockSignal }],
+    });
     const fixture = TestBed.createComponent(FeedbackComponent);
     const comp = fixture.componentInstance;
 

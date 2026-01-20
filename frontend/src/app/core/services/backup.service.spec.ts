@@ -10,9 +10,14 @@ describe('BackupService', () => {
 
   beforeEach(() => {
     http = { get: jest.fn(() => of('blob')), post: jest.fn(() => of('posted')) };
-    error = { handleError: jest.fn(() => (err: any) => of([])) };
+    error = { handleError: jest.fn(() => (err: any): any => of([])) };
 
-    TestBed.configureTestingModule({ providers: [{ provide: HttpClient, useValue: http }, { provide: ErrorHandlerService, useValue: error }] });
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: HttpClient, useValue: http },
+        { provide: ErrorHandlerService, useValue: error },
+      ],
+    });
   });
 
   it('backupDB calls GET /backup', (done) => {

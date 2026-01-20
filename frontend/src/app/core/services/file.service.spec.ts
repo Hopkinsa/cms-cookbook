@@ -10,9 +10,14 @@ describe('FileService', () => {
 
   beforeEach(() => {
     http = { post: jest.fn(() => of('posted')), delete: jest.fn(() => of('deleted')) };
-    error = { handleError: jest.fn(() => (err: any) => of([])) };
+    error = { handleError: jest.fn(() => (err: any): any => of([])) };
 
-    TestBed.configureTestingModule({ providers: [{ provide: HttpClient, useValue: http }, { provide: ErrorHandlerService, useValue: error }] });
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: HttpClient, useValue: http },
+        { provide: ErrorHandlerService, useValue: error },
+      ],
+    });
   });
 
   it('uploadImage posts to images/upload', (done) => {

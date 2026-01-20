@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AmendImageComponent } from './amend-image.component';
-import { SignalService, FileService } from '@server/core/services';
+import { FileService, SignalService } from '@server/core/services';
 
 describe('AmendImageComponent', () => {
   it('reads route params and sets signals, and back() navigates', () => {
@@ -11,7 +11,15 @@ describe('AmendImageComponent', () => {
     const mockRouter: any = { navigate: jest.fn() };
     const mockRoute: any = { params: of({ name: 'file.name.png' }) };
 
-    TestBed.configureTestingModule({ imports: [AmendImageComponent], providers: [{ provide: SignalService, useValue: mockSignal }, { provide: FileService, useValue: mockFile }, { provide: Router, useValue: mockRouter }, { provide: ActivatedRoute, useValue: mockRoute }] });
+    TestBed.configureTestingModule({
+      imports: [AmendImageComponent],
+      providers: [
+        { provide: SignalService, useValue: mockSignal },
+        { provide: FileService, useValue: mockFile },
+        { provide: Router, useValue: mockRouter },
+        { provide: ActivatedRoute, useValue: mockRoute },
+      ],
+    });
 
     const fixture = TestBed.createComponent(AmendImageComponent);
     const comp = fixture.componentInstance as any;

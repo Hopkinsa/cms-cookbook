@@ -70,6 +70,8 @@ backend/images/uploaded/*
 !backend/images/uploaded/barabrith-Icon.jpeg
 !backend/images/uploaded/barabrith-Banner.jpeg
 
+/deployment/
+
 # OS Specific
 .DS_Store
 Thumbs.db

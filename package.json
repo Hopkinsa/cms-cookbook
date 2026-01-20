@@ -5,8 +5,14 @@
   "author": "Andy Hopkins",
   "version": "1.0.0",
   "scripts": {
-    "ng": "ng",
-    "start": "npm run start --prefix ./frontend & npm run start:dev --prefix ./backend"
+    "start": "npm run start --prefix ./frontend & npm run start --prefix ./backend",
+    "style": "cd ./frontend && npm run style && cd ../backend && npm run style",
+    "lint": "cd ./frontend && npm run lint && cd ../backend && npm run lint",
+    "build": "cd ./backend && npm run deploy && cd ../frontend && npm run build",
+    "test": "cd ./frontend && npm run test && cd ../backend && npm run test",
+    "test:report": "cd ./frontend && npm run test:report && cd ../backend && npm run test:report"
   },
   "private": true
+
 }
+

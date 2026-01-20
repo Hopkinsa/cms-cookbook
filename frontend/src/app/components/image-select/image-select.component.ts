@@ -31,7 +31,7 @@ export class ImageSelectComponent {
   });
   fieldChange = output<string>();
 
-  protected imgURL = `${environment.baseImgURL}image/`;
+  protected imgUrl = `${environment.baseImgURL}`;
   protected fileService: FileService = inject(FileService);
   protected fieldModel = signal<string>('');
   protected fieldForm = form(this.fieldModel);

@@ -7,17 +7,29 @@ import { of } from 'rxjs';
 describe('RecipesComponent', () => {
   it('icon, sortOption, search, reset, delete, amend and back', () => {
     const mockSignal: any = { returnTo: { set: jest.fn() } };
-    const mockRecipeList: any = { recipeSort: { set: jest.fn() }, getRecipeList: { set: jest.fn() }, findRecipes: { set: jest.fn() } };
+    const mockRecipeList: any = {
+      recipeSort: { set: jest.fn() },
+      getRecipeList: { set: jest.fn() },
+      findRecipes: { set: jest.fn() },
+    };
     const mockRecipeService: any = { deleteRecipe: jest.fn(() => of({})) };
     const mockRouter: any = { navigate: jest.fn() };
 
-    TestBed.configureTestingModule({ imports: [RecipesComponent], providers: [{ provide: SignalService, useValue: mockSignal }, { provide: RecipeListService, useValue: mockRecipeList }, { provide: RecipeService, useValue: mockRecipeService }, { provide: Router, useValue: mockRouter }] });
+    TestBed.configureTestingModule({
+      imports: [RecipesComponent],
+      providers: [
+        { provide: SignalService, useValue: mockSignal },
+        { provide: RecipeListService, useValue: mockRecipeList },
+        { provide: RecipeService, useValue: mockRecipeService },
+        { provide: Router, useValue: mockRouter },
+      ],
+    });
 
     const fixture = TestBed.createComponent(RecipesComponent);
     const comp = fixture.componentInstance as any;
 
     // icon should include img path fragment
-    expect(comp.icon('file.name.png')).toContain('image/');
+    expect(comp.icon('file.name.png')).toContain('file.name-Icon.png');
 
     // sortOption triggers recipeSort.set and getRecipeList.set
     comp.fieldModel.set({ sortSelect: 't2', terms: '' });

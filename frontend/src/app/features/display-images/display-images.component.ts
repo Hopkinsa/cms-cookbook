@@ -20,7 +20,7 @@ import { crudResponse } from '@server/core/interface';
 })
 export class DisplayImagesComponent {
   private router: Router = inject(Router);
-  protected imgURL = `${environment.baseImgURL}image/`;
+  protected imgURL = `${environment.baseImgURL}`;
   protected fileService: FileService = inject(FileService);
   protected signalService: SignalService = inject(SignalService);
 

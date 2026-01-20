@@ -1,8 +1,10 @@
 import express, { Express, NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 
+import { IMAGE_PATH, TEMPLATE_PATH } from './utility/helpers.ts';
 import { FILE_ROUTES } from './routes/file.routes.ts';
 import { API_ROUTES } from './routes/api.routes.ts';
+import AngularResponse from './routes/angular-routes.ts';
 
 export const app: Express = express();
 
@@ -34,7 +36,12 @@ app.use(
 
 app.use(cors());
 
-app.use('/image', express.static('images/uploaded'));
-app.use('/template', express.static('images/template'));
+app.use('/image', express.static(`${IMAGE_PATH}`));
+app.use('/template', express.static(`${TEMPLATE_PATH}`));
+
 app.use(FILE_ROUTES);
 app.use(API_ROUTES);
+
+
+// Catch-all to serve Angular app
+API_ROUTES.get('/{*splat}', AngularResponse.angular_root);

@@ -27,8 +27,7 @@ export const routes: Routes = [
       {
         path: 'backup',
         title: 'Backup / Restore | Cookbook',
-        loadComponent: () =>
-          import('./features/backup/backup.component').then((m) => m.BackupComponent),
+        loadComponent: () => import('./features/backup/backup.component').then((m) => m.BackupComponent),
         canActivate: [AuthGuard],
       },
       {
@@ -114,8 +113,7 @@ export const routes: Routes = [
       {
         path: 'images/:name',
         title: 'Amend Image | Cookbook',
-        loadComponent: () =>
-          import('./features/amend-image/amend-image.component').then((m) => m.AmendImageComponent),
+        loadComponent: () => import('./features/amend-image/amend-image.component').then((m) => m.AmendImageComponent),
       },
     ],
   },

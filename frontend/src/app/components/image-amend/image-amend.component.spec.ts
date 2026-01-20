@@ -26,7 +26,13 @@ describe('ImageAmendComponent (edge cases)', () => {
     const mockSignal: any = { feedbackMessage: { set: jest.fn() } };
     const mockFile: any = { uploadImage: jest.fn(() => ({ subscribe: () => {} })) };
 
-    TestBed.configureTestingModule({ imports: [ImageAmendComponent], providers: [{ provide: SignalService, useValue: mockSignal }, { provide: FileService, useValue: mockFile }] });
+    TestBed.configureTestingModule({
+      imports: [ImageAmendComponent],
+      providers: [
+        { provide: SignalService, useValue: mockSignal },
+        { provide: FileService, useValue: mockFile },
+      ],
+    });
   });
 
   it('initializes cropper and responds to controls', () => {
@@ -144,6 +150,9 @@ describe('ImageAmendComponent (edge cases)', () => {
     comp.apply();
 
     expect(mockFileService.uploadImage).toHaveBeenCalled();
-    expect(mockSignalService.feedbackMessage.set).toHaveBeenCalledWith({ type: 'error', message: 'Image upload failed' });
+    expect(mockSignalService.feedbackMessage.set).toHaveBeenCalledWith({
+      type: 'error',
+      message: 'Image upload failed',
+    });
   });
 });

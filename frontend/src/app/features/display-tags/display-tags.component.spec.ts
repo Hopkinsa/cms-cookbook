@@ -7,7 +7,13 @@ describe('DisplayTagsComponent', () => {
   it('back navigates', () => {
     const mockSignal: any = {};
     const mockRouter: any = { navigate: jest.fn() };
-    TestBed.configureTestingModule({ imports: [DisplayTagsComponent], providers: [{ provide: SignalService, useValue: mockSignal }, { provide: Router, useValue: mockRouter }] });
+    TestBed.configureTestingModule({
+      imports: [DisplayTagsComponent],
+      providers: [
+        { provide: SignalService, useValue: mockSignal },
+        { provide: Router, useValue: mockRouter },
+      ],
+    });
 
     const fixture = TestBed.createComponent(DisplayTagsComponent);
     const comp = fixture.componentInstance as any;

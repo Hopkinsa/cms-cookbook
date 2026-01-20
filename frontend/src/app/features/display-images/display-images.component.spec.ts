@@ -10,7 +10,14 @@ describe('DisplayImagesComponent', () => {
     const mockSignal: any = { feedbackMessage: { set: jest.fn() } };
     const mockRouter: any = { navigate: jest.fn() };
 
-    TestBed.configureTestingModule({ imports: [DisplayImagesComponent], providers: [{ provide: FileService, useValue: mockFile }, { provide: SignalService, useValue: mockSignal }, { provide: Router, useValue: mockRouter }] });
+    TestBed.configureTestingModule({
+      imports: [DisplayImagesComponent],
+      providers: [
+        { provide: FileService, useValue: mockFile },
+        { provide: SignalService, useValue: mockSignal },
+        { provide: Router, useValue: mockRouter },
+      ],
+    });
 
     const fixture = TestBed.createComponent(DisplayImagesComponent);
     const comp = fixture.componentInstance as any;

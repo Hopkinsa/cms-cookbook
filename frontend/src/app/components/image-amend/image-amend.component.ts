@@ -40,13 +40,13 @@ export class ImageAmendComponent {
   readonly signalImageOrig = input<any>('', {
     alias: 'imageOrig',
   });
-  protected imgURL = `${environment.baseImgURL}image/`;
+  protected imgUrl = `${environment.baseImgURL}`;
   protected signalService: SignalService = inject(SignalService);
   protected fileService: FileService = inject(FileService);
 
-  readonly imgIconSrc = computed(() => `${this.imgURL}${this.signalIconImage()}` || '');
-  readonly imgBannerSrc = computed(() => `${this.imgURL}${this.signalBannerImage()}` || '');
-  readonly imgOrigSrc = computed(() => `${this.imgURL}${this.signalImageOrig()}` || '');
+  readonly imgIconSrc = computed(() => `${this.imgUrl}${this.signalIconImage()}` || '');
+  readonly imgBannerSrc = computed(() => `${this.imgUrl}${this.signalBannerImage()}` || '');
+  readonly imgOrigSrc = computed(() => `${this.imgUrl}${this.signalImageOrig()}` || '');
   readonly imgType = computed(() => {
     const ext = this.signalImageOrig().slice(this.signalImageOrig().lastIndexOf('.') + 1);
     let type = 'image/';

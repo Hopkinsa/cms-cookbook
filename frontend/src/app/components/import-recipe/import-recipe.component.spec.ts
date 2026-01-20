@@ -8,7 +8,10 @@ describe('ImportRecipeComponent', () => {
 
   beforeEach(() => {
     const mockSignal: any = { units: () => [{ abbreviation: 'g', unit: 'gram' }] };
-    TestBed.configureTestingModule({ imports: [ImportRecipeComponent], providers: [{ provide: SignalService, useValue: mockSignal }] });
+    TestBed.configureTestingModule({
+      imports: [ImportRecipeComponent],
+      providers: [{ provide: SignalService, useValue: mockSignal }],
+    });
     const fixture = TestBed.createComponent(ImportRecipeComponent);
     comp = fixture.componentInstance;
   });

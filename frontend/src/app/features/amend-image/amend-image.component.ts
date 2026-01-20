@@ -20,7 +20,7 @@ import { FeedbackComponent } from '@server/components/feedback/feedback.componen
 export class AmendImageComponent {
   private router: Router = inject(Router);
   private route: ActivatedRoute = inject(ActivatedRoute);
-  protected imgURL = `${environment.baseImgURL}image/`;
+  protected imgUrl = `${environment.baseImgURL}`;
   protected fileService: FileService = inject(FileService);
   protected signalService: SignalService = inject(SignalService);
 
