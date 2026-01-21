@@ -14,7 +14,14 @@ describe('DisplayRecipeComponent', () => {
     const mockTitle: any = { setTitle: jest.fn() };
     const mockRouter: any = { navigate: jest.fn(), url: '/recipe/1' };
 
-    TestBed.configureTestingModule({ imports: [DisplayRecipeComponent], providers: [{ provide: SignalService, useValue: mockSignal }, { provide: Title, useValue: mockTitle }, { provide: Router, useValue: mockRouter }] });
+    TestBed.configureTestingModule({
+      imports: [DisplayRecipeComponent],
+      providers: [
+        { provide: SignalService, useValue: mockSignal },
+        { provide: Title, useValue: mockTitle },
+        { provide: Router, useValue: mockRouter },
+      ],
+    });
 
     const fixture = TestBed.createComponent(DisplayRecipeComponent);
     const comp = fixture.componentInstance as any;
@@ -24,14 +31,14 @@ describe('DisplayRecipeComponent', () => {
     expect(mockTitle.setTitle).toHaveBeenCalled();
 
     expect(comp.totalTime()).toBe(15);
-    expect(comp.banner()).toContain('image/');
+    expect(comp.banner()).toContain('file-Banner.png');
 
     // serving up/down
     (mockSignal.recipeServes as any).update = jest.fn((fn: any) => fn(2));
     comp.servingUp();
     expect((mockSignal.recipeServes as any).update).toHaveBeenCalled();
 
-    (mockSignal.recipeServes as any).value = () => 2;
+    (mockSignal.recipeServes as any).value = (): any => 2;
     comp.servingDown();
     expect((mockSignal.recipeServes as any).update).toHaveBeenCalled();
 

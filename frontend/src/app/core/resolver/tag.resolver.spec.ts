@@ -4,7 +4,7 @@ import { tagResolver } from './tag.resolver';
 
 describe('tagResolver', () => {
   it('sets getTags when null', () => {
-    const getTags: any = (() => null);
+    const getTags: any = () => null;
     getTags.set = jest.fn();
     const tagService = { getTags } as any;
     TestBed.configureTestingModule({ providers: [{ provide: TagService, useValue: tagService }] });
@@ -15,7 +15,7 @@ describe('tagResolver', () => {
   });
 
   it('does not set getTags when already set', () => {
-    const getTags: any = (() => 123);
+    const getTags: any = () => 123;
     getTags.set = jest.fn();
     const tagService = { getTags } as any;
     TestBed.configureTestingModule({ providers: [{ provide: TagService, useValue: tagService }] });

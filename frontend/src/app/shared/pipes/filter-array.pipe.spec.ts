@@ -14,14 +14,20 @@ describe('FilterArrayPipe', () => {
   });
 
   it('should filter using a JSON-array string field', () => {
-    const arr = [{ id: 1, tags: '["a","b"]' }, { id: 2, tags: '["c"]' }];
+    const arr = [
+      { id: 1, tags: '["a","b"]' },
+      { id: 2, tags: '["c"]' },
+    ];
     const res = pipe.transform(arr, 'tags', 'a');
     expect(res.length).toBe(1);
     expect(res[0].id).toBe(1);
   });
 
   it('should filter using a plain string field (case-insensitive)', () => {
-    const arr = [{ id: 1, title: 'Chocolate Cake' }, { id: 2, title: 'Vanilla' }];
+    const arr = [
+      { id: 1, title: 'Chocolate Cake' },
+      { id: 2, title: 'Vanilla' },
+    ];
     const res = pipe.transform(arr, 'title', 'cake');
     expect(res.length).toBe(1);
     expect(res[0].id).toBe(1);
@@ -32,7 +38,10 @@ describe('FilterArrayPipe', () => {
   });
 
   it('should handle fields that are actual arrays by stringifying and matching', () => {
-    const arr = [{ id: 1, tags: ['a', 'b'] }, { id: 2, tags: ['c'] }];
+    const arr = [
+      { id: 1, tags: ['a', 'b'] },
+      { id: 2, tags: ['c'] },
+    ];
     const res = pipe.transform(arr, 'tags', 'a');
     expect(res.length).toBe(1);
     expect(res[0].id).toBe(1);

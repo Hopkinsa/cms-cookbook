@@ -5,7 +5,10 @@ import { SignalService } from '@server/core/services';
 describe('IngredientsComponent', () => {
   it('creates and injects signal service and decimal pipe is available', () => {
     const mockSignal = {};
-    TestBed.configureTestingModule({ imports: [IngredientsComponent], providers: [{ provide: SignalService, useValue: mockSignal }] });
+    TestBed.configureTestingModule({
+      imports: [IngredientsComponent],
+      providers: [{ provide: SignalService, useValue: mockSignal }],
+    });
     const fixture = TestBed.createComponent(IngredientsComponent);
     const comp = fixture.componentInstance as any;
 

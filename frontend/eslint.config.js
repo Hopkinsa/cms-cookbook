@@ -1,13 +1,14 @@
 // eslint.config.js
 // @ts-check
+const { defineConfig } = require("eslint/config");
 const eslint = require('@eslint/js');
 const tseslint = require('typescript-eslint');
 const angular = require('angular-eslint');
 const eslintConfigPrettier = require('eslint-config-prettier');
 
-module.exports = tseslint.config(
+module.exports = defineConfig([
   {
-    ignores: ['.angular/**', '.nx/**', 'coverage/**', 'dist/**'],
+    ignores: ['.angular/**', '.nx/**', 'coverage/**', 'dist/**', '**/*.spec.ts'],
     files: ['**/*.ts'],
     extends: [
       eslint.configs.recommended,
@@ -131,4 +132,4 @@ module.exports = tseslint.config(
       '@angular-eslint/template/use-track-by-function': 'warn',
     },
   },
-);
+]);

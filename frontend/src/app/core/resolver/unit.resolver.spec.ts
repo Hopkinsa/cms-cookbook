@@ -4,7 +4,7 @@ import { unitResolver } from './unit.resolver';
 
 describe('unitResolver', () => {
   it('sets getUnits when null', () => {
-    const getUnits: any = (() => null);
+    const getUnits: any = () => null;
     getUnits.set = jest.fn();
     const svc = { getUnits } as any;
     TestBed.configureTestingModule({ providers: [{ provide: UnitsService, useValue: svc }] });

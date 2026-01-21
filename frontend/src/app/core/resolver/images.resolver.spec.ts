@@ -4,7 +4,7 @@ import { imagesResolver } from './images.resolver';
 
 describe('imagesResolver', () => {
   it('sets getImages when null', () => {
-    const getImages: any = (() => null);
+    const getImages: any = () => null;
     getImages.set = jest.fn();
     const svc = { getImages } as any;
     TestBed.configureTestingModule({ providers: [{ provide: FileService, useValue: svc }] });

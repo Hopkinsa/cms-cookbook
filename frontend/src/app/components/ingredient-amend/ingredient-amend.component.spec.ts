@@ -3,7 +3,9 @@ import { IngredientAmendComponent } from './ingredient-amend.component';
 
 describe('IngredientAmendComponent', () => {
   it('initializes from input signal and updates quantity unit on event', () => {
-    const fixture = TestBed.configureTestingModule({ imports: [IngredientAmendComponent] }).createComponent(IngredientAmendComponent);
+    const fixture = TestBed.configureTestingModule({ imports: [IngredientAmendComponent] }).createComponent(
+      IngredientAmendComponent,
+    );
     const comp = fixture.componentInstance;
 
     const mockSignal: any = () => ({

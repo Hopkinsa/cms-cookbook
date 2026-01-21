@@ -7,7 +7,7 @@ import tseslint from 'typescript-eslint';
 import eslintConfigPrettier from 'eslint-config-prettier';
 
 export default defineConfig({
-    ignores: ['data/**', 'coverage/**', 'dist/**'],
+    ignores: ['data/**', 'coverage/**', 'dist/**', '**/*.spec.ts', 'jest-global-mocks.ts'],
     files: ['**/*.ts'],
     extends: [
       eslint.configs.recommended,

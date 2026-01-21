@@ -12,7 +12,14 @@ describe('AmendTagsComponent', () => {
     const mockTagService: any = { deleteTag: jest.fn(() => of({ completed: true })), getTags: { set: jest.fn() } };
     const mockRouter: any = { navigate: jest.fn() };
 
-    TestBed.configureTestingModule({ imports: [AmendTagsComponent], providers: [{ provide: SignalService, useValue: mockSignal }, { provide: TagService, useValue: mockTagService }, { provide: 'Router', useValue: mockRouter }] });
+    TestBed.configureTestingModule({
+      imports: [AmendTagsComponent],
+      providers: [
+        { provide: SignalService, useValue: mockSignal },
+        { provide: TagService, useValue: mockTagService },
+        { provide: 'Router', useValue: mockRouter },
+      ],
+    });
 
     const fixture = TestBed.createComponent(AmendTagsComponent);
     const comp = fixture.componentInstance as any;

@@ -5,7 +5,10 @@ import { SignalService } from '@server/core/services';
 describe('StepsComponent', () => {
   it('creates and injects signal service', () => {
     const mockSignal = {};
-    TestBed.configureTestingModule({ imports: [StepsComponent], providers: [{ provide: SignalService, useValue: mockSignal }] });
+    TestBed.configureTestingModule({
+      imports: [StepsComponent],
+      providers: [{ provide: SignalService, useValue: mockSignal }],
+    });
     const fixture = TestBed.createComponent(StepsComponent);
     const comp = fixture.componentInstance as any;
 

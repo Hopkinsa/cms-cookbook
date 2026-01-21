@@ -31,7 +31,7 @@ export class BackupService {
 
   restoreDB(): Observable<any> {
     return this.http
-      .post<any>(`${this.apiUrl}restore`,'')
+      .post<any>(`${this.apiUrl}restore`, '')
       .pipe(catchError(this.error.handleError('restoreDB', 'Unable to restore backup', [])));
   }
 }

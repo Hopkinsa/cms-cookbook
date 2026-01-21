@@ -58,7 +58,7 @@ export class AmendRecipeComponent {
   private recipeService: RecipeService = inject(RecipeService);
   protected id = this.route.snapshot.data['id'];
 
-  protected imgURL = `${environment.baseImgURL}image/`;
+  protected imgUrl = `${environment.baseImgURL}`;
   protected signalService: SignalService = inject(SignalService);
   protected readonly showImportField = signal(false);
   protected readonly enableSave = signal(true);

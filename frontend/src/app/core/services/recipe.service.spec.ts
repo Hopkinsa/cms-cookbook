@@ -15,7 +15,7 @@ describe('RecipeService', () => {
       patch: jest.fn(() => of('patched')),
       delete: jest.fn(() => of('deleted')),
     };
-    error = { handleError: jest.fn(() => (err: any) => of([])) };
+    error = { handleError: jest.fn(() => (err: any): any => of([])) };
 
     TestBed.configureTestingModule({
       providers: [
@@ -37,7 +37,13 @@ describe('RecipeService', () => {
   it('updateRecipe patches /recipe/:id with signal recipe as body', (done) => {
     const fakeSignal = { recipe: jest.fn(() => ({ id: 1, title: 'head' })) } as any;
     TestBed.resetTestingModule();
-    TestBed.configureTestingModule({ providers: [{ provide: HttpClient, useValue: http }, { provide: ErrorHandlerService, useValue: error }, { provide: SignalService, useValue: fakeSignal }] });
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: HttpClient, useValue: http },
+        { provide: ErrorHandlerService, useValue: error },
+        { provide: SignalService, useValue: fakeSignal },
+      ],
+    });
     const svc = TestBed.inject(RecipeService);
     svc.updateRecipe(3).subscribe(() => {
       expect(http.patch).toHaveBeenCalledWith('recipe/3', { id: 1, title: 'head' });

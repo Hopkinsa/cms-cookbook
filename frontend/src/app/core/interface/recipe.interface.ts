@@ -12,7 +12,7 @@ export const IRecipeSearchInit: IRecipeSearch = {
   sortSelect: 't1',
   sort: { target: 'title', direction: 'asc' },
   terms: '',
-}
+};
 
 export interface IRecipeList {
   id: number;
@@ -44,8 +44,8 @@ export const ISearchResultsInit: ISearchResults = {
   total: 0,
   page: { offset: 0, quantity: 0 },
   sort: { target: '', direction: '' },
-  results: []
-}
+  results: [],
+};
 
 export interface IRecipeTagForm {
   tag: string;

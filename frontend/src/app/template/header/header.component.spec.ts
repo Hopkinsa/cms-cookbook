@@ -14,16 +14,13 @@ const environmentMock = {
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
-  let httpMock : HttpTestingController;
+  let httpMock: HttpTestingController;
   let signalService: SignalService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HeaderComponent],
-      providers: [
-        provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
@@ -41,7 +38,7 @@ describe('HeaderComponent', () => {
   });
 
   it('should have correct imgURL', () => {
-    expect(component['imgURL']).toBe(`template/`);
+    expect(component['imgURL']).toBe(environmentMock.baseImgURL);
   });
 
   it('should toggle editEnabled signal', () => {

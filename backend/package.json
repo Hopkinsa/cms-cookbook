@@ -6,13 +6,12 @@
   "author": "Andy Hopkins",
   "type": "module",
   "scripts": {
-    "start:dev": "nodemon --config nodemon.json",
-    "build": "rm -rf ./build && tsc",
-    "start": "rm -rf ./build && tsc && node build/index.ts",
+    "start": "nodemon --config nodemon.json",
     "style": "prettier 'src/**/*.{ts, json}' --write",
     "lint": "npx eslint",
     "test": "jest",
-    "test:report": "jest --coverage"
+    "test:report": "jest --coverage",
+    "deploy": "mkdir -p ../deployment/www/ ../deployment/images/ && cp -R ../helper/* ../deployment/ && cp -R images/* ../deployment/images/ && cp -R src/* ../deployment/www/ && find ../deployment/www/ -name '*.spec.ts' -type f -delete"
   },
   "dependencies": {
     "adm-zip": "^0.5.16",

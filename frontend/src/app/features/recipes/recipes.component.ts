@@ -23,7 +23,7 @@ export class RecipesComponent {
   private recipeListService: RecipeListService = inject(RecipeListService);
   private recipeService: RecipeService = inject(RecipeService);
 
-  protected imgURL = `${environment.baseImgURL}image/`;
+  protected imgURL = `${environment.baseImgURL}`;
   protected readonly fieldModel = signal<IRecipeSearch>(IRecipeSearchInit);
   protected searchForm = form(this.fieldModel);
 

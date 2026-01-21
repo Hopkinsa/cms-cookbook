@@ -9,10 +9,19 @@ describe('TagService', () => {
   let error: any;
 
   beforeEach(() => {
-    http = { post: jest.fn(() => of('posted')), patch: jest.fn(() => of('patched')), delete: jest.fn(() => of('deleted')) };
-    error = { handleError: jest.fn(() => (err: any) => of([])) };
+    http = {
+      post: jest.fn(() => of('posted')),
+      patch: jest.fn(() => of('patched')),
+      delete: jest.fn(() => of('deleted')),
+    };
+    error = { handleError: jest.fn(() => (err: any): any => of([])) };
 
-    TestBed.configureTestingModule({ providers: [{ provide: HttpClient, useValue: http }, { provide: ErrorHandlerService, useValue: error }] });
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: HttpClient, useValue: http },
+        { provide: ErrorHandlerService, useValue: error },
+      ],
+    });
   });
 
   it('createTag calls POST /tags', (done) => {
