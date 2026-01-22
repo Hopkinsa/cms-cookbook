@@ -25,9 +25,16 @@
   </div>
 </div>
 <div class="row">
+  <div class="column">
+    <mat-paginator aria-label="Select page" [length]="signalService.recipesFound()" [pageSize]="pageSize()"
+     [pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)"/>
+  </div>
+</div>
+<div class="row">
   @if (signalService.recipeList()) {
   <div class="column">
-    @for (recipe of signalService.recipeList(); track recipe.id) {
+
+    @for (recipe of resultsPage(); track recipe.id) {
     <div class="recipe">
       <a [routerLink]="['/recipe', recipe.id]">
         @if (recipe.img_url !== '') {
@@ -52,6 +59,12 @@
   @else {
   <p>No recipes found</p>
   }
+</div>
+<div class="row">
+  <div class="column">
+    <mat-paginator aria-label="Select page" [length]="signalService.recipesFound()" [pageSize]="pageSize()"
+     [pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)"/>
+  </div>
 </div>
 <div class="row">
   <button matButton="filled" type="button" (click)="back()">Back</button>

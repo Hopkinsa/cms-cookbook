@@ -106,3 +106,13 @@ h2 {
     }
   }
 }
+.mat-mdc-paginator {
+  .mat-mdc-paginator-outer-container {
+    .mat-mdc-paginator-container {
+      padding: 0;
+      .mat-mdc-paginator-page-size-label {
+        margin-left: 0;
+      }
+    }
+  }
+}

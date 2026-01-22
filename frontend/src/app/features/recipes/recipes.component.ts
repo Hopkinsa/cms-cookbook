@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, linkedSignal, signal, ViewEncapsulation } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { Field, form } from '@angular/forms/signals';
 import { environment } from 'src/environment/environment';
 
@@ -14,14 +15,25 @@ import { generateFilename } from '@server/shared/helper/filename.helper';
   templateUrl: './recipes.component.html',
   styleUrls: ['./recipes.component.scss'],
   standalone: true,
-  imports: [RouterLink, MatButtonModule, MatIconModule, Field],
+  imports: [RouterLink, MatButtonModule, MatIconModule, MatPaginatorModule, Field],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class RecipesComponent {
   private router: Router = inject(Router);
   protected signalService: SignalService = inject(SignalService);
   private recipeListService: RecipeListService = inject(RecipeListService);
   private recipeService: RecipeService = inject(RecipeService);
+
+  protected pageSizeOptions: number[] = [6, 9, 12, 18, 24];
+  protected pageIndex = signal<number>(0);
+  protected pageSize = signal<number>(this.pageSizeOptions[1]);
+
+  protected resultsPage = linkedSignal(() => {
+    const start = this.pageIndex() * this.pageSize();
+    const end = start + this.pageSize();
+    return this.signalService.recipeList()!.slice(start, end);
+  });
 
   protected imgURL = `${environment.baseImgURL}`;
   protected readonly fieldModel = signal<IRecipeSearch>(IRecipeSearchInit);
@@ -56,6 +68,14 @@ export class RecipesComponent {
   reset(): void {
     this.fieldModel.set(IRecipeSearchInit);
     this.recipeListService.findRecipes.set(null);
+  }
+
+  onPageChange(event: any): void {
+    const pageIndex = event.pageIndex;
+    const pageSize = event.pageSize;
+    this.pageIndex.set(pageIndex);
+    this.pageSize.set(pageSize);
+    console.info('Page changed to index:', this.pageIndex(), 'with size:', this.pageSize());
   }
 
   delete(id: number): void {

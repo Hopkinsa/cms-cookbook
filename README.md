@@ -11,6 +11,7 @@ The following Angular Signals are used:
 - signal
 - effect
 - computed
+- linkedSignal
 - httpResource
 - viewChild
 - input
