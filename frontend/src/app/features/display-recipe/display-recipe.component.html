@@ -28,17 +28,22 @@
     <b>Serves:</b> {{ signalService.recipeServes() }}
     <button matIconButton type="button" (click)="servingUp()"><mat-icon>keyboard_arrow_up</mat-icon></button>
     <button matIconButton type="button" (click)="servingDown()"><mat-icon>keyboard_arrow_down</mat-icon></button>
-
   </div>
   <div class="recipe-time">
     <div class="recipe-prep">
+      @if (signalService.recipe()!.prep_time > 0) {
       <b>Prep time:</b> {{ signalService.recipe()?.prep_time | hoursMinutes }}
+      }
     </div>
     <div class="recipe-cook">
+      @if (signalService.recipe()!.cook_time > 0) {
       <b>Cook time:</b> {{ signalService.recipe()?.cook_time | hoursMinutes }}
+      }
     </div>
     <div class="recipe-total">
+      @if (totalTime()! > 0) {
       <b>Total time:</b> {{ totalTime() | hoursMinutes }}
+      }
     </div>
   </div>
 </div>

@@ -2,11 +2,11 @@
 <div class="row">
   <h1>Amend Image</h1>
 </div>
-@if (imgName() !== '') {
-<div class="row">
-  <app-image-amend [imageBanner]="imgNameBanner()" [imageIcon]="imgNameIcon()" [imageOrig]="imgName()"/>
+<div class="row rowFull">
+  @if (imgName() !== '') {
+  <app-image-amend class="rowFull" [imageBanner]="imgNameBanner()" [imageIcon]="imgNameIcon()" [imageOrig]="imgName()" />
+  }
 </div>
-}
 <div class="row">
   <button matButton="filled" type="button" (click)="back()">Back</button>
 </div>

@@ -26,14 +26,14 @@ import { SortArrayPipe, TruncatePipe } from '@server/shared/pipes';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImageSelectComponent {
-  signalField = input<any>(null, {
+  readonly signalField = input<any>(null, {
     alias: 'formField',
   });
-  fieldChange = output<string>();
+  readonly fieldChange = output<string>();
 
   protected imgUrl = `${environment.baseImgURL}`;
   protected fileService: FileService = inject(FileService);
-  protected fieldModel = signal<string>('');
+  protected readonly fieldModel = signal<string>('');
   protected fieldForm = form(this.fieldModel);
 
   private initSelector = effect(() => {
@@ -68,14 +68,7 @@ export class ImageSelectComponent {
     }
   });
 
-  // Update parent via output signal if value has changed
-  private updateEffect = effect(() => {
-    let updateData = null;
-    if (this.fieldModel() !== this.signalField()) {
-      updateData = this.fieldModel();
-    }
-    if (updateData !== null) {
-      this.fieldChange.emit(updateData);
-    }
-  });
+  selected(): void {
+    this.fieldChange.emit(this.fieldModel());
+  }
 }

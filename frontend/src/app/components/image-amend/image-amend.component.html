@@ -1,12 +1,6 @@
-<div class="row">
+<div class="row rowFull">
     <div class="column">
         <div class="options">
-            <div class="preview">
-                <p>Preview</p>
-                <div class="optWrapper">
-                    <div class="previewImage"></div>
-                </div>
-            </div>
             <div class="target">
                 <p>Image</p>
                 <div class="optWrapper">
@@ -28,6 +22,17 @@
                     </button>
                     <button matIconButton type="button" (click)="zoomOut()">
                         <mat-icon>zoom_out</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="scale">
+                <p>Scale</p>
+                <div class="optWrapper">
+                    <button matIconButton type="button" (click)="scaleUp()">
+                        <mat-icon fontSet="material-icons-outlined">add_circle_outlined</mat-icon>
+                    </button>
+                    <button matIconButton type="button" (click)="scaleDown()">
+                        <mat-icon fontSet="material-icons-outlined">do_not_disturb_on</mat-icon>
                     </button>
                 </div>
             </div>
@@ -71,12 +76,12 @@
                         <mat-icon>crop_free</mat-icon>
                     </button>
                     <button matIconButton type="button" (click)="drag()">
-                        <mat-icon>image</mat-icon>
+                        <mat-icon fontSet="material-icons-outlined">image</mat-icon>
                     </button>
                 </div>
             </div>
             <div class="controlCropper">
-                <p>Control Cropper</p>
+                <p>Crop</p>
                 <div class="optWrapper">
                     <button matIconButton type="button" (click)="reset()">
                         <mat-icon>replay</mat-icon>
@@ -85,11 +90,48 @@
                         <mat-icon>check</mat-icon>
                     </button>
                 </div>
-
             </div>
         </div>
     </div>
-    <div class="column">
+    <div class="column columnFull">
+        <div class="row rowFull rowWPreview">
+            <div class="optionsRow">
+                <div class="preview">
+                    <p><b>Original</b><br />
+                        Size: {{ imgWidth() }} x {{ imgHeight() }} px</p>
+
+                    <div class="optWrapper">
+                        <div class="imageDisplay">
+                            <div class="image-box" style="background-image: url('{{ imgOrigSrc() }}')"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="preview">
+                    <p><b>@if (formModel().targetImage === 'icon') { Icon }
+                        @else { Banner}</b><br /></p>
+                    <div class="optWrapper">
+                        <div class="imageDisplay">
+                            @if (formModel().targetImage === 'icon') {
+                            <div class="image-box" style="background-image: url('{{ imgIconSrc() }}')"></div>
+                            }
+                            @else {
+                            <div class="image-box" style="background-image: url('{{ imgBannerSrc() }}')"></div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="preview">
+                    <p><b>Preview</b><br>
+                        Size: {{ cropWidth() }} x {{ cropHeight() }} px</p>
+                    <div class="optWrapper">
+                        <div class="imageDisplay">
+                            <div class="previewImage"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
         <div class="image-container">
             <img #image alt="" />
         </div>

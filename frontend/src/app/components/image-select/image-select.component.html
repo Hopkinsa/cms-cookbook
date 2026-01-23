@@ -1,6 +1,6 @@
 <mat-form-field>
   <mat-label>Images</mat-label>
-  <mat-select [field]="fieldForm">
+  <mat-select [field]="fieldForm" (selectionChange)="selected()">
     <mat-option>-- None --</mat-option>
     @if (fileService.imageList()) {
     @for (image of fileService.imageList() | sortArrays:'image':'asc'; track image; let i = $index ) {

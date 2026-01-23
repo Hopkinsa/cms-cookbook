@@ -82,6 +82,7 @@ export class AmendRecipeComponent {
 
   imageSelected(imageName: string): void {
     const x = this.recipeModel() as IRecipe;
+    console.log('Image selected:', imageName);
     this.recipeForm.img_url().value.set(imageName);
     this.signalService.recipe.set({ ...x, img_url: imageName });
   }
@@ -190,6 +191,16 @@ export class AmendRecipeComponent {
   }
 
   save(): void {
+    // ensure serves is at least 1
+    if (
+      this.recipeForm.serves() === null ||
+      this.recipeForm.serves() === undefined ||
+      parseInt(this.recipeForm.serves().value().toString()) === 0 // handle form type issues between string and number
+    ) {
+      const x = this.recipeModel() as IRecipe;
+      this.recipeForm.serves().value.set(1);
+      this.recipeModel.set({ ...x, serves: 1 });
+    }
     if (this.id >= 0) {
       this.enableSave.set(false);
       this.signalService.recipe.set(this.recipeModel());
