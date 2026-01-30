@@ -86,9 +86,6 @@ class FileApi {
     const filteredFilenames: string[] = filenames.filter(
       (name) => name !== '.DS_Store' && !name.includes('-Icon.') && !name.includes('-Banner.'),
     );
-filteredFilenames.forEach((name) => {
-  FileApi.resizeImage(name);
-})
     res.status(200).json(filteredFilenames);
   };
 }

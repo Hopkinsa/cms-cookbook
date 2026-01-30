@@ -33,6 +33,13 @@ export class ImportRecipeComponent {
   protected readonly importModel = signal<IImport>({ recipe: '' });
   protected importForm = form(this.importModel);
 
+  toTitleCase(str: string): string {
+    return str.toLowerCase()
+    .split(/\s+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+  }
+
   import(e: Event): void {
     e.preventDefault();
     if (this.importForm.recipe().value().trim() !== '') {
@@ -69,7 +76,7 @@ export class ImportRecipeComponent {
 
   addTitle(data: string[]): void {
     // Assume first line is the recipe title
-    this.processedRecipe.title = data[0];
+    this.processedRecipe.title = this.toTitleCase(data[0].trim());
   }
 
   addPrepTime(data: string[]): void {
@@ -107,7 +114,7 @@ export class ImportRecipeComponent {
   }
 
   addServing(data: string[]): void {
-    let idx = data.findIndex((elm) => elm.match(/(?:\s*(?:serve|yield)s?)/i));
+    let idx = data.findIndex((elm) => elm.match(/(?:\s*(?:serve|serving|yield)s?)/i));
     if (idx >= 0) {
       let servesMatch = data[idx].match(/(\d+)/i);
       if (servesMatch !== null) {
@@ -139,11 +146,17 @@ export class ImportRecipeComponent {
       .findIndex(
         (elm) =>
           elm.abbreviation.toLowerCase() === firstWord.toLowerCase() ||
-          elm.unit.toLowerCase() === firstWord.toLowerCase(),
+          `${elm.abbreviation.toLowerCase()}s` === firstWord.toLowerCase() ||
+          elm.unit.toLowerCase() === firstWord.toLowerCase() ||
+          `${elm.unit.toLowerCase()}s` === firstWord.toLowerCase(),
       );
 
     if (unit >= 0) {
+      // found, remove word from string
       processData = processData.replace(firstWord, '').trim();
+    } else {
+      // not found (-1), set to 0
+      unit = 0;
     }
     // Find ingredient name and preparation
     const remainingWords = processData.split(',');

@@ -65,17 +65,24 @@ export class ImageAmendComponent {
   readonly imageElement = viewChild<ElementRef<HTMLImageElement>>('image');
   readonly imgWidth = signal(0);
   readonly imgHeight = signal(0);
+  readonly cropWidth = signal(0);
+  readonly cropHeight = signal(0);
 
   readonly formModel = signal<{ targetImage: string }>({ targetImage: 'icon' });
   protected formTarget = form(this.formModel);
 
-  formData = new FormData();
+  protected formData = new FormData();
 
-  imageDestination = '';
+  protected imageDestination = '';
+  protected flipX = 1;
+  protected flipY = 1;
+  protected scaleX = 1;
+  protected scaleY = 1;
+
   protected cropper: Cropper | undefined = undefined;
   private cropperConfig = {
     DragMode: 'move',
-    ViewMode: 2,
+    ViewMode: 1,
     preview: '.previewImage',
     modal: true,
     background: true,
@@ -88,6 +95,15 @@ export class ImageAmendComponent {
     cropBoxMovable: true,
     cropBoxResizable: true,
     resize: false,
+    ready: (): void => {
+      this.imageData();
+    },
+    zoom: (): void => {
+      this.imageData();
+    },
+    crop: (): void => {
+      this.imageData();
+    },
   };
 
   constructor() {
@@ -97,8 +113,28 @@ export class ImageAmendComponent {
     });
   }
 
-  flipX = -1;
-  flipY = -1;
+  imageData(): void {
+    const imgData = this.cropper!.getImageData();
+    const cropData = this.cropper!.getData();
+    this.imgWidth.set(Math.round(imgData.naturalWidth));
+    this.imgHeight.set(Math.round(imgData.naturalHeight));
+    this.cropWidth.set(Math.round(cropData.width));
+    this.cropHeight.set(Math.round(cropData.height));
+  }
+
+  scaleDown(): void {
+    this.scaleX -= (0.05 * this.flipX);
+    this.scaleY -= (0.05 * this.flipY);
+    this.cropper!.scale(this.scaleX, this.scaleY);
+    this.imageData();
+  }
+
+  scaleUp(): void {
+    this.scaleX += (0.05 * this.flipX);
+    this.scaleY += (0.05 * this.flipY);
+    this.cropper!.scale(this.scaleX, this.scaleY);
+    this.imageData();
+  }
 
   zoomOut(): void {
     this.cropper!.zoom(-0.05);
@@ -117,18 +153,21 @@ export class ImageAmendComponent {
   }
 
   flipH(): void {
-    this.cropper!.scale(this.flipX, 1);
     this.flipX = -this.flipX;
+    this.scaleX = -this.scaleX;
+    this.cropper!.scale(this.scaleX, this.scaleY);
   }
 
   flipV(): void {
-    this.cropper!.scale(1, this.flipY);
     this.flipY = -this.flipY;
+    this.scaleY = -this.scaleY;
+    this.cropper!.scale(this.scaleX, this.scaleY);
   }
 
   aspectRatio(which: number): void {
     const ratio = [16 / 9, 4 / 3, 1, 0, 5 / 3, 14 / 3];
     this.cropper!.setAspectRatio(ratio[which]);
+    this.imageData();
   }
 
   selectBox(): void {
@@ -142,6 +181,7 @@ export class ImageAmendComponent {
   reset(): void {
     this.cropper!.setAspectRatio(0);
     this.cropper!.reset();
+    this.imageData();
   }
 
   apply(): void {

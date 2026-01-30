@@ -1,8 +1,15 @@
 .row {
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: flex-end;
   margin-bottom: 1rem;
+}
+.rowFull {
+  width: 100%;
+}
+.columnFull {
+  width: 100%;
+  padding-right: 1rem;
 }
 .column {
   display: flex;
@@ -13,7 +20,8 @@
   justify-content: center;
 }
 
-.options {
+.options,
+.optionsRow {
   display: flex;
   flex-direction: column;
   margin-right: 1rem;
@@ -21,6 +29,7 @@
   & .preview,
   & .target,
   & .zoom,
+  & .scale,
   & .flip,
   & .aspectRatio,
   & .dragMode,
@@ -63,18 +72,58 @@
   }
 
   & .preview {
+    flex-direction: row;
+
     & p {
       margin-top: 0;
     }
     & .previewImage {
       display: inline-block;
-      padding-left: 1rem;
       width: 100px;
       height: 100px;
       overflow: hidden;
-      border-radius: 0.2rem;
-      border: 2px dashed #ccc;
     }
+  }
+}
+.rowWPreview {
+  margin-bottom: 0.25rem;
+
+  & .optionsRow {
+    flex-direction: row;
+    justify-content: left;
+    width: 100%;
+    margin-right: 0;
+
+    & .preview {
+      border-bottom: none;
+     & .optWrapper {
+        padding-right: 1rem;
+      }
+      & p {
+        padding-left: 0;
+      }
+    }
+  }
+}
+.imageDisplay {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  border-radius: 0.2rem;
+  border: 2px dashed #ccc;
+
+  & .image-box {
+      position: relative;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: block;
+      aspect-ratio: auto;
+      width: 100px;
+      height: 100px;
   }
 }
 
@@ -107,6 +156,12 @@
   transform: rotate(-90deg);
 }
 
+.image-container {
+  max-height: 50vh;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid #f0f;
+}
 // ------------------------------------
 // Styles taken from
 // frontend/node_modules/cropperjs/dist
@@ -131,12 +186,12 @@
   backface-visibility: hidden;
   display: block;
   height: 100%;
+  width: 100%;
   image-orientation: 0deg;
   max-height: none !important;
   max-width: none !important;
   min-height: 0 !important;
   min-width: 0 !important;
-  width: 100%;
 }
 
 .cropper-wrap-box,

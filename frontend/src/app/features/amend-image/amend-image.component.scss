@@ -9,6 +9,9 @@ h1 + h2 {
   flex-direction: row;
   align-items: center;
 }
+.rowFull {
+  width: 100%;
+}
 .column {
   display: flex;
   flex-direction: row;
