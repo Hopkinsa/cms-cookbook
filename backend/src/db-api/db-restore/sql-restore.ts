@@ -34,8 +34,6 @@ INSERT INTO "recipe" (
 VALUES
 `;
 
-
-
 export const UNIT_DATA = `
 INSERT INTO "units" (
     "id",
@@ -46,8 +44,6 @@ INSERT INTO "units" (
 VALUES
 
  `;
-
-
 
 export const TAG_DATA = `
 INSERT INTO "tags" (

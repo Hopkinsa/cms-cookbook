@@ -81,7 +81,8 @@ class DBRestore {
   private static populateRecipeDatabase = async (recipeData: ICard[]): Promise<void> => {
     let jsonCards = '';
     recipeData.forEach((recipe: ICard) => {
-      jsonCards += `(${recipe.id}, '${recipe.card}'),`;
+       // Escape single quotes in JSON string as will cause error in SQLite
+      jsonCards += `(${recipe.id}, '${recipe.card.replace(/'/g, "''")}'),`;
     });
 
     try {
@@ -95,7 +96,7 @@ class DBRestore {
   };
 
   static dbProcessUpload = async (req: Request): Promise<boolean> => {
-    log.info_lv2(`${DEBUG}dbRestore`);
+    log.info_lv2(`${DEBUG}dbRestore - dbProcessUpload`);
 
     const zip = new AdmZip(req.file?.buffer);
     const zipEntries = zip.getEntries();
