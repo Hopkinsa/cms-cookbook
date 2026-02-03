@@ -24,7 +24,7 @@ import { FileService, SignalService } from '@server/core/services';
 @Component({
   selector: 'app-image-amend',
   templateUrl: './image-amend.component.html',
-  styleUrl: './image-amend.component.scss',
+  styleUrls: ['./image-amend.component.scss', './image-amend-cropper.component.scss'],
   imports: [CommonModule, MatButtonModule, MatIconModule, MatProgressBarModule, Field],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,

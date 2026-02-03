@@ -34,3 +34,19 @@ From the repository root, run `npm run start` for a dev server.
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
 Please note that starting it this way will start both the frontend and backend server.
+
+## To build
+
+From the repository root, run `npm run build`.
+
+This will build the Angular application and copy the required NodeJS files to `./deployment`.
+
+The Angular files are in `static` and NodeJS files in `www`.
+
+A package.json file will also be copied to the folder, containing the dependancies needed to run.
+
+After using `npm install` to install the dependencies, use `npm run start` to serve the application.
+
+Once the server is running, open your browser and navigate to `http://localhost:3000/`.
+
+pm2 can also be used to serve the application.  An example ecosystem.config file can be found in `./helper`.

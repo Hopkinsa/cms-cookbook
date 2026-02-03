@@ -1,10 +1,9 @@
 import { createServer } from 'http';
 
-import { log } from './utility/helpers.ts';
+import { log, PORT } from './utility/helpers.ts';
 import  DBService from './services/db.service.ts';
 import { app } from './app.ts';
 
-const PORT = 3000;
 const server = createServer(app);
 
 log.title(`Starting Cookbook backend server`);

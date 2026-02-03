@@ -1,13 +1,12 @@
 import sqlite3 from 'sqlite3';
 import { Database, open } from 'sqlite';
 
-import { log } from '../utility/helpers.ts';
+import { DATA_PATH, DIR_PATH, log } from '../utility/helpers.ts';
 import { createDatabase, populateDatabase } from '../db-api/db-init/db-init.ts';
 import * as fs from 'fs';
 
 const DEBUG = 'db.service | ';
-const dbFolder = './data';
-const pathToDB = `${dbFolder}/cookbook.db`;
+const pathToDB = `${DATA_PATH}/cookbook.db`;
 class DBService {
   static db: Database;
 
@@ -24,10 +23,10 @@ class DBService {
   static connectToDatabase = async (): Promise<void> => {
     if (!fs.existsSync(pathToDB)) {
       this.newDB = true;
-      if (!fs.existsSync(dbFolder)) {
+      if (!fs.existsSync(DATA_PATH)) {
         log.info_lv2(`${DEBUG}Database folder does not exist.`);
-        fs.mkdirSync(dbFolder);
-        log.info_lv2(`${DEBUG}Database folder created at '${dbFolder}'.`);
+        fs.mkdirSync(DATA_PATH);
+        log.info_lv2(`${DEBUG}Database folder created at '${DATA_PATH}'.`);
       }
     }
     this.db = await this.openDatabase();

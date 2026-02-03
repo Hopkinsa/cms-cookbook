@@ -3,11 +3,11 @@ import * as path from 'path';
 import * as fs from 'fs';
 import sharp from 'sharp';
 
-import { log } from '../../utility/helpers.ts';
+import { IMAGE_PATH, log } from '../../utility/helpers.ts';
 
 const DEBUG = 'file-api | ';
 
-const UPLOAD_PATH = path.resolve('../backend/images/uploaded');
+const UPLOAD_PATH = path.resolve(`${IMAGE_PATH}`);
 
 class FileApi {
   static generateNames(fileName: string): { icon: string; banner: string } {
