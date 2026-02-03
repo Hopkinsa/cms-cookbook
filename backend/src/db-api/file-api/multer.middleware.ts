@@ -6,9 +6,10 @@
 
 import multer from 'multer';
 import * as path from 'path';
+import { IMAGE_PATH } from '../../utility/helpers.ts';
 
 // Define destination file path for upload
-const UPLOAD_PATH = path.resolve('../backend/images/uploaded');
+const UPLOAD_PATH = path.resolve(`${IMAGE_PATH}`);
 
 // Define allowed file types (MIME types and extensions)
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
