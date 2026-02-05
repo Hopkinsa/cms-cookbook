@@ -35,7 +35,10 @@ export class DisplayRecipeComponent {
   });
   protected readonly totalTime = computed(() => {
     if (this.signalService.recipe()) {
-      return this.signalService.recipe()!.prep_time + this.signalService.recipe()!.cook_time;
+      // +(value as number) used as type being lost and defaulting to string
+      const prepTime = +(this.signalService.recipe()!.prep_time as number);
+      const cookTime = +(this.signalService.recipe()!.cook_time as number);
+      return prepTime + cookTime;
     }
     return;
   });

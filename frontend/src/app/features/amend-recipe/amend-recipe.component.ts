@@ -82,7 +82,6 @@ export class AmendRecipeComponent {
 
   imageSelected(imageName: string): void {
     const x = this.recipeModel() as IRecipe;
-    console.log('Image selected:', imageName);
     this.recipeForm.img_url().value.set(imageName);
     this.signalService.recipe.set({ ...x, img_url: imageName });
   }
