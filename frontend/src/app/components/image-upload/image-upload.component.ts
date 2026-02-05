@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpEventType } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, inject, Input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -16,8 +16,8 @@ import { FileService, SignalService } from '@server/core/services';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImageUploadComponent {
-  @Input() variant = '';
-  fileUploaded = output<string>();
+  readonly variant = input('');
+  readonly fileUploaded = output<string>();
 
   protected signalService: SignalService = inject(SignalService);
   protected fileService: FileService = inject(FileService);

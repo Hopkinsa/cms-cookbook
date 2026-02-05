@@ -24,6 +24,8 @@ h2 {
     justify-content: space-between;
     margin-left: 1rem;
     margin-bottom: 1rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
     border: 1px solid #ccc;
     border-radius: 0.5rem;
     width: 20rem;
@@ -33,13 +35,24 @@ h2 {
 
     .image-box {
       position: relative;
-      background-size: contain;
-      background-position: center;
-      background-repeat: no-repeat;
-      display: block;
-      aspect-ratio: auto;
+      flex-direction: row;
+      justify-content: center;
+      display: flex;
       width: 100%;
-      height: 9rem;
+      height: 7rem;
+      object-fit: contain;
+      cursor: pointer;
+      &:hover {
+        opacity: 0.8;
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+
+      & img {
+        width: 100%;
+        height: auto;
+        aspect-ratio: auto;
+        object-fit: scale-down;
+      }
     }
     .image-amend {
       display: block;
@@ -52,9 +65,46 @@ h2 {
       border-left: 1px solid #ccc;
       border-bottom-left-radius: 0.5rem;
     }
+
+    .image-box-row {
+      justify-content: space-between;
+      width: 100%;
+
+      .image-box-alt {
+        position: relative;
+        display: flex;
+        width: 45%;
+        height: 4rem;
+        border: #ccc 1px solid;
+        cursor: pointer;
+        &:hover {
+          opacity: 0.8;
+          background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        & img {
+          width: 100%;
+          height: auto;
+          aspect-ratio: auto;
+          object-fit: scale-down;
+        }
+      }
+      .image-label {
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: beige;
+        padding: 0.25rem 0.5rem;
+        border-bottom: 1px solid #ccc;
+        border-left: 1px solid #ccc;
+        border-bottom-left-radius: 0.5rem;
+        font-size: 0.75em;
+      }
+    }
     .image-name {
       align-self: center;
-      font-size: 1em;
+      font-size: 0.9em;
       margin-bottom: 1rem;
       margin-left: 1rem;
       margin-right: 1rem;

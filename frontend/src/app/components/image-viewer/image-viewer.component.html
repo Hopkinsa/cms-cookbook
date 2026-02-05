@@ -1,0 +1,7 @@
+<div class="modal" [ngClass]="{ 'modalOpen': imgView(), 'modalClose': !imgView() }">
+  <button class="close" type="button" (click)="close()">&times;</button>
+  <div class="modal-container">
+    <img alt="Image Preview" class="modal-content" [src]="imgSrc()">
+    <div id="caption">{{ caption() }}</div>
+  </div>
+</div>

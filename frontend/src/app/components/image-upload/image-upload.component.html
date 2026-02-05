@@ -1,7 +1,7 @@
-<div class="file-upload-container" [class.file-upload-container-margin]="variant !== 'icon'">
+<div class="file-upload-container" [class.file-upload-container-margin]="variant() !== 'icon'">
   <input #fileUpload class="file-input" id="file-upload" title="file upload" type="file"
     (change)="onFileSelected($event)" />
-  @if (variant === 'icon') {
+  @if (variant() === 'icon') {
   <button matIconButton type="button" (click)="fileUpload.click()"><mat-icon>upload_file</mat-icon></button>
   }
   @else {

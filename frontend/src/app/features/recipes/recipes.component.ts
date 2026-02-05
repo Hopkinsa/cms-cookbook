@@ -71,11 +71,11 @@ export class RecipesComponent {
   }
 
   onPageChange(event: any): void {
+    // keep top and bottom paginator in sync
     const pageIndex = event.pageIndex;
     const pageSize = event.pageSize;
     this.pageIndex.set(pageIndex);
     this.pageSize.set(pageSize);
-    console.info('Page changed to index:', this.pageIndex(), 'with size:', this.pageSize());
   }
 
   delete(id: number): void {

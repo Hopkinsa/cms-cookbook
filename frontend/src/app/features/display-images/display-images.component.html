@@ -2,30 +2,43 @@
 <div class="row">
   <h1>Available Images</h1>
   @if (signalService.editEnabled()) {
-    <app-image-upload [variant]="'text'" />
+  <app-image-upload [variant]="'text'" />
   }
 </div>
 
 <div class="row">
   @if (fileService.imageList()) {
-    <div class="column">
-      @for (image of fileService.imageList() | sortArrays:'image':'asc'; track image; let i = $index ) {
-        <div class="recipe-image">
-          <div class="image-box" style="background-image: url('{{ imgURL }}{{ image }}')"></div>
-            @if (signalService.editEnabled()) {
-              <div class="image-amend">
-                <button matIconButton type="button" (click)="amend(image)"><mat-icon>edit</mat-icon></button>
-                <button matIconButton type="button" (click)="delete(image)"><mat-icon fontSet="material-icons-outlined">delete</mat-icon></button>
-              </div>
-            }
-          <div class="image-name">{{ image }}</div>
-        </div>
+  <div class="column">
+    @for (image of fileService.imageList() | sortArrays:'image':'asc'; track image; let i = $index ) {
+    <div class="recipe-image">
+      <div class="image-box" (click)="openModal(image, 'original')"><img alt="{{ image }}" [src]="imgURL + image" /></div>
+      @if (signalService.editEnabled()) {
+      <div class="image-amend">
+        <button matIconButton type="button" (click)="amend(image)"><mat-icon>edit</mat-icon></button>
+        <button matIconButton type="button" (click)="delete(image)"><mat-icon
+            fontSet="material-icons-outlined">delete</mat-icon></button>
+      </div>
       }
+      <div class="row image-box-row ">
+        <div class="image-box-alt" (click)="openModal(image, 'icon')" >
+          <img alt="{{ image }} Icon" [src]="imgURL + altImage(image, 'icon')" />
+          <div class="image-label">Icon</div>
+        </div>
+        <div class="image-box-alt" (click)="openModal(image, 'banner')" >
+          <img alt="{{ image }} Banner" [src]="imgURL + altImage(image, 'banner')" />
+          <div class="image-label" >Banner</div>
+        </div>
+      </div>
+      <div class="image-name">{{ image | truncate:30 }}</div>
     </div>
+    }
+  </div>
+  <app-image-viewer [(caption)]="imageModal.caption" [(imgSrc)]="imageModal.src" [(imgView)]="imageModal.open" />
   }
   @else {
-    <p>No images found</p>
-  }</div>
+  <p>No images found</p>
+  }
+</div>
 <div class="row">
   <button matButton="filled" type="button" (click)="back()">Back</button>
 </div>
