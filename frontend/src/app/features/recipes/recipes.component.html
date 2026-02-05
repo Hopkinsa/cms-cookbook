@@ -26,7 +26,7 @@
 </div>
 <div class="row">
   <div class="column">
-    <mat-paginator aria-label="Select page" [length]="signalService.recipesFound()" [pageSize]="pageSize()"
+    <mat-paginator aria-label="Select page" [length]="signalService.recipesFound()" [pageIndex]="pageIndex()" [pageSize]="pageSize()"
      [pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)"/>
   </div>
 </div>
@@ -62,7 +62,7 @@
 </div>
 <div class="row">
   <div class="column">
-    <mat-paginator aria-label="Select page" [length]="signalService.recipesFound()" [pageSize]="pageSize()"
+    <mat-paginator aria-label="Select page" [length]="signalService.recipesFound()" [pageIndex]="pageIndex()" [pageSize]="pageSize()"
      [pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)"/>
   </div>
 </div>
