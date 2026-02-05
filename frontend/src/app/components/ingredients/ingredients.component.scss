@@ -1,10 +1,18 @@
 .ingredient-title {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   margin-left: 1rem;
   font-weight: 600;
 }
 .ingredient-line {
   margin-left: 2rem;
+  margin-top: 0.5rem;
   display: list-item;
   list-style-type: circle;
+}
+
+.ingredient-line + .ingredient-line {
+    margin-top: 0.15rem;
+}
+.ingredient-line + .ingredient-title {
+    margin-top: 1rem;
 }

@@ -55,17 +55,17 @@
     }
   </mat-chip-set>
 </div>
+<div class="recipe-details">
+  <div class="recipe-ingredients">
+    <b>Ingredients:</b>
+    <app-ingredients />
+  </div>
 
-<div class="recipe-ingredients">
-  <b>Ingredients:</b>
-  <app-ingredients />
+  <div class="recipe-steps">
+    <b>Steps:</b>
+    <app-steps />
+  </div>
 </div>
-
-<div class="recipe-steps">
-  <b>Steps:</b>
-  <app-steps />
-</div>
-
 @if (signalService.recipe()?.notes !== ''){
 <div class="recipe-notes">
   <b>Notes:</b>
