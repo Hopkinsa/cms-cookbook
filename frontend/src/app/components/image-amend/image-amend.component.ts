@@ -123,15 +123,15 @@ export class ImageAmendComponent {
   }
 
   scaleDown(): void {
-    this.scaleX -= (0.05 * this.flipX);
-    this.scaleY -= (0.05 * this.flipY);
+    this.scaleX -= 0.05 * this.flipX;
+    this.scaleY -= 0.05 * this.flipY;
     this.cropper!.scale(this.scaleX, this.scaleY);
     this.imageData();
   }
 
   scaleUp(): void {
-    this.scaleX += (0.05 * this.flipX);
-    this.scaleY += (0.05 * this.flipY);
+    this.scaleX += 0.05 * this.flipX;
+    this.scaleY += 0.05 * this.flipY;
     this.cropper!.scale(this.scaleX, this.scaleY);
     this.imageData();
   }
@@ -185,38 +185,26 @@ export class ImageAmendComponent {
   }
 
   apply(): void {
-    // Upload cropped image to server if the browser supports `HTMLCanvasElement.toBlob`.
-    // The default value for the second parameter of `toBlob` is 'image/png', change it if necessary.
-    const cropBoxData = this.cropper!.getCropBoxData();
-    const imgName = this.formModel().targetImage === 'icon' ? this.signalIconImage() : this.signalBannerImage();
-
-    this.cropper!.getCroppedCanvas({
-      width: cropBoxData.width,
-      height: cropBoxData.height,
-      fillColor: '#fff',
-      imageSmoothingEnabled: false,
-      imageSmoothingQuality: 'high',
-    }).toBlob(
-      (blob) => {
-        const formData = new FormData();
-
-        // Pass the image file name as the third parameter if necessary.
-        formData.append('file', blob as Blob, imgName);
-
-        this.fileService.uploadImage(formData).subscribe(
-          (res: any) => {
-            if (res.type === HttpEventType.Response) {
-              this.signalService.feedbackMessage.set({ type: 'success', message: 'Image added' });
-            }
-          },
-          (error) => {
-            console.error('Upload error:', error);
-            this.signalService.feedbackMessage.set({ type: 'error', message: 'Image upload failed' });
-          },
-        );
-      },
-      this.imgType(),
-      0.9,
-    );
+    // Upload image cchanges to the server for processing in sharp
+    const cropBoxData = this.cropper!.getData();
+    const imgName = this.signalImageOrig();
+    const imgSave = this.formModel().targetImage === 'icon' ? this.signalIconImage() : this.signalBannerImage();
+    this.fileService
+      .editImage({
+        file: imgName,
+        saveTo: imgSave,
+        cropBoxData: cropBoxData,
+      })
+      .subscribe(
+        (res: any) => {
+          if (res.type === HttpEventType.Response) {
+            this.signalService.feedbackMessage.set({ type: 'success', message: 'Image added' });
+          }
+        },
+        (error) => {
+          console.error('Upload error:', error);
+          this.signalService.feedbackMessage.set({ type: 'error', message: 'Image upload failed' });
+        },
+      );
   }
 }
