@@ -19,19 +19,54 @@ class FileApi {
     return { icon: nameIcon, banner: nameBanner };
   }
 
-  static resizeImage(filename: string): void {
+  static resizeImage = async (filename: string): Promise<void> => {
     const fileNames = FileApi.generateNames(filename);
 
-    sharp(`${UPLOAD_PATH}/${filename}`)
-      .resize({ width: 450 })
-      .jpeg({ quality: 50 })
-      .toFile(`${UPLOAD_PATH}/${fileNames.icon}`);
+    const input = `${UPLOAD_PATH}/${filename}`;
+    const outputIcon = `${UPLOAD_PATH}/${fileNames.icon}`;
+    const outputBanner = `${UPLOAD_PATH}/${fileNames.banner}`;
 
-    sharp(`${UPLOAD_PATH}/${filename}`)
-      .resize({ width: 800 })
-      .jpeg({ quality: 80 })
-      .toFile(`${UPLOAD_PATH}/${fileNames.banner}`);
-  }
+    const iconWidth = 450;
+    const iconHeight = 270;
+    const bannerWidth = 800;
+    const bannerHeight = 171;
+
+    await sharp(input)
+      .metadata()
+      .then(({ width, height }) => {
+        const scaleX = iconWidth / width;
+        const newHeight = height * scaleX;
+        const cropArea = {
+          left: 0,
+          top: Math.round(Math.abs(newHeight - iconHeight) / 2),
+          width: iconWidth,
+          height: iconHeight,
+        };
+        sharp(input)
+          .resize(Math.round(width * scaleX))
+          .extract(cropArea)
+          .jpeg({ quality: 80 })
+          .toFile(outputIcon);
+      });
+
+    await sharp(input)
+      .metadata()
+      .then(({ width, height }) => {
+        const scaleX = bannerWidth / width;
+        const newHeight = height * scaleX;
+        const cropArea = {
+          left: 0,
+          top: Math.round(Math.abs(newHeight - bannerHeight) / 2),
+          width: bannerWidth,
+          height: bannerHeight,
+        };
+        sharp(input)
+          .resize(Math.round(width * scaleX))
+          .extract(cropArea)
+          .jpeg({ quality: 80 })
+          .toFile(outputBanner);
+      });
+  };
 
   // POST route for file upload
   static uploadImageFiles = async (req: Request, res: Response): Promise<void> => {
@@ -45,10 +80,63 @@ class FileApi {
       resMessage = 'No file uploaded or invalid file type!';
     } else {
       if (!file.includes('-Icon.') && !file.includes('-Banner.')) {
-        FileApi.resizeImage(file);
+        await FileApi.resizeImage(file);
       }
       resCode = 200;
       resMessage = 'File uploaded successfully!';
+    }
+    res.status(resCode).json(resMessage);
+  };
+
+  static editImageFiles = async (req: Request, res: Response): Promise<void> => {
+    const file: string = !req.body.file ? '' : req.body.file;
+    const saveTo: string = !req.body.saveTo ? '' : req.body.saveTo;
+    const cropBoxData = req.body.cropBoxData;
+    log.info_lv2(`${DEBUG}editImageFiles: ${saveTo}`);
+    let resCode = 200;
+    let resMessage = '';
+    if (!file || !saveTo) {
+      resCode = 400;
+      resMessage = 'No file specified!';
+    } else {
+      const input = `${UPLOAD_PATH}/${file}`;
+      const output = `${UPLOAD_PATH}/${saveTo}`;
+
+      if (fs.existsSync(input)) {
+        const rotate = cropBoxData.rotate;
+        const scaleX = Math.abs(cropBoxData.scaleX); // Must be positive
+        const scaleY = Math.abs(cropBoxData.scaleY); // Must be positive
+        const cropX = parseInt(cropBoxData.x);
+        const cropY = parseInt(cropBoxData.y);
+        const cropWidth = parseInt(cropBoxData.width);
+        const cropHeight = parseInt(cropBoxData.height);
+
+        const flipImage = cropBoxData.scaleX < 0; // Mirror the image vertically
+        const flopImage = cropBoxData.scaleY < 0; // Mirror the image horizontally
+
+        const cropArea = {
+          left: cropX,
+          top: cropY,
+          width: cropWidth,
+          height: cropHeight,
+        };
+
+        await sharp(input)
+          .metadata()
+          .then(({ width, height }) =>
+            sharp(input)
+              .resize(Math.round(width * scaleX), Math.round(height * scaleY))
+              .rotate(rotate)
+              .extract(cropArea)
+              .flip(flipImage)
+              .flop(flopImage)
+              .jpeg({ quality: 80 })
+              .toFile(output),
+          );
+      } else {
+        resCode = 404;
+        resMessage = 'Image not found';
+      }
     }
     res.status(resCode).json(resMessage);
   };

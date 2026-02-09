@@ -45,6 +45,15 @@ export class FileService {
       .pipe(catchError(this.error.handleError('uploadImage', 'Unable to upload file', [])));
   }
 
+    editImage(data: any): Observable<any> {
+    return this.http
+      .post<any>(`${this.apiUrl}images/edit`, data, {
+        reportProgress: true,
+        observe: 'events',
+      })
+      .pipe(catchError(this.error.handleError('editImage', 'Unable to edit file', [])));
+  }
+
   deleteImage(imgName: string): Observable<any> {
     return this.http
       .delete<any>(`${this.apiUrl}images/${imgName}`)
