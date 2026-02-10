@@ -9,6 +9,13 @@ const DEBUG = 'file-api | ';
 
 const UPLOAD_PATH = path.resolve(`${IMAGE_PATH}`);
 
+interface ICropArea {
+      left: number;
+      top: number;
+      width: number;
+      height: number;
+}
+
 class FileApi {
   static generateNames(fileName: string): { icon: string; banner: string } {
     const lastIndex = fileName.lastIndexOf('.');
@@ -18,6 +25,36 @@ class FileApi {
     const nameBanner = `${before}-Banner${after}`;
     return { icon: nameIcon, banner: nameBanner };
   }
+
+  static resizeDimensions = (
+    targetWidth: number,
+    targetHeight: number,
+    imgWidth: number,
+    imgHeight: number,
+  ): { width: number; height: number; crop: ICropArea } => {
+    const scaleX = targetWidth / imgWidth;
+    const scaleY = targetHeight / imgHeight;
+    let newWidth = Math.round(imgWidth * scaleX);
+    let newHeight = Math.round(imgHeight * scaleX);
+
+    if (newHeight <= targetHeight) {
+      newWidth = Math.round(imgWidth * scaleY);
+      newHeight = Math.round(imgHeight * scaleY);
+    }
+    if (newWidth <= targetWidth) {
+      // fallback - will distort image, but prevent error
+      newWidth = Math.round(imgWidth * scaleX);
+    }
+
+    const cropArea = {
+      left: 0,
+      top: Math.round(Math.abs(newHeight - targetHeight) / 2),
+      width: targetWidth,
+      height: targetHeight,
+    };
+
+    return { width: newWidth, height: newHeight, crop: cropArea };
+  };
 
   static resizeImage = async (filename: string): Promise<void> => {
     const fileNames = FileApi.generateNames(filename);
@@ -30,41 +67,24 @@ class FileApi {
     const iconHeight = 270;
     const bannerWidth = 800;
     const bannerHeight = 171;
-
     await sharp(input)
       .metadata()
       .then(({ width, height }) => {
-        const scaleX = iconWidth / width;
-        const newHeight = height * scaleX;
-        const cropArea = {
-          left: 0,
-          top: Math.round(Math.abs(newHeight - iconHeight) / 2),
-          width: iconWidth,
-          height: iconHeight,
-        };
-        sharp(input)
-          .resize(Math.round(width * scaleX))
-          .extract(cropArea)
-          .jpeg({ quality: 80 })
-          .toFile(outputIcon);
+        const newSize = FileApi.resizeDimensions(iconWidth, iconHeight, width, height);
+        sharp(input).resize(newSize.width, newSize.height).extract(newSize.crop).jpeg({ quality: 80 }).toFile(outputIcon);
+      })
+      .catch((err) => {
+        log.error(`${DEBUG}FileApi - resizeImage Icon: `, err.message);
       });
 
     await sharp(input)
       .metadata()
       .then(({ width, height }) => {
-        const scaleX = bannerWidth / width;
-        const newHeight = height * scaleX;
-        const cropArea = {
-          left: 0,
-          top: Math.round(Math.abs(newHeight - bannerHeight) / 2),
-          width: bannerWidth,
-          height: bannerHeight,
-        };
-        sharp(input)
-          .resize(Math.round(width * scaleX))
-          .extract(cropArea)
-          .jpeg({ quality: 80 })
-          .toFile(outputBanner);
+        const newSize = FileApi.resizeDimensions(bannerWidth, bannerHeight, width, height);
+        sharp(input).resize(newSize.width, newSize.height).extract(newSize.crop).jpeg({ quality: 80 }).toFile(outputBanner);
+      })
+      .catch((err) => {
+        log.error(`${DEBUG}FileApi - resizeImage Banner: `, err.message);
       });
   };
 
@@ -132,7 +152,10 @@ class FileApi {
               .flop(flopImage)
               .jpeg({ quality: 80 })
               .toFile(output),
-          );
+          )
+          .catch((err) => {
+            log.error(`${DEBUG}FileApi - editImageFiles: `, err.message);
+          });
       } else {
         resCode = 404;
         resMessage = 'Image not found';
@@ -167,13 +190,35 @@ class FileApi {
     res.status(resCode).json(resMessage);
   };
 
-  static getImageFiles = async (req: Request, res: Response): Promise<void> => {
-    log.info_lv2(`${DEBUG}getImageFiles`);
+  static listImageFiles = async (): Promise<string[]> => {
+    log.info_lv2(`${DEBUG}listImageFiles`);
     const filenames = fs.readdirSync(UPLOAD_PATH);
 
     const filteredFilenames: string[] = filenames.filter(
       (name) => name !== '.DS_Store' && !name.includes('-Icon.') && !name.includes('-Banner.'),
     );
+    return filteredFilenames;
+  };
+
+  static getImageFiles = async (req: Request, res: Response): Promise<void> => {
+    log.info_lv2(`${DEBUG}getImageFiles`);
+
+    const filteredFilenames: string[] = await FileApi.listImageFiles();
+
+    res.status(200).json(filteredFilenames);
+  };
+
+  static resetAllImageFiles = async (req: Request, res: Response): Promise<void> => {
+    log.info_lv2(`${DEBUG}resetAllImageFiles`);
+    const filteredFilenames: string[] = await FileApi.listImageFiles();
+
+    await filteredFilenames.forEach(async (img: string) => {
+      const filepath = `${UPLOAD_PATH}/${img}`;
+      if (fs.existsSync(filepath)) {
+        await FileApi.resizeImage(img);
+      }
+    });
+
     res.status(200).json(filteredFilenames);
   };
 }
