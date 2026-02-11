@@ -16,7 +16,7 @@ class DBUpdate {
       res.status(422).json({ errors: errors.array() });
     } else {
       const recipeId: number = parseInt(req.params['id']);
-      const recipeData: IRecipe = req.body;
+      const recipeData: IRecipe = JSON.parse(JSON.stringify(req.body));
       recipeData.date_updated = Date.now();
       let resCode = 200;
       let resMessage: IResponse = { completed: true };
@@ -26,7 +26,8 @@ class DBUpdate {
         resCode = 500;
         resMessage = { message: 'IDs missing or invalid' };
       } else {
-        await DBService.db.run(UPDATE_RECIPE_DATA, JSON.stringify(recipeData), recipeId).catch((err) => {
+        const recipe = JSON.stringify(recipeData).replace(/&#x27;/g, "'");
+        await DBService.db.run(UPDATE_RECIPE_DATA, recipe, recipeId).catch((err) => {
           log.error(`${DEBUG}updateRecipe - Error: `, err.message);
           resCode = 500;
           resMessage = { message: 'update failed' };

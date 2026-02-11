@@ -23,7 +23,7 @@ class DBCreate {
       let resMessage: IResponse = { completed: true };
       log.info_lv2(`${DEBUG}createRecipe`);
 
-      const data = JSON.stringify(recipeData);
+      const data = JSON.stringify(recipeData).replace(/&#x27;/g, "'");
       await DBService.db.run(CREATE_RECIPE_DATA, `${data}`).catch((err) => {
         log.error(`${DEBUG}createRecipe - Error: `, err.message);
         resCode = 500;
