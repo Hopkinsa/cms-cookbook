@@ -25,7 +25,7 @@ export class RecipeTagAmendComponent {
 
   protected signalService: SignalService = inject(SignalService);
 
-  protected tagModel = signal<IRecipeTagForm>(recipeTagFormInitialState);
+  protected tagModel = signal<IRecipeTagForm>({...recipeTagFormInitialState});
   protected tagForm = form(this.tagModel);
 
   protected enableSave = true;

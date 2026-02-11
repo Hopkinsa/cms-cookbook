@@ -1,7 +1,7 @@
 <div class="row">
   <h1>Recipes</h1>
   @if (signalService.editEnabled()) {
-  <a matButton="tonal" routerLink="/recipe/add">Add</a>
+  <button matButton="tonal"  type="button" (click)="add()">Add</button>
   }
 </div>
 <div class="row result-top">
@@ -16,6 +16,10 @@
         <select title="Sort" [field]="searchForm.sortSelect" (change)="sortOption()">
           <option value="t1">Title (A - Z)</option>
           <option value="t2">Title (Z - A)</option>
+          <option value="t3">Added (Latest)</option>
+          <option value="t4">Added (Oldest)</option>
+          <option value="t5">Updated (Latest)</option>
+          <option value="t6">Updated (Oldest)</option>
         </select>
       </label>
       <label><b>Search:</b><input type="text" [field]="searchForm.terms"></label><button matIconButton type="button"

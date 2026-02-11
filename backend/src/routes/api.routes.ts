@@ -2,14 +2,14 @@ import { Router } from 'express';
 
 import { recipeBody, searchQuery, sortQuery, tagBody } from '../validation/api.validation.ts';
 
-import DBCreate from '../db-api/db-create/db-create.ts';
-import DBRead from '../db-api/db-read/db-read.ts';
-import DBUpdate from '../db-api/db-update/db-update.ts';
-import DBDelete from '../db-api/db-delete/db-delete.ts';
-import DBBackup from '../db-api/db-backup/db-backup.ts';
-import DBRestore from '../db-api/db-restore/db-restore.ts';
+import DBCreate from '../api/db-create/db-create.ts';
+import DBRead from '../api/db-read/db-read.ts';
+import DBUpdate from '../api/db-update/db-update.ts';
+import DBDelete from '../api/db-delete/db-delete.ts';
+import DBBackup from '../api/db-backup/db-backup.ts';
+import DBRestore from '../api/db-restore/db-restore.ts';
 
-import uploadZip from '../db-api/db-restore/multer.middleware.ts';
+import uploadZip from '../api/db-restore/multer.middleware.ts';
 
 export const API_ROUTES = Router();
 

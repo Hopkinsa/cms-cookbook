@@ -28,7 +28,7 @@ export class ImportRecipeComponent {
   recipeImport = output<any>();
 
   protected signalService: SignalService = inject(SignalService);
-  protected processedRecipe: IRecipe = recipeInitialState;
+  protected processedRecipe: IRecipe = {...recipeInitialState};
 
   protected readonly importModel = signal<IImport>({ recipe: '' });
   protected importForm = form(this.importModel);

@@ -62,16 +62,17 @@ export class AmendRecipeComponent {
   protected signalService: SignalService = inject(SignalService);
   protected readonly showImportField = signal(false);
   protected readonly enableSave = signal(true);
-  protected readonly recipeModel = signal<IRecipe>(recipeInitialState);
+  protected readonly recipeModel = signal<IRecipe>({...recipeInitialState});
   protected recipeForm = form(this.recipeModel);
 
   private initPage = effect(() => {
     this.signalService.canEdit();
-
     // populate on change
     const recipe = this.signalService.recipe();
-    // Prevent initial null value from signal creation
-    if (recipe !== null) {
+    if (recipe === null) {
+      // Add / amend setup
+      this.recipeModel.set({...recipeInitialState});
+    } else {
       this.recipeModel.set(recipe);
     }
   });

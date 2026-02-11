@@ -18,7 +18,7 @@ export class IngredientAmendComponent {
   });
   ingredientChange = output<any>();
 
-  protected ingredientModel = signal<IIngredients>(ingredientInitialState);
+  protected ingredientModel = signal<IIngredients>({...ingredientInitialState});
   protected ingredientForm = form(this.ingredientModel);
 
   private formInit = true;
