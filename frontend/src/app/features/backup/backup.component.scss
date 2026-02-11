@@ -1,9 +1,6 @@
 h1 {
   display: inline-block;
 }
-h1 + a {
-  margin-left: 1rem;
-}
 h2 {
   text-transform: capitalize;
 }
@@ -15,19 +12,17 @@ h2 {
 .options {
   justify-content: center;
 }
-button + button {
-  margin-left: 2rem;
-}
 
-.file-upload-container-margin {
-  margin-left: 1rem;
-}
-
-.file-upload-container {
+.file-download-container, .file-upload-container {
   display: flex;
   flex-direction: row;
   align-items: center;
-
+}
+.file-download-container {
+    margin-right: 1rem;
+}
+.file-upload-container {
+  margin-left: 1rem;
   /* Hide the default file input */
   .file-input {
     display: none;

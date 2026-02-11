@@ -3,19 +3,20 @@
   <h1>Backup / Restore</h1>
 </div>
 <div class="row options">
-  <button matButton="filled" type="button" [disabled]="!enableBtn()" (click)="backup()">Backup</button>
-
-  <div class="file-upload-container">
-  <input #fileUpload class="file-input" id="file-upload" title="file upload" type="file"
-    (change)="onFileSelected($event)" />
-  <button matButton="filled" type="button" [disabled]="!enableBtn()" (click)="fileUpload.click()">Restore</button>
-  @if (uploadProgress) {
-  <div class="progress-container">
-    <mat-progress-bar class="progress-bar" mode="determinate" [value]="uploadProgress" />
-    <div class="progress-text">{{ uploadProgress }}%</div>
+  <div class="file-download-container">
+    <button matButton="filled" type="button" [disabled]="!enableBtn()" (click)="backup()">Backup</button>
   </div>
-  }
-</div>
+  <div class="file-upload-container">
+    <input #fileUpload class="file-input" id="file-upload" title="file upload" type="file"
+      (change)="onFileSelected($event)" />
+    <button matButton="filled" type="button" [disabled]="!enableBtn()" (click)="fileUpload.click()">Restore</button>
+    @if (uploadProgress) {
+    <div class="progress-container">
+      <mat-progress-bar class="progress-bar" mode="determinate" [value]="uploadProgress" />
+      <div class="progress-text">{{ uploadProgress }}%</div>
+    </div>
+    }
+  </div>
 </div>
 <div class="row">
   <button matButton="filled" type="button" (click)="back()">Back</button>

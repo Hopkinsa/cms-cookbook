@@ -6,7 +6,8 @@ import type { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from '@an
 
 export const addRecipeResolver: ResolveFn<any> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
   const id = -1;
-  const initialState = recipeInitialState;
-  inject(SignalService).recipe.set(initialState);
+  const sigSer: SignalService = inject(SignalService)
+  const initialState = {...recipeInitialState};
+  sigSer.recipe.set({...initialState});
   return id;
 };

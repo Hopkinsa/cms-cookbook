@@ -21,7 +21,7 @@ export class TagAmendComponent {
 
   protected signalService: SignalService = inject(SignalService);
   protected tagService: TagService = inject(TagService);
-  protected tagModel = signal<ITags>(tagsInitialState);
+  protected tagModel = signal<ITags>({...tagsInitialState});
   protected tagForm = form(this.tagModel);
   protected readonly enableSave = signal(true);
 

@@ -36,7 +36,7 @@ export class RecipesComponent {
   });
 
   protected imgURL = `${environment.baseImgURL}`;
-  protected readonly fieldModel = signal<IRecipeSearch>(IRecipeSearchInit);
+  protected readonly fieldModel = signal<IRecipeSearch>({...IRecipeSearchInit});
   protected searchForm = form(this.fieldModel);
 
   icon(img_url: string): string {
@@ -51,6 +51,18 @@ export class RecipesComponent {
     }
     if (this.fieldModel().sortSelect === 't2') {
       sortValue = { target: 'title', direction: 'desc' };
+    }
+    if (this.fieldModel().sortSelect === 't3') {
+      sortValue = { target: 'created', direction: 'desc' };
+    }
+    if (this.fieldModel().sortSelect === 't4') {
+      sortValue = { target: 'created', direction: 'asc' };
+    }
+    if (this.fieldModel().sortSelect === 't5') {
+      sortValue = { target: 'updated', direction: 'desc' };
+    }
+    if (this.fieldModel().sortSelect === 't6') {
+      sortValue = { target: 'updated', direction: 'asc' };
     }
     this.recipeListService.recipeSort.set(sortValue);
     this.fieldModel().sort = sortValue;
@@ -89,6 +101,11 @@ export class RecipesComponent {
   amend(id: number): void {
     this.signalService.returnTo.set('recipes');
     this.router.navigate(['/recipe', id, 'amend']);
+  }
+
+  add(): void {
+    this.signalService.returnTo.set('recipes');
+    this.router.navigate(['/recipe', 'add']);
   }
 
   back(): void {

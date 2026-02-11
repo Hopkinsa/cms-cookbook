@@ -172,7 +172,12 @@ class DBRead {
           log.error(`${DEBUG}getRecipes - Error: `, err.message);
         });
 
-      const dbData = await DBService.db.prepare(`${FIND_RECIPES} ${param.sort.target} ${param.sort.direction.toUpperCase()}`);
+      let sortResults = `${param.sort.target} ${param.sort.direction.toUpperCase()}`;
+      if (param.sort.target !== 'title') {
+        sortResults += ', title ASC';
+      }
+
+      const dbData = await DBService.db.prepare(`${FIND_RECIPES} ${sortResults}`);
       await dbData
         .all(`%${param.terms}%`)
         .then((data) => {

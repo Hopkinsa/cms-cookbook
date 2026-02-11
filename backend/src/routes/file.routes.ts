@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
-import FileApi from '../db-api/file-api/file-api.ts';
-import uploadImage from '../db-api/file-api/multer.middleware.ts';
+import FileApi from '../api/file-api/file-api.ts';
+import uploadImage from '../api/file-api/multer.middleware.ts';
 
 export const FILE_ROUTES = Router();
 

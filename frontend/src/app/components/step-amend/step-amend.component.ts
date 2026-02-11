@@ -17,7 +17,7 @@ export class StepAmendComponent {
   });
   stepChange = output<any>();
 
-  protected stepModel = signal<IStep>(stepInitialState);
+  protected stepModel = signal<IStep>({...stepInitialState});
   protected stepForm = form(this.stepModel);
 
   private formInit = true;
