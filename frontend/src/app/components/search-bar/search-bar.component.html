@@ -1,0 +1,55 @@
+<div class="row result-top">
+  <div class="row info-bar">
+    @if (signalService.recipeList()) {
+    <b>Recipes:</b> {{ signalService.recipesFound() }}
+    }
+  </div>
+  <div class="row search-bar">
+    <form>
+      <label><b>Categories:</b></label>
+      <select title="Tags" [field]="searchForm.tag"  (change)="addTag()">
+        <option value="">Select a tag</option>
+        @for (tags of signalService.tags() | groupBy:'type' | keyvalue; track tags.key) {
+        <optgroup [label]="$any(tags.key) | titlecase">
+
+          @for (item of tags.value; track item) {
+          <option [value]="item.tag">{{ item.tag }}</option>
+          }
+        </optgroup>
+        }
+        @empty {
+        <div class="text-row">
+          <div class="text-block">
+            There are no tags
+          </div>
+        </div>
+        }
+      </select>
+      <mat-chip-grid>
+        @for (tag of searchForm.tags().value(); track tag; let i = $index) {
+        <mat-chip-row>{{ tag }}
+          <button matChipRemove type="button" (click)="removeTag(i)">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+        }
+
+      </mat-chip-grid>
+    </form>
+    <form (submit)="search($event)">
+      <label><b>Order by:</b>
+        <select title="Sort" [field]="searchForm.sortSelect" (change)="sortOption()">
+          <option value="t1">Title (A - Z)</option>
+          <option value="t2">Title (Z - A)</option>
+          <option value="t3">Added (Latest)</option>
+          <option value="t4">Added (Oldest)</option>
+          <option value="t5">Updated (Latest)</option>
+          <option value="t6">Updated (Oldest)</option>
+        </select>
+      </label>
+      <label><b>Search:</b><input type="text" [field]="searchForm.terms"></label><button matIconButton type="button"
+        (click)="search($event)"><mat-icon>search</mat-icon></button>
+      <button matIconButton type="button" (click)="reset()"><mat-icon>close_small</mat-icon></button>
+    </form>
+  </div>
+</div>

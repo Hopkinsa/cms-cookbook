@@ -5,11 +5,6 @@ import { environment } from 'src/environment/environment';
 import { SignalService } from '@server/core/services/signal.service';
 import { IRecipeList, ISearchResults } from '@server/core/interface/recipe.interface';
 
-interface ISortSignal {
-  target: string;
-  direction: string;
-}
-
 @Injectable({
   providedIn: 'root',
 })
@@ -23,13 +18,13 @@ export class RecipeListService {
   // or an ISortSignal object to recipeSort using recipeSort.set(<ISortSignal>)
   readonly getRecipeList: WritableSignal<number | null> = signal(null);
   readonly findRecipes: WritableSignal<string | null> = signal(null);
-  readonly recipeSort: WritableSignal<ISortSignal> = signal({ target: 'title', direction: 'asc' });
 
   private recipeListRequestResolved = effect(() => {
     if (this.recipeListRequest.status() === 'resolved') {
       const resolvedData = this.recipeListRequest.value();
       this.signalService.recipeList.set(resolvedData?.results as IRecipeList[]);
       this.signalService.recipesFound.set(resolvedData?.total as number);
+      this.signalService.pageIndex.set(0);
     }
   });
 
@@ -41,7 +36,7 @@ export class RecipeListService {
 
   private recipeListRequest = httpResource<ISearchResults>(() => {
     const terms = this.findRecipes();
-    const sorting = this.recipeSort();
+    const sorting = this.signalService.pageSort();
     const sortOn = sorting.target;
     const sortDir = sorting.direction;
 

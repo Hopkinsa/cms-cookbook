@@ -1,37 +1,15 @@
 <div class="row">
   <h1>Recipes</h1>
   @if (signalService.editEnabled()) {
-  <button matButton="tonal"  type="button" (click)="add()">Add</button>
+  <button matButton="tonal" type="button" (click)="add()">Add</button>
   }
 </div>
-<div class="row result-top">
-  <div class="row info-bar">
-    @if (signalService.recipeList()) {
-    <b>Recipes:</b> {{ signalService.recipesFound() }}
-    }
-  </div>
-  <div class="row search-bar">
-    <form (submit)="search($event)">
-      <label><b>Order by:</b>
-        <select title="Sort" [field]="searchForm.sortSelect" (change)="sortOption()">
-          <option value="t1">Title (A - Z)</option>
-          <option value="t2">Title (Z - A)</option>
-          <option value="t3">Added (Latest)</option>
-          <option value="t4">Added (Oldest)</option>
-          <option value="t5">Updated (Latest)</option>
-          <option value="t6">Updated (Oldest)</option>
-        </select>
-      </label>
-      <label><b>Search:</b><input type="text" [field]="searchForm.terms"></label><button matIconButton type="button"
-        (click)="search($event)"><mat-icon>search</mat-icon></button>
-      <button matIconButton type="button" (click)="reset()"><mat-icon>close_small</mat-icon></button>
-    </form>
-  </div>
-</div>
+<app-search-bar />
 <div class="row">
   <div class="column">
-    <mat-paginator aria-label="Select page" [length]="signalService.recipesFound()" [pageIndex]="pageIndex()" [pageSize]="pageSize()"
-     [pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)"/>
+    <mat-paginator aria-label="Select page" [length]="signalService.recipesFound()"
+      [pageIndex]="signalService.pageIndex()" [pageSize]="signalService.pageSize()"
+      [pageSizeOptions]="signalService.pageSizeOptions" (page)="onPageChange($event)" />
   </div>
 </div>
 <div class="row">
@@ -51,7 +29,8 @@
       @if (signalService.editEnabled()) {
       <div class="recipe-amend">
         <button matIconButton type="button" (click)="amend(recipe.id)"><mat-icon>edit</mat-icon></button>
-        <button matIconButton type="button" (click)="delete(recipe.id)"><mat-icon fontSet="material-icons-outlined">delete</mat-icon></button>
+        <button matIconButton type="button" (click)="delete(recipe.id)"><mat-icon
+            fontSet="material-icons-outlined">delete</mat-icon></button>
       </div>
       }
       <div class="recipe-name"><a [routerLink]="['/recipe', recipe.id]">{{ recipe.title }}</a></div>
@@ -66,8 +45,9 @@
 </div>
 <div class="row">
   <div class="column">
-    <mat-paginator aria-label="Select page" [length]="signalService.recipesFound()" [pageIndex]="pageIndex()" [pageSize]="pageSize()"
-     [pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)"/>
+    <mat-paginator aria-label="Select page" [length]="signalService.recipesFound()"
+      [pageIndex]="signalService.pageIndex()" [pageSize]="signalService.pageSize()"
+      [pageSizeOptions]="signalService.pageSizeOptions" (page)="onPageChange($event)" />
   </div>
 </div>
 <div class="row">
