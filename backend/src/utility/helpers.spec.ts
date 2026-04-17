@@ -1,4 +1,4 @@
-import { num2Bool, bool2Num, log } from './helpers';
+import { bool2Num, log, num2Bool, routeParamInt, routeParamValue } from './helpers';
 
 describe('helpers', () => {
   let consoleSpy: jest.SpyInstance;
@@ -19,6 +19,18 @@ describe('helpers', () => {
   test('bool2Num converts true to 1 and false to 0', () => {
     expect(bool2Num(true)).toBe(1);
     expect(bool2Num(false)).toBe(0);
+  });
+
+  test('routeParamValue normalizes express params to a single string', () => {
+    expect(routeParamValue('42')).toBe('42');
+    expect(routeParamValue(['42', '43'])).toBe('42');
+    expect(routeParamValue(undefined)).toBeUndefined();
+  });
+
+  test('routeParamInt parses normalized route params as integers', () => {
+    expect(routeParamInt('42')).toBe(42);
+    expect(routeParamInt(['42', '43'])).toBe(42);
+    expect(routeParamInt(undefined)).toBeNaN();
   });
 
   test('log methods call console.info', () => {

@@ -73,6 +73,21 @@ export function bool2Num(x: boolean): number {
   return 0;
 }
 
+export function routeParamValue(param: string | string[] | undefined): string | undefined {
+  if (Array.isArray(param)) {
+    return param[0];
+  }
+  return param;
+}
+
+export function routeParamInt(param: string | string[] | undefined): number {
+  const value = routeParamValue(param);
+  if (value === undefined) {
+    return Number.NaN;
+  }
+  return Number.parseInt(value, 10);
+}
+
 export const PORT = 3000;
 
 // Determine the base directory path

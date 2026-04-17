@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import QueryString from 'qs';
 
-import { log } from '../../utility/helpers.ts';
+import { log, routeParamInt } from '../../utility/helpers.ts';
 import DBService from '../../services/db.service.ts';
 import { ICard, IRecipe, IResponse, ISearchResults, ITags, IUnit } from '../../model/data-model.ts';
 import {
@@ -72,7 +72,7 @@ class DBRead {
 
   // Recipes
   static findRecipeByID = async (req: Request, res: Response): Promise<void> => {
-    const recipeId: number = parseInt(req.params['id']);
+    const recipeId: number = routeParamInt(req.params['id']);
     log.info_lv2(`${DEBUG}findRecipeByID: ${recipeId}`);
     let recipe: ICard | undefined;
     let resCode = 200;
@@ -190,7 +190,7 @@ class DBRead {
 
   // Units
   static findUnitByID = async (req: Request, res: Response): Promise<void> => {
-    const unitId: number = parseInt(req.params['id']);
+    const unitId: number = routeParamInt(req.params['id']);
     log.info_lv2(`${DEBUG}findUnitByID: ${unitId}`);
     let unit: IUnit | undefined;
     let resCode = 200;
@@ -236,7 +236,7 @@ class DBRead {
 
   // Tags
   static findTagByID = async (req: Request, res: Response): Promise<void> => {
-    const tagId: number = parseInt(req.params['id']);
+    const tagId: number = routeParamInt(req.params['id']);
     log.info_lv2(`${DEBUG}findTagByID: ${tagId}`);
     let tag: ITags | undefined;
     let resCode = 200;

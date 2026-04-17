@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, linkedSignal, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, ViewEncapsulation } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -32,10 +32,11 @@ export class RecipesComponent {
   private recipeListService: RecipeListService = inject(RecipeListService);
   private recipeService: RecipeService = inject(RecipeService);
 
-  protected readonly resultsPage = linkedSignal(() => {
+  protected readonly filteredRecipes = computed(() => this.signalService.filteredRecipeList() ?? []);
+  protected readonly resultsPage = computed(() => {
     const start = this.signalService.pageIndex() * this.signalService.pageSize();
     const end = start + this.signalService.pageSize();
-    return this.signalService.recipeList()!.slice(start, end);
+    return this.filteredRecipes().slice(start, end);
   });
 
   protected imgURL = `${environment.baseImgURL}`;

@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 
 import { IRecipe, IResponse, ITags } from '../../model/data-model.ts';
-import { log } from '../../utility/helpers.ts';
+import { log, routeParamInt } from '../../utility/helpers.ts';
 import  DBService from '../../services/db.service.ts';
 import { UPDATE_RECIPE_DATA, UPDATE_TAG_DATA } from './sql-update.ts';
 
@@ -15,7 +15,7 @@ class DBUpdate {
     if (!errors.isEmpty()) {
       res.status(422).json({ errors: errors.array() });
     } else {
-      const recipeId: number = parseInt(req.params['id']);
+      const recipeId: number = routeParamInt(req.params['id']);
       const recipeData: IRecipe = JSON.parse(JSON.stringify(req.body));
       recipeData.date_updated = Date.now();
       let resCode = 200;
@@ -46,7 +46,7 @@ class DBUpdate {
     if (!errors.isEmpty()) {
       res.status(422).json({ errors: errors.array() });
     } else {
-      const tagId: number = parseInt(req.params['id']);
+      const tagId: number = routeParamInt(req.params['id']);
       const tagData: ITags = req.body;
       let resCode = 200;
       let resMessage: IResponse = { completed: true };

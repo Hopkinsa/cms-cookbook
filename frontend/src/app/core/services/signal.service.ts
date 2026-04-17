@@ -1,7 +1,7 @@
 import { computed, inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { IFeedback, IRecipe, IRecipeList, ISortSignal, ITags, IUnits } from '@server/core/interface';
+import { IFeedback, IRecipe, IRecipeList, IRecipeSearch, IRecipeSearchInit, ISortSignal, ITags, IUnits } from '@server/core/interface';
 import { storageSignal } from './signal-storage.service';
 
 @Injectable({
@@ -22,6 +22,29 @@ export class SignalService {
   // Signal that contains the Recipe List data
   readonly recipeList: WritableSignal<IRecipeList[] | null> = signal(null);
   readonly recipesFound: WritableSignal<number | null> = signal(null);
+  readonly recipeSearch: WritableSignal<IRecipeSearch> = signal({ ...IRecipeSearchInit });
+  readonly filteredRecipeList = computed(() => {
+    const recipes = this.recipeList();
+    if (!recipes) {
+      return null;
+    }
+
+    const { tags, tagMode } = this.recipeSearch();
+    if (!tags.length) {
+      return recipes;
+    }
+
+    return recipes.filter((recipe) => {
+      const recipeTags = recipe.tags ?? [];
+
+      if (tagMode === 'and') {
+        return tags.every((tag) => recipeTags.includes(tag));
+      }
+
+      return tags.some((tag) => recipeTags.includes(tag));
+    });
+  });
+  readonly filteredRecipesFound = computed(() => this.filteredRecipeList()?.length ?? 0);
 
   // Signals that contains the Recipe data
   readonly recipe: WritableSignal<IRecipe | null> = signal(null);

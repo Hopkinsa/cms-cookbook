@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
-import { Field, form } from '@angular/forms/signals';
+import { FormField, form } from '@angular/forms/signals';
 
 import { IStep, stepInitialState } from '@server/core/interface';
 
@@ -8,7 +8,7 @@ import { IStep, stepInitialState } from '@server/core/interface';
   templateUrl: './step-amend.component.html',
   styleUrls: ['./step-amend.component.scss'],
   standalone: true,
-  imports: [Field],
+  imports: [FormField],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StepAmendComponent {

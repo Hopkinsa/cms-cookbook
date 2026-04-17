@@ -4,6 +4,9 @@ export interface ISortSignal {
   target: string;
   direction: string;
 }
+
+export type RecipeTagFilterMode = 'or' | 'and';
+
 export interface IRecipeSearch {
   total?: number;
   page?: { offset: number; quantity: number };
@@ -12,6 +15,7 @@ export interface IRecipeSearch {
   terms: string;
   tag: string;
   tags: string[];
+  tagMode: RecipeTagFilterMode;
 }
 
 export const IRecipeSearchInit: IRecipeSearch = {
@@ -20,6 +24,7 @@ export const IRecipeSearchInit: IRecipeSearch = {
   terms: '',
   tag: '',
   tags: [],
+  tagMode: 'or',
 };
 
 export interface IRecipeList {
