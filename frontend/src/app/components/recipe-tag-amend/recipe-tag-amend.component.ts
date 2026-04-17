@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input, output, signal } from '@angular/core';
-import { Field, form } from '@angular/forms/signals';
+import { FormField, form } from '@angular/forms/signals';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { KeyValuePipe, TitleCasePipe } from '@angular/common';
@@ -13,7 +13,7 @@ import { GroupByPipe } from '@server/shared/pipes';
   templateUrl: './recipe-tag-amend.component.html',
   styleUrls: ['./recipe-tag-amend.component.scss'],
   standalone: true,
-  imports: [Field, MatIconModule, MatChipsModule, GroupByPipe, KeyValuePipe, TitleCasePipe],
+  imports: [FormField, MatIconModule, MatChipsModule, GroupByPipe, KeyValuePipe, TitleCasePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeTagAmendComponent {

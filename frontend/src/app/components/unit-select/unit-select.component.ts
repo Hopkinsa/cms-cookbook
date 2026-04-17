@@ -1,6 +1,6 @@
 import { KeyValuePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, inject, input, output, signal } from '@angular/core';
-import { Field, form } from '@angular/forms/signals';
+import { FormField, form } from '@angular/forms/signals';
 
 import { SignalService } from '@server/core/services/signal.service';
 import { GroupByPipe } from '@server/shared/pipes/group-by.pipe';
@@ -10,7 +10,7 @@ import { GroupByPipe } from '@server/shared/pipes/group-by.pipe';
   templateUrl: './unit-select.component.html',
   styleUrls: ['./unit-select.component.scss'],
   standalone: true,
-  imports: [KeyValuePipe, Field, GroupByPipe],
+  imports: [KeyValuePipe, FormField, GroupByPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnitSelectComponent {
@@ -33,7 +33,7 @@ export class UnitSelectComponent {
     if (fieldSignal !== null && this.formInit) {
       let initForm;
       if (fieldSignal !== undefined) {
-        initForm = fieldSignal;
+        initForm = fieldSignal().value();
       } else {
         initForm = '0';
       }
@@ -45,7 +45,8 @@ export class UnitSelectComponent {
   // Update parent via output signal if value has changed
   private updateEffect = effect(() => {
     let updateData = null;
-    if (this.fieldModel() !== this.signalField()) {
+    const fieldSignal = this.signalField();
+    if (fieldSignal !== null && fieldSignal !== undefined && this.fieldModel() !== fieldSignal().value()) {
       updateData = parseInt(this.fieldModel());
     }
     if (updateData !== null) {

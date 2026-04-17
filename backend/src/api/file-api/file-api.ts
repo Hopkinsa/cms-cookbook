@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import sharp from 'sharp';
 
-import { IMAGE_PATH, log } from '../../utility/helpers.ts';
+import { IMAGE_PATH, log, routeParamValue } from '../../utility/helpers.ts';
 
 const DEBUG = 'file-api | ';
 
@@ -165,7 +165,7 @@ class FileApi {
   };
 
   static deleteImageFiles = async (req: Request, res: Response): Promise<void> => {
-    const file: string = req.params['name'];
+    const file: string = routeParamValue(req.params['name']) ?? '';
     log.info_lv2(`${DEBUG}deleteImageFiles: ${file}`);
     let resCode = 200;
     let resMessage = '';

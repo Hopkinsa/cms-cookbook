@@ -11,7 +11,7 @@ import {
   viewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { Field, form } from '@angular/forms/signals';
+import { FormField, form } from '@angular/forms/signals';
 import { HttpEventType } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -25,7 +25,7 @@ import { FileService, SignalService } from '@server/core/services';
   selector: 'app-image-amend',
   templateUrl: './image-amend.component.html',
   styleUrls: ['./image-amend.component.scss', './image-amend-cropper.component.scss'],
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatProgressBarModule, Field],
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatProgressBarModule, FormField],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,

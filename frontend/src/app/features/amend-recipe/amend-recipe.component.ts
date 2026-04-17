@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
-import { Field, form } from '@angular/forms/signals';
+import { FormField, form } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CdkDrag, CdkDragDrop, CdkDragPlaceholder, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatButtonModule } from '@angular/material/button';
@@ -34,7 +34,7 @@ import { ImageUploadComponent } from '@server/components/image-upload/image-uplo
   styleUrls: ['./amend-recipe.component.scss'],
   standalone: true,
   imports: [
-    Field,
+    FormField,
     CdkDropList,
     CdkDrag,
     CdkDragPlaceholder,

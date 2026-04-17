@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { Field, form } from '@angular/forms/signals';
+import { FormField, form } from '@angular/forms/signals';
 
 import { crudResponse, ITags, tagsInitialState } from '@server/core/interface';
 import { SignalService, TagService } from '@server/core/services';
@@ -11,7 +11,7 @@ import { SignalService, TagService } from '@server/core/services';
   templateUrl: './tag-amend.component.html',
   styleUrls: ['./tag-amend.component.scss'],
   standalone: true,
-  imports: [Field, MatButtonModule, MatIconModule],
+  imports: [FormField, MatButtonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TagAmendComponent {

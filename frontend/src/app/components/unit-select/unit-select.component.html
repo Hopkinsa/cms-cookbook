@@ -1,4 +1,4 @@
-<select title="measurement" [field]="fieldForm">
+<select title="measurement" [formField]="fieldForm">
   <option value="">Select a unit</option>
   <option [value]="0">- - -</option>
   @for (unit of signalService.units() | groupBy:'title' | keyvalue; track unit.key) {

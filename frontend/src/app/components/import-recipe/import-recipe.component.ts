@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, output, signal } from '@angular/core';
-import { Field, form } from '@angular/forms/signals';
+import { FormField, form } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
 
 import {
@@ -21,7 +21,7 @@ type IImport = {
   templateUrl: './import-recipe.component.html',
   styleUrls: ['./import-recipe.component.scss'],
   standalone: true,
-  imports: [Field, MatButtonModule],
+  imports: [FormField, MatButtonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImportRecipeComponent {

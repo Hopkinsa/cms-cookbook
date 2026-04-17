@@ -8,7 +8,7 @@ import {
   signal,
   ViewEncapsulation,
 } from '@angular/core';
-import { Field, form } from '@angular/forms/signals';
+import { FormField, form } from '@angular/forms/signals';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { environment } from 'src/environment/environment';
@@ -22,7 +22,7 @@ import { SortArrayPipe, TruncatePipe } from '@server/shared/pipes';
   styleUrls: ['./image-select.component.scss'],
   standalone: true,
   encapsulation: ViewEncapsulation.None,
-  imports: [MatFormFieldModule, MatSelectModule, Field, TruncatePipe, SortArrayPipe],
+  imports: [MatFormFieldModule, MatSelectModule, FormField, TruncatePipe, SortArrayPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImageSelectComponent {
@@ -49,7 +49,7 @@ export class ImageSelectComponent {
     if (fieldSignal !== null) {
       let initForm;
       if (fieldSignal !== undefined) {
-        initForm = fieldSignal;
+        initForm = fieldSignal().value();
       } else {
         initForm = '';
       }
@@ -60,8 +60,9 @@ export class ImageSelectComponent {
   // Update form if input signal value has changed
   private selectUpdateEffect = effect(() => {
     let updateData = null;
-    if (this.fieldModel() !== this.signalField()) {
-      updateData = this.signalField();
+    const fieldSignal = this.signalField();
+    if (fieldSignal !== null && fieldSignal !== undefined && this.fieldModel() !== fieldSignal().value()) {
+      updateData = fieldSignal().value();
     }
     if (updateData !== null) {
       this.fieldModel.set(updateData);

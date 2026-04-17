@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RecipesComponent } from './recipes.component';
@@ -5,10 +6,20 @@ import { RecipeListService, RecipeService, SignalService } from '@server/core/se
 import { of } from 'rxjs';
 
 describe('RecipesComponent', () => {
-  it('icon, sortOption, search, reset, delete, amend and back', () => {
-    const mockSignal: any = { returnTo: { set: jest.fn() } };
+  it('paginates filtered recipes and supports delete, amend and back', () => {
+    const mockSignal: any = {
+      returnTo: { set: jest.fn() },
+      filteredRecipeList: signal([
+        { id: 1, title: 'A', img_url: '', tags: ['vegan'], date_created: 1, date_updated: 1 },
+        { id: 2, title: 'B', img_url: '', tags: ['vegan', 'quick'], date_created: 1, date_updated: 1 },
+        { id: 3, title: 'C', img_url: '', tags: ['breakfast'], date_created: 1, date_updated: 1 },
+      ]),
+      filteredRecipesFound: signal(3),
+      pageIndex: signal(0),
+      pageSize: signal(2),
+      pageSizeOptions: [2, 4, 6],
+    };
     const mockRecipeList: any = {
-      recipeSort: { set: jest.fn() },
       getRecipeList: { set: jest.fn() },
       findRecipes: { set: jest.fn() },
     };
@@ -16,7 +27,6 @@ describe('RecipesComponent', () => {
     const mockRouter: any = { navigate: jest.fn() };
 
     TestBed.configureTestingModule({
-      imports: [RecipesComponent],
       providers: [
         { provide: SignalService, useValue: mockSignal },
         { provide: RecipeListService, useValue: mockRecipeList },
@@ -25,22 +35,19 @@ describe('RecipesComponent', () => {
       ],
     });
 
-    const fixture = TestBed.createComponent(RecipesComponent);
-    const comp = fixture.componentInstance as any;
+    const comp = TestBed.runInInjectionContext(() => new RecipesComponent()) as any;
 
-    // icon should include img path fragment
     expect(comp.icon('file.name.png')).toContain('file.name-Icon.png');
+    expect(comp.filteredRecipes().map((recipe: any) => recipe.id)).toEqual([1, 2, 3]);
+    expect(comp.resultsPage().map((recipe: any) => recipe.id)).toEqual([1, 2]);
 
-    // delete
     comp.delete(2);
     expect(mockRecipeService.deleteRecipe).toHaveBeenCalled();
 
-    // amend
     comp.amend(3);
     expect(mockSignal.returnTo.set).toHaveBeenCalled();
     expect(mockRouter.navigate).toHaveBeenCalled();
 
-    // back
     comp.back();
     expect(mockRouter.navigate).toHaveBeenCalled();
   });

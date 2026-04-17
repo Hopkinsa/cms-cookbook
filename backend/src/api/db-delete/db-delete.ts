@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { log } from '../../utility/helpers.ts';
+import { log, routeParamInt } from '../../utility/helpers.ts';
 import  DBService from '../../services/db.service.ts';
 import { DELETE_RECIPE_DATA, DELETE_TAG_DATA } from './sql-delete.ts';
 import { IResponse } from '../../model/data-model.ts';
@@ -9,7 +9,7 @@ const DEBUG = 'db-delete | ';
 class DBDelete {
   // Recipes
   static deleteRecipe = async (req: Request, res: Response): Promise<void> => {
-    const recipeId: number = parseInt(req.params['id']);
+    const recipeId: number = routeParamInt(req.params['id']);
     let resCode = 200;
     let resMessage: IResponse = { completed: true };
     log.info_lv2(`${DEBUG}deleteRecipe: ${recipeId}`);
@@ -32,7 +32,7 @@ class DBDelete {
 
   // Tags
   static deleteTag = async (req: Request, res: Response): Promise<void> => {
-    const tagId: number = parseInt(req.params['id']);
+    const tagId: number = routeParamInt(req.params['id']);
     let resCode = 200;
     let resMessage: IResponse = { completed: true };
     log.info_lv2(`${DEBUG}deleteTag: ${tagId}`);

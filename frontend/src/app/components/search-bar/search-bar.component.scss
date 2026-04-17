@@ -21,11 +21,15 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 0.75rem;
     margin-bottom: 1rem;
 
     form {
       display: flex;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
 
       label {
         margin-right: 0.5rem;
@@ -38,8 +42,20 @@
       }
 
       & + form {
-        margin-left: 1rem;
+        margin-left: 0;
       }
     }
   }
+
+  &.selected-tags {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+  }
+}
+
+.tag-mode-indicator {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface-variant, var(--mat-sys-on-surface));
 }

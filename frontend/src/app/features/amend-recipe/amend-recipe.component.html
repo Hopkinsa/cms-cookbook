@@ -13,9 +13,9 @@
     <app-import-recipe (recipeImport)="importedRecipe($event)" />
   }
 <form>
-  <label><b>Title:</b> <input type="text" [field]="recipeForm.title"></label>
+  <label><b>Title:</b> <input type="text" [formField]="recipeForm.title"></label>
   <label class="label-textarea"><b>Description:</b> <textarea rows="5"
-      [field]="recipeForm.description"></textarea></label>
+      [formField]="recipeForm.description"></textarea></label>
   <label><b>Image:</b></label>
   <div class="image-select">
     <div class="image-preview-container">
@@ -29,9 +29,9 @@
     </div>
   </div>
 
-  <label><b>Prep time:</b> <input type="number" [field]="recipeForm.prep_time"></label>
-  <label><b>Cook time:</b> <input type="number" [field]="recipeForm.cook_time"></label>
-  <label><b>Serves:</b> <input type="number" [field]="recipeForm.serves"></label>
+  <label><b>Prep time:</b> <input type="number" [formField]="recipeForm.prep_time"></label>
+  <label><b>Cook time:</b> <input type="number" [formField]="recipeForm.cook_time"></label>
+  <label><b>Serves:</b> <input type="number" [formField]="recipeForm.serves"></label>
   <label><b>Categories:</b></label>
   <mat-chip-grid>
     @for (recipe_tag of recipeForm.tags; track recipe_tag; let i = $index) {
@@ -68,7 +68,7 @@
   </div>
   <button matIconButton type="button" (click)="addStep()"><mat-icon fontSet="material-icons-outlined">add_circle_outlined</mat-icon></button>
 
-  <label class="label-textarea"><b>Notes:</b> <textarea rows="5" [field]="recipeForm.notes"></textarea></label>
+  <label class="label-textarea"><b>Notes:</b> <textarea rows="5" [formField]="recipeForm.notes"></textarea></label>
 
 </form>
 

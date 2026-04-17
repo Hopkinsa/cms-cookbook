@@ -1,18 +1,18 @@
 <div class="row result-top">
     <div class="row info-bar">
         @if (signalService.recipeList()) {
-        <b>Recipes:</b> {{ signalService.recipesFound() }}
+        <b>Recipes:</b> {{ signalService.filteredRecipesFound() }}
         }
     </div>
     <div class="row search-bar">
         <form>
             <label><b>Categories:</b></label>
-            <select title="Tags" [field]="searchForm.tag" (change)="addTag()">
-                <option value="">Select a tag</option>
-                @for (tags of signalService.tags() | groupBy:'type' | keyvalue; track tags.key) {
-                <optgroup [label]="$any(tags.key) | titlecase">
+            <select title="Tags" [formField]="searchForm.tag" (change)="addTag()">
+                <option value="">Select a category</option>
+                @for (tagGroup of availableTagGroups(); track tagGroup.type) {
+                <optgroup [label]="tagGroup.type | titlecase">
 
-                    @for (item of tags.value; track item) {
+                    @for (item of tagGroup.items; track item.id) {
                     <option [value]="item.tag">{{ item.tag }}</option>
                     }
                 </optgroup>
@@ -25,10 +25,18 @@
                 </div>
                 }
             </select>
+            @if (showTagMode()) {
+            <label><b>Match:</b>
+                <select title="Category filter mode" [formField]="searchForm.tagMode" (change)="tagModeChanged()">
+                    <option value="or">OR</option>
+                    <option value="and">AND</option>
+                </select>
+            </label>
+            }
         </form>
         <form (submit)="search($event)">
             <label><b>Order by:</b>
-                <select title="Sort" [field]="searchForm.sortSelect" (change)="sortOption()">
+                <select title="Sort" [formField]="searchForm.sortSelect" (change)="sortOption()">
                     <option value="t1">Title (A - Z)</option>
                     <option value="t2">Title (Z - A)</option>
                     <option value="t3">Added (Latest)</option>
@@ -37,13 +45,16 @@
                     <option value="t6">Updated (Oldest)</option>
                 </select>
             </label>
-            <label><b>Search:</b><input type="text" [field]="searchForm.terms"></label><button matIconButton
+            <label><b>Search:</b><input type="text" [formField]="searchForm.terms"></label><button matIconButton
                 type="button" (click)="search($event)"><mat-icon>search</mat-icon></button>
             <button matIconButton type="button" (click)="reset()"><mat-icon>close_small</mat-icon></button>
         </form>
     </div>
 </div>
-<div class="row">
+<div class="row selected-tags">
+    @if (showTagMode()) {
+    <div class="tag-mode-indicator">{{ activeTagModeLabel() }}</div>
+    }
     <mat-chip-grid>
         @for (tag of searchForm.tags().value(); track tag; let i = $index) {
         <mat-chip-row>{{ tag }}

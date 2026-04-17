@@ -7,7 +7,7 @@
   </mat-chip-row>
   }
   @else {
-  <select title="Tags" [field]="tagForm.tag">
+  <select title="Tags" [formField]="tagForm.tag">
     <option value="">Select a unit</option>
     @for (tags of signalService.tags() | groupBy:'type' | keyvalue; track tags.key) {
     <optgroup [label]="$any(tags.key) | titlecase">

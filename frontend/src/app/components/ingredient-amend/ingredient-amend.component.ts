@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
-import { Field, form } from '@angular/forms/signals';
+import { FormField, form } from '@angular/forms/signals';
 
 import { IIngredients, ingredientInitialState } from '@server/core/interface';
 import { UnitSelectComponent } from '@server/components/unit-select/unit-select.component';
@@ -9,7 +9,7 @@ import { UnitSelectComponent } from '@server/components/unit-select/unit-select.
   templateUrl: './ingredient-amend.component.html',
   styleUrls: ['./ingredient-amend.component.scss'],
   standalone: true,
-  imports: [Field, UnitSelectComponent],
+  imports: [FormField, UnitSelectComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IngredientAmendComponent {
