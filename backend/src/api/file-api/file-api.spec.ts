@@ -46,16 +46,29 @@ describe('FileApi', () => {
     expect(json).toHaveBeenCalledWith('Image not found');
   });
 
-  test('getImageFiles filters names and calls resizeImage', async () => {
+  test('getImageFiles filters names', async () => {
     const files = ['.DS_Store', 'a-Icon.jpg', 'b-Banner.jpg', 'good.jpg'];
     (fs.readdirSync as jest.Mock).mockReturnValue(files as any);
-    const resizeSpy = jest.spyOn(FileApi as any, 'resizeImage').mockImplementation(() => {});
     const req: any = {};
     const status = jest.fn().mockReturnThis();
     const json = jest.fn();
     const res: any = { status, json };
 
     await FileApi.getImageFiles(req, res);
+    expect(json).toHaveBeenCalledWith(['good.jpg']);
+  });
+
+  test('resetAllImageFiles filters names and resizes each source image', async () => {
+    const files = ['.DS_Store', 'a-Icon.jpg', 'b-Banner.jpg', 'good.jpg'];
+    (fs.readdirSync as jest.Mock).mockReturnValue(files as any);
+    (fs.existsSync as jest.Mock).mockReturnValue(true);
+    const resizeSpy = jest.spyOn(FileApi as any, 'resizeImage').mockResolvedValue(undefined);
+    const req: any = {};
+    const status = jest.fn().mockReturnThis();
+    const json = jest.fn();
+    const res: any = { status, json };
+
+    await FileApi.resetAllImageFiles(req, res);
     expect(json).toHaveBeenCalledWith(['good.jpg']);
     expect(resizeSpy).toHaveBeenCalledWith('good.jpg');
   });

@@ -1,7 +1,7 @@
 import { computed, inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { IFeedback, IRecipe, IRecipeList, ITags, IUnits } from '@server/core/interface';
+import { IFeedback, IRecipe, IRecipeList, ISortSignal, ITags, IUnits } from '@server/core/interface';
 import { storageSignal } from './signal-storage.service';
 
 @Injectable({
@@ -41,6 +41,12 @@ export class SignalService {
 
   // Signal that contains the Tag data
   readonly tags: WritableSignal<ITags[] | null> = signal(null);
+
+  // Signals for results page
+  readonly pageSizeOptions: number[] = [6, 9, 12, 18, 24];
+  readonly pageIndex: WritableSignal<number> = signal(0);
+  readonly pageSize: WritableSignal<number> = signal(this.pageSizeOptions[1]);
+  readonly pageSort: WritableSignal<ISortSignal> = signal({ target: 'title', direction: 'asc' });
 
   // Signal that contains previous page
   readonly returnTo: WritableSignal<string | null> = signal(null);

@@ -1,25 +1,16 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+import { AdminLinkBarComponent } from "../admin-link-bar/admin-link-bar.component";
 import { environment } from 'src/environment/environment';
-
-import { SignalService } from '@server/core/services/signal.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  imports: [MatButtonModule, MatIconModule, NgOptimizedImage],
+  imports: [AdminLinkBarComponent, NgOptimizedImage],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
   protected imgURL = `${environment.baseTemplateURL}`;
-  protected signalService: SignalService = inject(SignalService);
-
-  toggleEdit(): void {
-    const editToggle = this.signalService.editEnabled();
-    this.signalService.editEnabled.set(!editToggle);
-  }
 }

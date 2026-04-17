@@ -8,8 +8,12 @@ describe('DBBackup', () => {
     const tags = [{ id: 1, type: 'c', tag: 't' }];
     const units = [{ id: 1, title: 'a', unit: 'u', abbreviation: 'ab' }];
     const recipes = [{ title: 'r' }];
-    const all = jest.fn().mockResolvedValueOnce(tags).mockResolvedValueOnce(units).mockResolvedValueOnce(recipes);
-    (DBService as any).db = { all };
+    const prepare = jest
+      .fn()
+      .mockReturnValueOnce({ all: jest.fn().mockReturnValue(tags) })
+      .mockReturnValueOnce({ all: jest.fn().mockReturnValue(units) })
+      .mockReturnValueOnce({ all: jest.fn().mockReturnValue(recipes) });
+    (DBService as any).db = { prepare };
 
     const req: any = {};
     const status = jest.fn().mockReturnThis();
@@ -23,8 +27,8 @@ describe('DBBackup', () => {
   });
 
   test('dbBackup returns 500 when no data', async () => {
-    const all = jest.fn().mockResolvedValue(undefined);
-    (DBService as any).db = { all };
+    const prepare = jest.fn().mockReturnValue({ all: jest.fn().mockReturnValue(undefined) });
+    (DBService as any).db = { prepare };
 
     const req: any = {};
     const status = jest.fn().mockReturnThis();

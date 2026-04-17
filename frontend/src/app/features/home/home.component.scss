@@ -1,34 +1,3 @@
-.link-bar {
-  display: flex;
-  position: relative;
-  padding: 0;
-  margin: 0;
-  justify-content: flex-end;
-  align-content: center;
-  flex-direction: row;
-  flex-wrap: wrap;
-  margin-bottom: 1rem;
-
-  ul {
-    display: inline-block;
-    padding: 0;
-    margin: 0;
-
-    li {
-      display: inline-block;
-      list-style: none;
-      margin-right: 1rem;
-      &:last-child {
-        margin-right: 0;
-      }
-    }
-  }
-
-  .pad {
-    width: 1px;
-    height: 20px;
-  }
-}
 .banner {
   position: relative;
   background-size: cover;

@@ -77,14 +77,11 @@ class DBRead {
     let recipe: ICard | undefined;
     let resCode = 200;
     let resMessage: string | IRecipe = '';
-    await DBService.db
-      .get(FIND_RECIPE_BY_ID, recipeId)
-      .then((data) => {
-        recipe = data as unknown as ICard;
-      })
-      .catch((err) => {
-        log.error(`${DEBUG}findRecipeByID - Error: `, err.message);
-      });
+    try {
+      recipe = DBService.db.prepare(FIND_RECIPE_BY_ID).get(recipeId) as ICard | undefined;
+    } catch (err) {
+      log.error(`${DEBUG}findRecipeByID - Error: `, (err as Error).message);
+    }
 
     if (recipe !== undefined) {
       const cardDecode: IRecipe = JSON.parse(recipe.card as unknown as string);
@@ -109,28 +106,22 @@ class DBRead {
       let recipes: IRecipe[] | undefined;
       let resCode = 200;
       let resMessage: string | ISearchResults = '';
-      await DBService.db
-        .all(GET_RECIPES_TOTAL)
-        .then((data) => {
-          if (data !== null && data !== undefined) {
-            if (data[0] !== null && data[0] !== undefined) {
-              param.total = data[0].total;
-            }
-          }
-        })
-        .catch((err) => {
-          log.error(`${DEBUG}getRecipes - Error: `, err.message);
-        });
+      try {
+        const totalData = DBService.db.prepare(GET_RECIPES_TOTAL).all() as Array<{ total: number }>;
+        if (totalData[0] !== null && totalData[0] !== undefined) {
+          param.total = totalData[0].total;
+        }
+      } catch (err) {
+        log.error(`${DEBUG}getRecipes - Error: `, (err as Error).message);
+      }
 
-      const dbData = await DBService.db.prepare(`${GET_RECIPES} ${param.sort.target} ${param.sort.direction.toUpperCase()}`);
-      await dbData
-        .all()
-        .then((data) => {
-          recipes = data as unknown as IRecipe[];
-        })
-        .catch((err) => {
-          log.error(`${DEBUG}getRecipes - Error: `, err.message);
-        });
+      try {
+        recipes = DBService.db
+          .prepare(`${GET_RECIPES} ${param.sort.target} ${param.sort.direction.toUpperCase()}`)
+          .all() as IRecipe[];
+      } catch (err) {
+        log.error(`${DEBUG}getRecipes - Error: `, (err as Error).message);
+      }
       if (recipes !== undefined) {
         resCode = 200;
         resMessage = {
@@ -159,33 +150,25 @@ class DBRead {
       let recipes: IRecipe[] | undefined;
       let resCode = 200;
       let resMessage: string | ISearchResults = '';
-      await DBService.db
-        .all(FIND_RECIPES_TOTAL, `%${param.terms}%`)
-        .then((data) => {
-          if (data !== null && data !== undefined) {
-            if (data[0] !== null && data[0] !== undefined) {
-              param.total = data[0].total;
-            }
-          }
-        })
-        .catch((err) => {
-          log.error(`${DEBUG}getRecipes - Error: `, err.message);
-        });
+      try {
+        const totalData = DBService.db.prepare(FIND_RECIPES_TOTAL).all(`%${param.terms}%`) as Array<{ total: number }>;
+        if (totalData[0] !== null && totalData[0] !== undefined) {
+          param.total = totalData[0].total;
+        }
+      } catch (err) {
+        log.error(`${DEBUG}getRecipes - Error: `, (err as Error).message);
+      }
 
       let sortResults = `${param.sort.target} ${param.sort.direction.toUpperCase()}`;
       if (param.sort.target !== 'title') {
         sortResults += ', title ASC';
       }
 
-      const dbData = await DBService.db.prepare(`${FIND_RECIPES} ${sortResults}`);
-      await dbData
-        .all(`%${param.terms}%`)
-        .then((data) => {
-          recipes = data as unknown as IRecipe[];
-        })
-        .catch((err) => {
-          log.error(`${DEBUG}findRecipes - Error: `, err.message);
-        });
+      try {
+        recipes = DBService.db.prepare(`${FIND_RECIPES} ${sortResults}`).all(`%${param.terms}%`) as IRecipe[];
+      } catch (err) {
+        log.error(`${DEBUG}findRecipes - Error: `, (err as Error).message);
+      }
 
       if (recipes !== undefined) {
         resCode = 200;
@@ -212,14 +195,11 @@ class DBRead {
     let unit: IUnit | undefined;
     let resCode = 200;
     let resMessage: IResponse | IUnit;
-    await DBService.db
-      .get(FIND_UNIT_BY_ID, unitId)
-      .then((data) => {
-        unit = data as unknown as IUnit;
-      })
-      .catch((err) => {
-        log.error(`${DEBUG}findUnitByID - Error: `, err.message);
-      });
+    try {
+      unit = DBService.db.prepare(FIND_UNIT_BY_ID).get(unitId) as IUnit | undefined;
+    } catch (err) {
+      log.error(`${DEBUG}findUnitByID - Error: `, (err as Error).message);
+    }
 
     if (unit !== undefined) {
       resCode = 200;
@@ -237,14 +217,11 @@ class DBRead {
     let units: IUnit[] | undefined;
     let resCode = 200;
     let resMessage: IResponse | IUnit[];
-    await DBService.db
-      .all(GET_UNITS)
-      .then((data) => {
-        units = data as unknown as IUnit[];
-      })
-      .catch((err) => {
-        log.error(`${DEBUG}getUnits - Error: `, err.message);
-      });
+    try {
+      units = DBService.db.prepare(GET_UNITS).all() as IUnit[];
+    } catch (err) {
+      log.error(`${DEBUG}getUnits - Error: `, (err as Error).message);
+    }
 
     if (units !== undefined) {
       resCode = 200;
@@ -264,14 +241,11 @@ class DBRead {
     let tag: ITags | undefined;
     let resCode = 200;
     let resMessage: IResponse | ITags;
-    await DBService.db
-      .get(FIND_UNIT_BY_ID, tagId)
-      .then((data) => {
-        tag = data as unknown as ITags;
-      })
-      .catch((err) => {
-        log.error(`${DEBUG}findTagByID - Error: `, err.message);
-      });
+    try {
+      tag = DBService.db.prepare(FIND_UNIT_BY_ID).get(tagId) as ITags | undefined;
+    } catch (err) {
+      log.error(`${DEBUG}findTagByID - Error: `, (err as Error).message);
+    }
 
     if (tag !== undefined) {
       resCode = 200;
@@ -289,14 +263,11 @@ class DBRead {
     let tags: ITags[] | undefined;
     let resCode = 200;
     let resMessage: IResponse | ITags[];
-    await DBService.db
-      .all(GET_TAGS)
-      .then((data) => {
-        tags = data as unknown as ITags[];
-      })
-      .catch((err) => {
-        log.error(`${DEBUG}getTags - Error: `, err.message);
-      });
+    try {
+      tags = DBService.db.prepare(GET_TAGS).all() as ITags[];
+    } catch (err) {
+      log.error(`${DEBUG}getTags - Error: `, (err as Error).message);
+    }
 
     if (tags !== undefined) {
       resCode = 200;
