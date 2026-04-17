@@ -18,11 +18,13 @@ class DBDelete {
       resCode = 500;
       resMessage = { message: 'IDs missing or invalid' };
     } else {
-      await DBService.db.run(DELETE_RECIPE_DATA, recipeId).catch((err) => {
-        log.error(`${DEBUG}deleteRecipe - Error: `, err.message);
+      try {
+        DBService.db.prepare(DELETE_RECIPE_DATA).run(recipeId);
+      } catch (err) {
+        log.error(`${DEBUG}deleteRecipe - Error: `, (err as Error).message);
         resCode = 500;
         resMessage = { message: 'remove failed' };
-      });
+      }
     }
 
     res.status(resCode).json(resMessage);
@@ -39,11 +41,13 @@ class DBDelete {
       resCode = 500;
       resMessage = { message: 'IDs missing or invalid' };
     } else {
-      await DBService.db.run(DELETE_TAG_DATA, tagId).catch((err) => {
-        log.error(`${DEBUG}deleteTag - Error: `, err.message);
+      try {
+        DBService.db.prepare(DELETE_TAG_DATA).run(tagId);
+      } catch (err) {
+        log.error(`${DEBUG}deleteTag - Error: `, (err as Error).message);
         resCode = 500;
         resMessage = { message: 'remove failed' };
-      });
+      }
     }
 
     res.status(resCode).json(resMessage);

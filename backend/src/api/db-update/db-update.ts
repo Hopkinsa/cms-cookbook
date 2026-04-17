@@ -27,11 +27,13 @@ class DBUpdate {
         resMessage = { message: 'IDs missing or invalid' };
       } else {
         const recipe = JSON.stringify(recipeData).replace(/&#x27;/g, "'");
-        await DBService.db.run(UPDATE_RECIPE_DATA, recipe, recipeId).catch((err) => {
-          log.error(`${DEBUG}updateRecipe - Error: `, err.message);
+        try {
+          DBService.db.prepare(UPDATE_RECIPE_DATA).run(recipe, recipeId);
+        } catch (err) {
+          log.error(`${DEBUG}updateRecipe - Error: `, (err as Error).message);
           resCode = 500;
           resMessage = { message: 'update failed' };
-        });
+        }
       }
 
       res.status(resCode).json(resMessage);
@@ -54,11 +56,13 @@ class DBUpdate {
         resCode = 500;
         resMessage = { message: 'IDs missing or invalid' };
       } else {
-        await DBService.db.run(UPDATE_TAG_DATA, tagData.type, tagData.tag, tagId).catch((err) => {
-          log.error(`${DEBUG}updateTag - Error: `, err.message);
+        try {
+          DBService.db.prepare(UPDATE_TAG_DATA).run(tagData.type, tagData.tag, tagId);
+        } catch (err) {
+          log.error(`${DEBUG}updateTag - Error: `, (err as Error).message);
           resCode = 500;
           resMessage = { message: 'update failed' };
-        });
+        }
       }
 
       res.status(resCode).json(resMessage);

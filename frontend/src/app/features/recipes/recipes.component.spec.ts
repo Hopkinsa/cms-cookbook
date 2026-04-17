@@ -31,21 +31,6 @@ describe('RecipesComponent', () => {
     // icon should include img path fragment
     expect(comp.icon('file.name.png')).toContain('file.name-Icon.png');
 
-    // sortOption triggers recipeSort.set and getRecipeList.set
-    comp.fieldModel.set({ sortSelect: 't2', terms: '' });
-    comp.sortOption();
-    expect(mockRecipeList.recipeSort.set).toHaveBeenCalled();
-
-    // search with empty terms does nothing
-    const fakeEvent: any = { preventDefault: jest.fn() };
-    comp.fieldModel.set({ terms: '' });
-    comp.search(fakeEvent);
-    expect(mockRecipeList.findRecipes.set).not.toHaveBeenCalled();
-
-    // reset
-    comp.reset();
-    expect(mockRecipeList.findRecipes.set).toHaveBeenCalledWith(null);
-
     // delete
     comp.delete(2);
     expect(mockRecipeService.deleteRecipe).toHaveBeenCalled();

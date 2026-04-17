@@ -24,11 +24,13 @@ class DBCreate {
       log.info_lv2(`${DEBUG}createRecipe`);
 
       const data = JSON.stringify(recipeData).replace(/&#x27;/g, "'");
-      await DBService.db.run(CREATE_RECIPE_DATA, `${data}`).catch((err) => {
-        log.error(`${DEBUG}createRecipe - Error: `, err.message);
+      try {
+        DBService.db.prepare(CREATE_RECIPE_DATA).run(`${data}`);
+      } catch (err) {
+        log.error(`${DEBUG}createRecipe - Error: `, (err as Error).message);
         resCode = 500;
         resMessage = { message: 'create failed' };
-      });
+      }
 
       res.status(resCode).json(resMessage);
     }
@@ -45,11 +47,13 @@ class DBCreate {
       let resMessage: IResponse = { completed: true };
       log.info_lv2(`${DEBUG}createTag`);
 
-      await DBService.db.run(CREATE_TAG_DATA, tagData.type, tagData.tag).catch((err) => {
-        log.error(`${DEBUG}createTag - Error: `, err.message);
+      try {
+        DBService.db.prepare(CREATE_TAG_DATA).run(tagData.type, tagData.tag);
+      } catch (err) {
+        log.error(`${DEBUG}createTag - Error: `, (err as Error).message);
         resCode = 500;
         resMessage = { message: 'create failed' };
-      });
+      }
 
       res.status(resCode).json(resMessage);
     }

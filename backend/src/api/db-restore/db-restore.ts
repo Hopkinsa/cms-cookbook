@@ -20,40 +20,48 @@ const DEBUG = 'db-restore | ';
 
 class DBRestore {
   private static createDatabase = async (): Promise<void> => {
-    await DBService.db
-      .run(TAG_TABLE)
-      .then(() => log.info_lv3(`${DEBUG}Tag table created successfully`))
-      .catch((err: Error) => log.error(`${DEBUG}Error creating Tag table: `, err.message));
+    try {
+      DBService.db.prepare(TAG_TABLE).run();
+      log.info_lv3(`${DEBUG}Tag table created successfully`);
+    } catch (err) {
+      log.error(`${DEBUG}Error creating Tag table: `, (err as Error).message);
+    }
 
-    await DBService.db
-      .run(UNIT_TABLE)
-      .then(() => log.info_lv3(`${DEBUG}Unit table created successfully`))
-      .catch((err: Error) => log.error(`${DEBUG}Error creating Unit table: `, err.message));
+    try {
+      DBService.db.prepare(UNIT_TABLE).run();
+      log.info_lv3(`${DEBUG}Unit table created successfully`);
+    } catch (err) {
+      log.error(`${DEBUG}Error creating Unit table: `, (err as Error).message);
+    }
 
-    await DBService.db
-      .run(RECIPE_TABLE)
-      .then(() => log.info_lv3(`${DEBUG}Recipe table created successfully`))
-      .catch((err: Error) => log.error(`${DEBUG}Error creating Recipe table: `, err.message));
+    try {
+      DBService.db.prepare(RECIPE_TABLE).run();
+      log.info_lv3(`${DEBUG}Recipe table created successfully`);
+    } catch (err) {
+      log.error(`${DEBUG}Error creating Recipe table: `, (err as Error).message);
+    }
   };
 
   private static truncateDatabase = async (): Promise<void> => {
-    await DBService.db
-      .run(TAG_CLEAR_DATA)
-      .then(() => log.info_lv3(`${DEBUG}Tag data truncated`))
-      .catch((err: Error) => log.error(`${DEBUG}Error truncating Tag data: `, err.message));
-
-    await DBService.db
-      .run(UNIT_CLEAR_DATA)
-      .then(() => log.info_lv3(`${DEBUG}Unit data truncated successfully`))
-      .catch((err: Error) => log.error(`${DEBUG}Error truncating Unit data: `, err.message));
+    try {
+      DBService.db.prepare(TAG_CLEAR_DATA).run();
+      log.info_lv3(`${DEBUG}Tag data truncated`);
+    } catch (err) {
+      log.error(`${DEBUG}Error truncating Tag data: `, (err as Error).message);
+    }
 
     try {
-      await DBService.db
-        .run(RECIPE_CLEAR_DATA)
-        .then(() => log.info_lv3(`${DEBUG}Recipe data truncated successfully`))
-        .catch((err: Error) => log.error(`${DEBUG}Error truncating Recipe data: `, err.message));
-    } catch (e) {
-      log.error(`${DEBUG}Error adding Recipe data: `, e as unknown as string);
+      DBService.db.prepare(UNIT_CLEAR_DATA).run();
+      log.info_lv3(`${DEBUG}Unit data truncated successfully`);
+    } catch (err) {
+      log.error(`${DEBUG}Error truncating Unit data: `, (err as Error).message);
+    }
+
+    try {
+      DBService.db.prepare(RECIPE_CLEAR_DATA).run();
+      log.info_lv3(`${DEBUG}Recipe data truncated successfully`);
+    } catch (err) {
+      log.error(`${DEBUG}Error adding Recipe data: `, (err as Error).message);
     }
   };
 
@@ -62,10 +70,12 @@ class DBRestore {
     tagData.forEach((tag: ITags) => {
       jsonTags += `(${tag.id}, '${tag.type}', '${tag.tag}'),`;
     });
-    await DBService.db
-      .run(`${TAG_DATA} ${jsonTags.replace(/,$/, '')}`)
-      .then(() => log.info_lv3(`${DEBUG}Tag data restored successfully`))
-      .catch((err: Error) => log.error(`${DEBUG}Error adding Tag data: `, err.message));
+    try {
+      DBService.db.prepare(`${TAG_DATA} ${jsonTags.replace(/,$/, '')}`).run();
+      log.info_lv3(`${DEBUG}Tag data restored successfully`);
+    } catch (err) {
+      log.error(`${DEBUG}Error adding Tag data: `, (err as Error).message);
+    }
   };
 
   private static populateUnitDatabase = async (unitData: IUnit[]): Promise<void> => {
@@ -73,25 +83,25 @@ class DBRestore {
     unitData.forEach((unit: IUnit) => {
       jsonUnits += `(${unit.id}, '${unit.title}', '${unit.unit}', '${unit.abbreviation}'),`;
     });
-    await DBService.db
-      .run(`${UNIT_DATA} ${jsonUnits.replace(/,$/, '')}`)
-      .then(() => log.info_lv3(`${DEBUG}Unit data restored successfully`))
-      .catch((err: Error) => log.error(`${DEBUG}Error adding Unit data: `, err.message));
+    try {
+      DBService.db.prepare(`${UNIT_DATA} ${jsonUnits.replace(/,$/, '')}`).run();
+      log.info_lv3(`${DEBUG}Unit data restored successfully`);
+    } catch (err) {
+      log.error(`${DEBUG}Error adding Unit data: `, (err as Error).message);
+    }
   };
   private static populateRecipeDatabase = async (recipeData: ICard[]): Promise<void> => {
     let jsonCards = '';
     recipeData.forEach((recipe: ICard) => {
-       // Escape single quotes in JSON string as will cause error in SQLite
+      // Escape single quotes in JSON string so the INSERT statement remains valid
       jsonCards += `(${recipe.id}, '${recipe.card.replace(/'/g, "''")}'),`;
     });
 
     try {
-      await DBService.db
-        .run(`${RECIPE_DATA} ${jsonCards.replace(/,$/, '')}`)
-        .then(() => log.info_lv3(`${DEBUG}Recipe data restored successfully`))
-        .catch((err: Error) => log.error(`${DEBUG}Error adding Recipe data: `, err.message));
-    } catch (e) {
-      log.error(`${DEBUG}Error adding Recipe data: `, e as unknown as string);
+      DBService.db.prepare(`${RECIPE_DATA} ${jsonCards.replace(/,$/, '')}`).run();
+      log.info_lv3(`${DEBUG}Recipe data restored successfully`);
+    } catch (err) {
+      log.error(`${DEBUG}Error adding Recipe data: `, (err as Error).message);
     }
   };
 

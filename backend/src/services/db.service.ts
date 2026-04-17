@@ -1,5 +1,4 @@
-import sqlite3 from 'sqlite3';
-import { Database, open } from 'sqlite';
+import Database from 'better-sqlite3';
 
 import { DATA_PATH, DIR_PATH, log } from '../utility/helpers.ts';
 import { createDatabase, populateDatabase } from '../api/db-init/db-init.ts';
@@ -8,16 +7,13 @@ import * as fs from 'fs';
 const DEBUG = 'db.service | ';
 const pathToDB = `${DATA_PATH}/cookbook.db`;
 class DBService {
-  static db: Database;
+  static db: Database.Database;
 
   // Check if DB exists
   static newDB = false;
 
-  static openDatabase = async (): Promise<Database> => {
-    return await open({
-      filename: pathToDB,
-      driver: sqlite3.Database,
-    });
+  static openDatabase = async (): Promise<Database.Database> => {
+    return new Database(pathToDB);
   };
 
   static connectToDatabase = async (): Promise<void> => {

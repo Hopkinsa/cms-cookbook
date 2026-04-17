@@ -15,8 +15,9 @@ describe('DBRead.findRecipeByID', () => {
 
   test('returns 200 with recipe when found', async () => {
     const card = { card: JSON.stringify({ title: 'x' }) };
-    const get = jest.fn().mockResolvedValue(card);
-    const db: any = { get };
+    const get = jest.fn().mockReturnValue(card);
+    const prepare = jest.fn().mockReturnValue({ get });
+    const db: any = { prepare };
     const dbService = require('../../services/db.service').default as any;
     const oldDb = dbService.db;
     dbService.db = db;
@@ -34,8 +35,9 @@ describe('DBRead.findRecipeByID', () => {
   });
 
   test('returns 404 when not found', async () => {
-    const get = jest.fn().mockResolvedValue(undefined);
-    const db: any = { get };
+    const get = jest.fn().mockReturnValue(undefined);
+    const prepare = jest.fn().mockReturnValue({ get });
+    const db: any = { prepare };
     (require('../../services/db.service').default as any).db = db;
 
     const req: any = { params: { id: '1' } };

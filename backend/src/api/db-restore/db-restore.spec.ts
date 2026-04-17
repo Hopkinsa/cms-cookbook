@@ -29,8 +29,9 @@ describe('DBRestore', () => {
   });
 
   test('dbProcessUpload processes zip with three entries', async () => {
-    const run = jest.fn().mockResolvedValue(undefined);
-    (DBService as any).db = { run };
+    const run = jest.fn();
+    const prepare = jest.fn().mockReturnValue({ run });
+    (DBService as any).db = { prepare };
 
     const req: any = { file: { buffer: Buffer.from('stub') } };
     const ok = await DBRestore.dbProcessUpload(req);

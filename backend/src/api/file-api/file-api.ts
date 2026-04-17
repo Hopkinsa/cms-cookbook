@@ -212,12 +212,12 @@ class FileApi {
     log.info_lv2(`${DEBUG}resetAllImageFiles`);
     const filteredFilenames: string[] = await FileApi.listImageFiles();
 
-    await filteredFilenames.forEach(async (img: string) => {
+    for (const img of filteredFilenames) {
       const filepath = `${UPLOAD_PATH}/${img}`;
       if (fs.existsSync(filepath)) {
         await FileApi.resizeImage(img);
       }
-    });
+    }
 
     res.status(200).json(filteredFilenames);
   };

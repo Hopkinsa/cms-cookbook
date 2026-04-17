@@ -13,14 +13,11 @@ class DBBackup {
   private static getRecipes = async (): Promise<IRecipe[] | null> => {
     log.info_lv2(`${DEBUG}getRecipes`);
     let recipes: IRecipe[] | undefined;
-    await DBService.db
-      .all(GET_RECIPES)
-      .then((data) => {
-        recipes = data as unknown as IRecipe[];
-      })
-      .catch((err) => {
-        log.error(`${DEBUG}getRecipes - Error: `, err.message);
-      });
+    try {
+      recipes = DBService.db.prepare(GET_RECIPES).all() as IRecipe[];
+    } catch (err) {
+      log.error(`${DEBUG}getRecipes - Error: `, (err as Error).message);
+    }
 
     if (recipes !== undefined) {
       return recipes;
@@ -31,14 +28,11 @@ class DBBackup {
   private static getTags = async (): Promise<ITags[] | null> => {
     log.info_lv2(`${DEBUG}getTags`);
     let tags: ITags[] | undefined;
-    await DBService.db
-      .all(GET_TAGS)
-      .then((data) => {
-        tags = data as unknown as ITags[];
-      })
-      .catch((err) => {
-        log.error(`${DEBUG}getTags - Error: `, err.message);
-      });
+    try {
+      tags = DBService.db.prepare(GET_TAGS).all() as ITags[];
+    } catch (err) {
+      log.error(`${DEBUG}getTags - Error: `, (err as Error).message);
+    }
     if (tags !== undefined) {
       return tags;
     }
@@ -48,14 +42,11 @@ class DBBackup {
   private static getUnits = async (): Promise<IUnit[] | null> => {
     log.info_lv2(`${DEBUG}getUnits`);
     let units: IUnit[] | undefined;
-    await DBService.db
-      .all(GET_UNITS)
-      .then((data) => {
-        units = data as unknown as IUnit[];
-      })
-      .catch((err) => {
-        log.error(`${DEBUG}getUnits - Error: `, err.message);
-      });
+    try {
+      units = DBService.db.prepare(GET_UNITS).all() as IUnit[];
+    } catch (err) {
+      log.error(`${DEBUG}getUnits - Error: `, (err as Error).message);
+    }
     if (units !== undefined) {
       return units;
     }
