@@ -5,7 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environment/environment';
 
 import { SignalService } from '@server/core/services/signal.service';
-import { ITags } from '@server/core/interface';
+import { crudResponse, ITags } from '@server/core/interface';
 import { ErrorHandlerService } from './error-handler.service';
 
 @Injectable({
@@ -37,21 +37,23 @@ export class TagService {
     return this.getTags() ? `${this.apiUrl}tags` : undefined;
   });
 
-  createTag(data: ITags): Observable<ITags[]> {
+  createTag(data: ITags): Observable<crudResponse> {
     return this.http
-      .post<ITags[]>(`${this.apiUrl}tags`, data)
-      .pipe(catchError(this.error.handleError('createTag', 'Unable to save tag', [])));
+      .post<crudResponse>(`${this.apiUrl}tags`, data)
+      .pipe(catchError(this.error.handleError<crudResponse>('createTag', 'Unable to save tag', { completed: false })));
   }
 
-  updateTag(tag: number, data: ITags): Observable<any> {
+  updateTag(tag: number, data: ITags): Observable<crudResponse> {
     return this.http
-      .patch<any>(`${this.apiUrl}tags/${tag}`, data)
-      .pipe(catchError(this.error.handleError('updateTag', 'Unable to save tag', [])));
+      .patch<crudResponse>(`${this.apiUrl}tags/${tag}`, data)
+      .pipe(catchError(this.error.handleError<crudResponse>('updateTag', 'Unable to save tag', { completed: false })));
   }
 
-  deleteTag(tag: number): Observable<any> {
+  deleteTag(tag: number): Observable<crudResponse> {
     return this.http
-      .delete<any>(`${this.apiUrl}tags/${tag}`)
-      .pipe(catchError(this.error.handleError('deleteTag', 'Unable to remove tag', [])));
+      .delete<crudResponse>(`${this.apiUrl}tags/${tag}`)
+      .pipe(
+        catchError(this.error.handleError<crudResponse>('deleteTag', 'Unable to remove tag', { completed: false })),
+      );
   }
 }

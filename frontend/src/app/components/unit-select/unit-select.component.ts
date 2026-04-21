@@ -1,9 +1,13 @@
 import { KeyValuePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, inject, input, output, signal } from '@angular/core';
-import { FormField, form } from '@angular/forms/signals';
+import { form, FormField } from '@angular/forms/signals';
 
 import { SignalService } from '@server/core/services/signal.service';
 import { GroupByPipe } from '@server/shared/pipes/group-by.pipe';
+
+type UnitField = () => {
+  value(): string | number;
+};
 
 @Component({
   selector: 'app-unit-select',
@@ -14,13 +18,13 @@ import { GroupByPipe } from '@server/shared/pipes/group-by.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnitSelectComponent {
-  signalField = input<any>(null, {
+  readonly signalField = input<UnitField | undefined>(undefined, {
     alias: 'formField',
   });
-  fieldChange = output<number>();
+  readonly fieldChange = output<number>();
 
   protected signalService: SignalService = inject(SignalService);
-  protected fieldModel = signal<string>('0');
+  protected readonly fieldModel = signal('0');
   protected fieldForm = form(this.fieldModel);
 
   private formInit = true;
@@ -33,7 +37,7 @@ export class UnitSelectComponent {
     if (fieldSignal !== null && this.formInit) {
       let initForm;
       if (fieldSignal !== undefined) {
-        initForm = fieldSignal().value();
+        initForm = String(fieldSignal().value());
       } else {
         initForm = '0';
       }

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, output, signal } from '@angular/core';
-import { FormField, form } from '@angular/forms/signals';
+import { form, FormField } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
 
 import {
@@ -25,7 +25,7 @@ type IImport = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImportRecipeComponent {
-  recipeImport = output<any>();
+  readonly recipeImport = output<IRecipe>();
 
   protected signalService: SignalService = inject(SignalService);
   protected processedRecipe: IRecipe = {...recipeInitialState};

@@ -51,14 +51,31 @@
 <div class="recipe-tags">
   <mat-chip-set>
     @for (recipe_tag of signalService.recipe()?.tags; track i; let i = $index) {
-    <mat-chip>{{ recipe_tag }}</mat-chip>
+    <mat-chip
+      class="recipe-tag-chip"
+      role="link"
+      tabindex="0"
+      (click)="filterByTag(recipe_tag)"
+      (keydown.enter)="filterByTag(recipe_tag)"
+      (keydown.space)="filterByTag(recipe_tag); $event.preventDefault()">{{ recipe_tag }}</mat-chip>
     }
   </mat-chip-set>
 </div>
 <div class="recipe-details">
   <div class="recipe-ingredients">
     <b>Ingredients:</b>
-    <app-ingredients />
+    <div class="recipe-measurements">
+      <span>Measurements:</span>
+      <mat-button-toggle-group
+        aria-label="Measurement display mode"
+        [value]="measurementMode()"
+        (valueChange)="setMeasurementMode($event)">
+        <mat-button-toggle value="original">Original</mat-button-toggle>
+        <mat-button-toggle value="metric">Metric</mat-button-toggle>
+        <mat-button-toggle value="imperial">Imperial</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+    <app-ingredients [displayMode]="measurementMode()" />
   </div>
 
   <div class="recipe-steps">

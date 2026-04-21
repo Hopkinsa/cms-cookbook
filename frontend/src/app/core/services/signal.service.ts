@@ -1,7 +1,16 @@
 import { computed, inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { IFeedback, IRecipe, IRecipeList, IRecipeSearch, IRecipeSearchInit, ISortSignal, ITags, IUnits } from '@server/core/interface';
+import {
+  IFeedback,
+  IRecipe,
+  IRecipeList,
+  IRecipeSearch,
+  IRecipeSearchInit,
+  ISortSignal,
+  ITags,
+  IUnits,
+} from '@server/core/interface';
 import { storageSignal } from './signal-storage.service';
 
 @Injectable({

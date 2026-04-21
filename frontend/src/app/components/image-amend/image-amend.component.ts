@@ -11,8 +11,8 @@ import {
   viewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { FormField, form } from '@angular/forms/signals';
-import { HttpEventType } from '@angular/common/http';
+import { HttpEvent, HttpEventType } from '@angular/common/http';
+import { form, FormField } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -24,20 +24,19 @@ import { FileService, SignalService } from '@server/core/services';
 @Component({
   selector: 'app-image-amend',
   templateUrl: './image-amend.component.html',
-  styleUrls: ['./image-amend.component.scss', './image-amend-cropper.component.scss'],
   imports: [CommonModule, MatButtonModule, MatIconModule, MatProgressBarModule, FormField],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class ImageAmendComponent {
-  readonly signalIconImage = input<any>('', {
+  readonly signalIconImage = input<string>('', {
     alias: 'imageIcon',
   });
-  readonly signalBannerImage = input<any>('', {
+  readonly signalBannerImage = input<string>('', {
     alias: 'imageBanner',
   });
-  readonly signalImageOrig = input<any>('', {
+  readonly signalImageOrig = input<string>('', {
     alias: 'imageOrig',
   });
   protected imgUrl = `${environment.baseImgURL}`;
@@ -196,12 +195,12 @@ export class ImageAmendComponent {
         cropBoxData: cropBoxData,
       })
       .subscribe(
-        (res: any) => {
+        (res: HttpEvent<unknown>) => {
           if (res.type === HttpEventType.Response) {
             this.signalService.feedbackMessage.set({ type: 'success', message: 'Image added' });
           }
         },
-        (error) => {
+        (error: unknown) => {
           console.error('Upload error:', error);
           this.signalService.feedbackMessage.set({ type: 'error', message: 'Image upload failed' });
         },

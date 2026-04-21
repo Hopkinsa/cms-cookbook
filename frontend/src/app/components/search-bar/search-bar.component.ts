@@ -1,24 +1,24 @@
 import { ChangeDetectionStrategy, Component, computed, inject, ViewEncapsulation } from '@angular/core';
+import { TitleCasePipe } from '@angular/common';
+import { form, FormField } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { FormField, form } from '@angular/forms/signals';
-import { TitleCasePipe } from '@angular/common';
 
 import { RecipeListService, SignalService } from '@server/core/services';
 import { IRecipeSearch, IRecipeSearchInit, ITags, RecipeTagFilterMode } from '@server/core/interface';
 
-interface ITagGroup {
+type ITagGroup = {
   type: string;
   items: ITags[];
-}
+};
 
 @Component({
   selector: 'app-search-bar',
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.scss',
-    standalone: true,
+  standalone: true,
   imports: [
     MatButtonModule,
     MatChipsModule,
@@ -55,7 +55,6 @@ export class SearchBarComponent {
 
     return Array.from(groups.entries()).map(([type, items]) => ({ type, items }));
   });
-
 
   sortOption(): void {
     let sortValue = { target: 'title', direction: 'asc' };

@@ -8,13 +8,17 @@ import {
   signal,
   ViewEncapsulation,
 } from '@angular/core';
-import { FormField, form } from '@angular/forms/signals';
+import { form, FormField } from '@angular/forms/signals';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { environment } from 'src/environment/environment';
 
 import { FileService } from '@server/core/services';
 import { SortArrayPipe, TruncatePipe } from '@server/shared/pipes';
+
+type ImageField = () => {
+  value(): string;
+};
 
 @Component({
   selector: 'app-image-select',
@@ -26,14 +30,14 @@ import { SortArrayPipe, TruncatePipe } from '@server/shared/pipes';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImageSelectComponent {
-  readonly signalField = input<any>(null, {
+  readonly signalField = input<ImageField | undefined>(undefined, {
     alias: 'formField',
   });
   readonly fieldChange = output<string>();
 
   protected imgUrl = `${environment.baseImgURL}`;
   protected fileService: FileService = inject(FileService);
-  protected readonly fieldModel = signal<string>('');
+  protected readonly fieldModel = signal('');
   protected fieldForm = form(this.fieldModel);
 
   private initSelector = effect(() => {

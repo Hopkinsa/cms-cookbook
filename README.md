@@ -50,3 +50,8 @@ After using `npm install` to install the dependencies, use `npm run start` to se
 Once the server is running, open your browser and navigate to `http://localhost:3000/`.
 
 pm2 can also be used to serve the application.  An example ecosystem.config file can be found in `./helper`.
+
+## Further Information
+
+- [Angular Frontend](./docs/angular-frontend.md)
+- [NodeJS Backend](./docs/nodejs-backend.md)

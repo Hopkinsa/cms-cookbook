@@ -1,9 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environment/environment';
 
+import { crudResponse } from '@server/core/interface';
 import { ErrorHandlerService } from './error-handler.service';
 
 @Injectable({
@@ -14,24 +15,26 @@ export class BackupService {
   private error: ErrorHandlerService = inject(ErrorHandlerService);
   private apiUrl = environment.baseApiURL;
 
-  backupDB(): Observable<any> {
+  backupDB(): Observable<Blob> {
     return this.http
       .get(`${this.apiUrl}backup`, { responseType: 'blob' })
-      .pipe(catchError(this.error.handleError('backupDB', 'Unable to create backup', [])));
+      .pipe(catchError(this.error.handleError('backupDB', 'Unable to create backup', new Blob())));
   }
 
-  uploadFile(data: any): Observable<any> {
+  uploadFile(data: FormData): Observable<HttpEvent<unknown>> {
     return this.http
-      .post<any>(`${this.apiUrl}restore`, data, {
+      .post<unknown>(`${this.apiUrl}restore`, data, {
         reportProgress: true,
         observe: 'events',
       })
-      .pipe(catchError(this.error.handleError('uploadFile', 'Unable to upload file', [])));
+      .pipe(catchError(this.error.handleError<HttpEvent<unknown>>('uploadFile', 'Unable to upload file')));
   }
 
-  restoreDB(): Observable<any> {
+  restoreDB(): Observable<crudResponse> {
     return this.http
-      .post<any>(`${this.apiUrl}restore`, '')
-      .pipe(catchError(this.error.handleError('restoreDB', 'Unable to restore backup', [])));
+      .post<crudResponse>(`${this.apiUrl}restore`, '')
+      .pipe(
+        catchError(this.error.handleError<crudResponse>('restoreDB', 'Unable to restore backup', { completed: false })),
+      );
   }
 }

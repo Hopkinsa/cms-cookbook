@@ -11,7 +11,9 @@
   <div class="column">
     @for (image of fileService.imageList() | sortArrays:'image':'asc'; track image; let i = $index ) {
     <div class="recipe-image">
-      <div class="image-box" (click)="openModal(image, 'original')"><img alt="{{ image }}" [src]="imgURL + image" /></div>
+      <button class="image-box" type="button" (click)="openModal(image, 'original')">
+        <img alt="{{ image }}" height="112" width="320" [ngSrc]="imgURL + image" />
+      </button>
       @if (signalService.editEnabled()) {
       <div class="image-amend">
         <button matIconButton type="button" (click)="amend(image)"><mat-icon>edit</mat-icon></button>
@@ -20,14 +22,14 @@
       </div>
       }
       <div class="row image-box-row ">
-        <div class="image-box-alt" (click)="openModal(image, 'icon')" >
-          <img alt="{{ image }} Icon" [src]="imgURL + altImage(image, 'icon')" />
+        <button class="image-box-alt" type="button" (click)="openModal(image, 'icon')">
+          <img alt="{{ image }} Icon" height="64" width="140" [ngSrc]="imgURL + altImage(image, 'icon')" />
           <div class="image-label">Icon</div>
-        </div>
-        <div class="image-box-alt" (click)="openModal(image, 'banner')" >
-          <img alt="{{ image }} Banner" [src]="imgURL + altImage(image, 'banner')" />
-          <div class="image-label" >Banner</div>
-        </div>
+        </button>
+        <button class="image-box-alt" type="button" (click)="openModal(image, 'banner')">
+          <img alt="{{ image }} Banner" height="64" width="140" [ngSrc]="imgURL + altImage(image, 'banner')" />
+          <div class="image-label">Banner</div>
+        </button>
       </div>
       <div class="image-name">{{ image | truncate:30 }}</div>
     </div>

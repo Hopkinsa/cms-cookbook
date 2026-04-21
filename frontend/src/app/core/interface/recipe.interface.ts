@@ -1,13 +1,13 @@
 import { IIngredients, IStep } from './';
 
-export interface ISortSignal {
+export type ISortSignal = {
   target: string;
   direction: string;
-}
+};
 
 export type RecipeTagFilterMode = 'or' | 'and';
 
-export interface IRecipeSearch {
+export type IRecipeSearch = {
   total?: number;
   page?: { offset: number; quantity: number };
   sortSelect: string;
@@ -16,7 +16,7 @@ export interface IRecipeSearch {
   tag: string;
   tags: string[];
   tagMode: RecipeTagFilterMode;
-}
+};
 
 export const IRecipeSearchInit: IRecipeSearch = {
   sortSelect: 't1',
@@ -27,14 +27,14 @@ export const IRecipeSearchInit: IRecipeSearch = {
   tagMode: 'or',
 };
 
-export interface IRecipeList {
+export type IRecipeList = {
   id: number;
   title: string;
   img_url: string;
   tags: string[];
   date_created: number;
   date_updated: number;
-}
+};
 
 export const recipeListInitialState: IRecipeList = {
   id: 0,
@@ -45,13 +45,13 @@ export const recipeListInitialState: IRecipeList = {
   date_updated: 0,
 };
 
-export interface ISearchResults {
+export type ISearchResults = {
   total: number;
   page?: { offset: number; quantity: number };
   sort?: ISortSignal;
   terms?: string;
   results: IRecipeList[];
-}
+};
 
 export const ISearchResultsInit: ISearchResults = {
   total: 0,
@@ -60,15 +60,15 @@ export const ISearchResultsInit: ISearchResults = {
   results: [],
 };
 
-export interface IRecipeTagForm {
+export type IRecipeTagForm = {
   tag: string;
-}
+};
 
 export const recipeTagFormInitialState: IRecipeTagForm = {
   tag: '',
 };
 
-export interface IRecipe {
+export type IRecipe = {
   title: string;
   description: string;
   tags: string[];
@@ -81,7 +81,7 @@ export interface IRecipe {
   notes: string;
   date_created: number;
   date_updated: number;
-}
+};
 
 export const recipeInitialState: IRecipe = {
   title: '',

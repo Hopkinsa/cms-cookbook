@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, computed, inject, ViewEncapsulation } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { environment } from 'src/environment/environment';
 
 import { RecipeListService, RecipeService, SignalService } from '@server/core/services';
 import { generateFilename } from '@server/shared/helper/filename.helper';
-import { SearchBarComponent } from "@server/components/search-bar/search-bar.component";
+import { SearchBarComponent } from '@server/components/search-bar/search-bar.component';
 
 @Component({
   selector: 'app-recipes',
@@ -21,12 +21,13 @@ import { SearchBarComponent } from "@server/components/search-bar/search-bar.com
     MatChipsModule,
     MatIconModule,
     MatPaginatorModule,
-    SearchBarComponent
-],
+    SearchBarComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class RecipesComponent {
+  private route: ActivatedRoute = inject(ActivatedRoute);
   private router: Router = inject(Router);
   protected signalService: SignalService = inject(SignalService);
   private recipeListService: RecipeListService = inject(RecipeListService);
@@ -41,12 +42,36 @@ export class RecipesComponent {
 
   protected imgURL = `${environment.baseImgURL}`;
 
+  constructor() {
+    this.applyRouteTagFilter();
+  }
+
+  private applyRouteTagFilter(): void {
+    const selectedTag = this.route.snapshot.queryParamMap.get('tag')?.trim();
+
+    if (!selectedTag) {
+      return;
+    }
+
+    const currentSearch = this.signalService.recipeSearch();
+
+    if (!currentSearch.tags.includes(selectedTag)) {
+      this.signalService.recipeSearch.set({
+        ...currentSearch,
+        tag: '',
+        tags: [...currentSearch.tags, selectedTag],
+      });
+    }
+
+    this.signalService.pageIndex.set(0);
+  }
+
   icon(img_url: string): string {
     const imgNames = generateFilename(img_url);
     return this.imgURL + imgNames.icon;
   }
 
-  onPageChange(event: any): void {
+  onPageChange(event: PageEvent): void {
     // keep top and bottom paginator in sync
     const pageIndex = event.pageIndex;
     const pageSize = event.pageSize;
