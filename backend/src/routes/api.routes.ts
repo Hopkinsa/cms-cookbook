@@ -2,35 +2,36 @@ import { Router } from 'express';
 
 import { recipeBody, searchQuery, sortQuery, tagBody } from '../validation/api.validation.ts';
 
-import DBCreate from '../api/db-create/db-create.ts';
-import DBRead from '../api/db-read/db-read.ts';
-import DBUpdate from '../api/db-update/db-update.ts';
-import DBDelete from '../api/db-delete/db-delete.ts';
-import DBBackup from '../api/db-backup/db-backup.ts';
-import DBRestore from '../api/db-restore/db-restore.ts';
+import { backup } from '../api/backup/backup.ts';
+import { findRecipeByID, findRecipes, getRecipes } from '../api/recipe/recipe-read.ts';
+import { createRecipe, deleteRecipe, updateRecipe } from '../api/recipe/recipe-write.ts';
+import { restore } from '../api/restore/restore.ts';
+import { findTagByID, getTags } from '../api/tag/tag-read.ts';
+import { createTag, deleteTag, updateTag } from '../api/tag/tag-write.ts';
+import { findUnitByID, getUnits } from '../api/unit/unit-read.ts';
 
-import uploadZip from '../api/db-restore/multer.middleware.ts';
+import uploadZip from '../api/restore/multer.middleware.ts';
 
 export const API_ROUTES = Router();
 
-API_ROUTES.delete('/api/recipe/:id', DBDelete.deleteRecipe); // By id
-API_ROUTES.patch('/api/recipe/:id', recipeBody, DBUpdate.updateRecipe); // By id
-API_ROUTES.post('/api/recipe', recipeBody, DBCreate.createRecipe);
-API_ROUTES.get('/api/recipe/:id', DBRead.findRecipeByID); // By id
+API_ROUTES.delete('/api/recipe/:id', deleteRecipe); // By id
+API_ROUTES.patch('/api/recipe/:id', recipeBody, updateRecipe); // By id
+API_ROUTES.post('/api/recipe', recipeBody, createRecipe);
+API_ROUTES.get('/api/recipe/:id', findRecipeByID); // By id
 
-API_ROUTES.get('/api/search', searchQuery, DBRead.findRecipes);
-API_ROUTES.get('/api/recipes', sortQuery, DBRead.getRecipes);
+API_ROUTES.get('/api/search', searchQuery, findRecipes);
+API_ROUTES.get('/api/recipes', sortQuery, getRecipes);
 
-API_ROUTES.get('/api/units/:id', DBRead.findUnitByID); // By id
-API_ROUTES.get('/api/units', DBRead.getUnits);
+API_ROUTES.get('/api/units/:id', findUnitByID); // By id
+API_ROUTES.get('/api/units', getUnits);
 
-API_ROUTES.delete('/api/tags/:id', DBDelete.deleteTag); // By id
-API_ROUTES.patch('/api/tags/:id', tagBody, DBUpdate.updateTag); // By id
-API_ROUTES.post('/api/tags', tagBody, DBCreate.createTag);
-API_ROUTES.get('/api/tags/:id', DBRead.findTagByID); // By id
-API_ROUTES.get('/api/tags', DBRead.getTags);
+API_ROUTES.delete('/api/tags/:id', deleteTag); // By id
+API_ROUTES.patch('/api/tags/:id', tagBody, updateTag); // By id
+API_ROUTES.post('/api/tags', tagBody, createTag);
+API_ROUTES.get('/api/tags/:id', findTagByID); // By id
+API_ROUTES.get('/api/tags', getTags);
 
-API_ROUTES.post('/api/restore', uploadZip.single('file'), DBRestore.dbRestore);
-API_ROUTES.get('/api/backup', DBBackup.dbBackup);
+API_ROUTES.post('/api/restore', uploadZip.single('file'), restore);
+API_ROUTES.get('/api/backup', backup);
 
 

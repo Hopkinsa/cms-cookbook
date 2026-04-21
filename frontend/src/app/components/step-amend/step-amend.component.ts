@@ -1,7 +1,12 @@
 import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
-import { FormField, form } from '@angular/forms/signals';
+import { form, FormField } from '@angular/forms/signals';
 
-import { IStep, stepInitialState } from '@server/core/interface';
+import { IStep, IStepUpdate, stepInitialState } from '@server/core/interface';
+
+type StepField = {
+  is_title(): { value(): boolean };
+  step(): { value(): string };
+};
 
 @Component({
   selector: 'app-step-amend',
@@ -12,12 +17,12 @@ import { IStep, stepInitialState } from '@server/core/interface';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StepAmendComponent {
-  signalStep = input<any>(stepInitialState, {
+  readonly signalStep = input<StepField | undefined>(undefined, {
     alias: 'step',
   });
-  stepChange = output<any>();
+  readonly stepChange = output<IStepUpdate>();
 
-  protected stepModel = signal<IStep>({...stepInitialState});
+  protected readonly stepModel = signal<IStep>({ ...stepInitialState });
   protected stepForm = form(this.stepModel);
 
   private formInit = true;
@@ -44,11 +49,17 @@ export class StepAmendComponent {
 
   // Update parent via output signal if value has changed
   private updateEffect = effect(() => {
+    const stepSignal = this.signalStep();
+
+    if (stepSignal === undefined) {
+      return;
+    }
+
     let updateData = null;
-    if (this.stepModel().is_title !== this.signalStep().is_title().value()) {
+    if (this.stepModel().is_title !== stepSignal.is_title().value()) {
       updateData = { is_title: this.stepModel().is_title };
     }
-    if (this.stepModel().step !== this.signalStep().step().value()) {
+    if (this.stepModel().step !== stepSignal.step().value()) {
       updateData = { step: this.stepModel().step };
     }
     if (updateData !== null) {

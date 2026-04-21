@@ -1,8 +1,8 @@
 import { inject } from '@angular/core';
 import { RecipeListService } from '@server/core/services';
 
-import type { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from '@angular/router';
+import type { ResolveFn } from '@angular/router';
 
-export const recipeListResolver: ResolveFn<any> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+export const recipeListResolver: ResolveFn<void> = () => {
   inject(RecipeListService).getRecipeList.set(Date.now());
 };

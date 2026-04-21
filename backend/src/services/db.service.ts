@@ -1,7 +1,7 @@
 import Database from 'better-sqlite3';
 
-import { DATA_PATH, DIR_PATH, log } from '../utility/helpers.ts';
-import { createDatabase, populateDatabase } from '../api/db-init/db-init.ts';
+import { DATA_PATH, log } from '../utility/helpers.ts';
+import { createDatabase, populateDatabase } from '../api/init/init.ts';
 import * as fs from 'fs';
 
 const DEBUG = 'db.service | ';

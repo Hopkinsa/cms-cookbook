@@ -1,6 +1,6 @@
 {
   "watch": ["src"],
   "ext": "ts",
-  "ignore": ["dist", "db-api/db-init/recipes-obj.ts"],
+  "ignore": ["dist", "src/api/init/recipe-seed-data.ts"],
   "exec": "node --loader ts-node/esm src/index.ts"
 }

@@ -1,8 +1,8 @@
-export interface ITags {
+export type ITags = {
   id: number;
   type: string;
   tag: string;
-}
+};
 
 export const tagsInitialState: ITags = {
   id: -1,

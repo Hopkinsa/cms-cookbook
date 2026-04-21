@@ -1,12 +1,12 @@
-export interface IStep {
+export type IStep = {
   is_title: boolean;
   step: string;
-}
+};
 
-export interface IStepUpdate {
+export type IStepUpdate = {
   is_title?: boolean;
   step?: string;
-}
+};
 
 export const stepInitialState: IStep = {
   is_title: false,

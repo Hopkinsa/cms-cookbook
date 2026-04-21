@@ -32,11 +32,11 @@ describe('AmendRecipeComponent', () => {
     // imageSelected should set img and call signal
     comp.recipeModel.set({ ...recipe });
     comp.imageSelected('x.png');
-    expect(mockSignal.recipe.set).toHaveBeenCalled();
+    expect(comp.recipeModel().img_url).toBe('x.png');
 
     // add tag
     comp.addTag();
-    expect(mockSignal.recipe.set).toHaveBeenCalled();
+    expect(comp.recipeModel().tags).toEqual(['a', '']);
 
     // tag update
     comp.recipeModel.set({ ...recipe, tags: ['a', ''] });
@@ -45,7 +45,7 @@ describe('AmendRecipeComponent', () => {
 
     // remove tag
     comp.removeTag(0);
-    expect(mockSignal.recipe.set).toHaveBeenCalled();
+    expect(comp.recipeModel().tags).toEqual(['b']);
 
     // add ingredient
     comp.recipeModel.set({ ...recipe, ingredients: [] });

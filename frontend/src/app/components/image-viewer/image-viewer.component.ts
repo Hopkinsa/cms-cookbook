@@ -1,11 +1,11 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 
 @Component({
   selector: 'app-image-viewer',
   templateUrl: './image-viewer.component.html',
   styleUrls: ['./image-viewer.component.scss'],
-  imports: [CommonModule,],
+  imports: [CommonModule, NgOptimizedImage],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

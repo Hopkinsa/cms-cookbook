@@ -5,8 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class RemoveCharactersPipe implements PipeTransform {
-  // "any" used to account for key value pairs
-  transform(text: any | null, char: string, newChar: string): string {
-    return (text as string).replaceAll(char, newChar);
+  transform(text: string | number | null | undefined, char: string, newChar: string): string {
+    return String(text ?? '').replaceAll(char, newChar);
   }
 }

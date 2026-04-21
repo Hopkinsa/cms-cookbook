@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input, output, signal } from '@angular/core';
-import { FormField, form } from '@angular/forms/signals';
+import { form, FormField } from '@angular/forms/signals';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { KeyValuePipe, TitleCasePipe } from '@angular/common';
@@ -7,6 +7,10 @@ import { KeyValuePipe, TitleCasePipe } from '@angular/common';
 import { IRecipeTagForm, recipeTagFormInitialState } from '@server/core/interface';
 import { SignalService } from '@server/core/services';
 import { GroupByPipe } from '@server/shared/pipes';
+
+type RecipeTagField = () => {
+  value(): string;
+};
 
 @Component({
   selector: 'app-recipe-tag-amend',
@@ -17,15 +21,15 @@ import { GroupByPipe } from '@server/shared/pipes';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeTagAmendComponent {
-  signalRecipeTag = input<any>('', {
+  readonly signalRecipeTag = input<RecipeTagField | undefined>(undefined, {
     alias: 'tag',
   });
-  recipeTagChange = output<any>();
-  recipeTagRemove = output<any>();
+  readonly recipeTagChange = output<string>();
+  readonly recipeTagRemove = output<boolean>();
 
   protected signalService: SignalService = inject(SignalService);
 
-  protected tagModel = signal<IRecipeTagForm>({...recipeTagFormInitialState});
+  protected readonly tagModel = signal<IRecipeTagForm>({ ...recipeTagFormInitialState });
   protected tagForm = form(this.tagModel);
 
   protected enableSave = true;
@@ -34,19 +38,20 @@ export class RecipeTagAmendComponent {
   private recipeTagInit = effect(() => {
     // populate on change
     const recipeTagSignal = this.signalRecipeTag();
+    const currentTag = recipeTagSignal?.().value();
 
     if (recipeTagSignal !== null && !this.formInit) {
       // Check if value on form matches value from signal, if not then update component
-      this.formInit = this.tagForm.tag().value() !== recipeTagSignal().value();
+      this.formInit = this.tagForm.tag().value() !== currentTag;
     }
 
     // Prevent initial null value from signal creation and repeated updated on signal change
     if (recipeTagSignal !== null && this.formInit) {
       let initForm: IRecipeTagForm;
 
-      if (recipeTagSignal !== undefined) {
+      if (currentTag !== undefined) {
         initForm = {
-          tag: recipeTagSignal().value(),
+          tag: currentTag,
         };
       } else {
         initForm = { tag: '' };
@@ -58,8 +63,9 @@ export class RecipeTagAmendComponent {
 
   // Update parent via output signal if value has changed
   private updateEffect = effect(() => {
+    const currentTag = this.signalRecipeTag()?.().value();
     let updateData = null;
-    if (this.tagModel().tag !== this.signalRecipeTag()) {
+    if (currentTag !== undefined && this.tagModel().tag !== currentTag) {
       updateData = this.tagModel().tag;
     }
     if (updateData !== null) {

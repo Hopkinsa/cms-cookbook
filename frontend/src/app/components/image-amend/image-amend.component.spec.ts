@@ -14,7 +14,8 @@ jest.mock('cropperjs', () => {
     setAspectRatio: jest.fn(),
     setDragMode: jest.fn(),
     reset: jest.fn(),
-    getCropBoxData: jest.fn(() => ({ width: 100, height: 50 })),
+    getImageData: jest.fn(() => ({ naturalWidth: 200, naturalHeight: 100 })),
+    getData: jest.fn(() => ({ width: 100, height: 50 })),
     getCroppedCanvas: jest.fn(() => ({
       toBlob: (cb: any) => cb(new Blob(['a'], { type: 'image/png' })),
     })),
@@ -24,7 +25,7 @@ jest.mock('cropperjs', () => {
 describe('ImageAmendComponent (edge cases)', () => {
   beforeEach(() => {
     const mockSignal: any = { feedbackMessage: { set: jest.fn() } };
-    const mockFile: any = { uploadImage: jest.fn(() => ({ subscribe: () => {} })) };
+    const mockFile: any = { editImage: jest.fn(() => ({ subscribe: () => {} })) };
 
     TestBed.configureTestingModule({
       imports: [ImageAmendComponent],
@@ -51,7 +52,8 @@ describe('ImageAmendComponent (edge cases)', () => {
       setAspectRatio: jest.fn(),
       setDragMode: jest.fn(),
       reset: jest.fn(),
-      getCropBoxData: jest.fn(() => ({ width: 100, height: 50 })),
+      getImageData: jest.fn(() => ({ naturalWidth: 200, naturalHeight: 100 })),
+      getData: jest.fn(() => ({ width: 100, height: 50 })),
       getCroppedCanvas: jest.fn(() => ({ toBlob: (cb: any) => cb(new Blob(['a'], { type: 'image/png' })) })),
     } as any;
 
@@ -95,14 +97,11 @@ describe('ImageAmendComponent (edge cases)', () => {
   });
 
   it('apply uploads cropped image and handles success', () => {
-    const CropperMock: any = require('cropperjs');
-    const instance = CropperMock.mock.instances[0];
-
     const mockFileService: any = TestBed.inject(FileService) as any;
     const mockSignalService: any = TestBed.inject(SignalService) as any;
 
-    // make uploadImage invoke success response
-    mockFileService.uploadImage = jest.fn(() => ({ subscribe: (next: any) => next({ type: HttpEventType.Response }) }));
+    // make editImage invoke success response
+    mockFileService.editImage = jest.fn(() => ({ subscribe: (next: any) => next({ type: HttpEventType.Response }) }));
 
     const fixture = TestBed.createComponent(ImageAmendComponent);
     const comp = fixture.componentInstance as any;
@@ -114,25 +113,22 @@ describe('ImageAmendComponent (edge cases)', () => {
 
     // set cropper mock so apply will use it
     (comp as any).cropper = {
-      getCropBoxData: jest.fn(() => ({ width: 100, height: 100 })),
+      getData: jest.fn(() => ({ width: 100, height: 100 })),
       getCroppedCanvas: jest.fn(() => ({ toBlob: (cb: any) => cb(new Blob(['a'], { type: 'image/png' })) })),
     } as any;
 
     comp.apply();
 
-    expect(mockFileService.uploadImage).toHaveBeenCalled();
+    expect(mockFileService.editImage).toHaveBeenCalled();
     expect(mockSignalService.feedbackMessage.set).toHaveBeenCalledWith({ type: 'success', message: 'Image added' });
   });
 
   it('apply handles upload error path', () => {
-    const CropperMock: any = require('cropperjs');
-    const instance = CropperMock.mock.instances[0];
-
     const mockFileService: any = TestBed.inject(FileService) as any;
     const mockSignalService: any = TestBed.inject(SignalService) as any;
 
-    // make uploadImage invoke error callback
-    mockFileService.uploadImage = jest.fn(() => ({ subscribe: (_next: any, err: any) => err('boom') }));
+    // make editImage invoke error callback
+    mockFileService.editImage = jest.fn(() => ({ subscribe: (_next: any, err: any) => err('boom') }));
 
     const fixture = TestBed.createComponent(ImageAmendComponent);
     const comp = fixture.componentInstance as any;
@@ -143,13 +139,13 @@ describe('ImageAmendComponent (edge cases)', () => {
 
     // set cropper mock so apply will use it
     (comp as any).cropper = {
-      getCropBoxData: jest.fn(() => ({ width: 100, height: 100 })),
+      getData: jest.fn(() => ({ width: 100, height: 100 })),
       getCroppedCanvas: jest.fn(() => ({ toBlob: (cb: any) => cb(new Blob(['a'], { type: 'image/png' })) })),
     } as any;
 
     comp.apply();
 
-    expect(mockFileService.uploadImage).toHaveBeenCalled();
+    expect(mockFileService.editImage).toHaveBeenCalled();
     expect(mockSignalService.feedbackMessage.set).toHaveBeenCalledWith({
       type: 'error',
       message: 'Image upload failed',

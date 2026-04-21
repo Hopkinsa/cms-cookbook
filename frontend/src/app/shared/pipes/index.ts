@@ -4,3 +4,4 @@ export * from './hours-minutes.pipe';
 export * from './sort-array.pipe';
 export * from './filter-array.pipe';
 export * from './truncate.pipe';
+export * from './ingredient-quantity.pipe';

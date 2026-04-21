@@ -5,6 +5,7 @@ import { SignalService } from '@server/core/services/signal.service';
 
 describe('ErrorHandlerService', () => {
   it('sets feedbackMessage and returns an observable with completed false', (done) => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
     const mockFeedback = { set: jest.fn() };
     const fakeSignalService = { feedbackMessage: mockFeedback } as any;
 
@@ -13,7 +14,7 @@ describe('ErrorHandlerService', () => {
     });
 
     const service = TestBed.inject(ErrorHandlerService);
-    const handler = service.handleError('op', 'feedback message', {} as any);
+  const handler = service.handleError('op', 'feedback message');
 
     const result$ = handler(new Error('boom'));
     result$.subscribe((res) => {

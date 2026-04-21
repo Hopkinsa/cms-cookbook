@@ -1,18 +1,18 @@
 import { Router } from 'express';
 
-import FileApi from '../api/file-api/file-api.ts';
-import uploadImage from '../api/file-api/multer.middleware.ts';
+import { deleteImageFiles, editImageFiles, getImageFiles, uploadImageFiles } from '../api/images/images.ts';
+import uploadImage from '../api/images/multer.middleware.ts';
 
 export const FILE_ROUTES = Router();
 
-FILE_ROUTES.delete('/api/images/:name', FileApi.deleteImageFiles);
-FILE_ROUTES.post('/api/images/edit', FileApi.editImageFiles);
-FILE_ROUTES.post('/api/images/upload', uploadImage.single('file'), FileApi.uploadImageFiles);
+FILE_ROUTES.delete('/api/images/:name', deleteImageFiles);
+FILE_ROUTES.post('/api/images/edit', editImageFiles);
+FILE_ROUTES.post('/api/images/upload', uploadImage.single('file'), uploadImageFiles);
 
 /*
  * Use the following route to resize all existing images
  * Commented out as only really need if there are a lot of unedited pictures
-FILE_ROUTES.get('/api/images/reset', FileApi.resetAllImageFiles);
+FILE_ROUTES.get('/api/images/reset', resetAllImageFiles);
  */
 
-FILE_ROUTES.get('/api/images', FileApi.getImageFiles);
+FILE_ROUTES.get('/api/images', getImageFiles);

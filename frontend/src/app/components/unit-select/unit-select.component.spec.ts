@@ -20,15 +20,18 @@ describe('UnitSelectComponent', () => {
   });
 
   it('emits fieldChange when model changes', () => {
-    const spy = jest.spyOn(comp['fieldChange'], 'emit');
-    // initialize input so formInit becomes false
-    (comp as any).signalField = (): any => '1';
-    fixture.detectChanges();
+    const localFixture = TestBed.createComponent(UnitSelectComponent);
+    const localComp = localFixture.componentInstance as any;
+    const spy = jest.spyOn(localComp['fieldChange'], 'emit');
+
+    // initialize input before the first change detection run
+    localComp.signalField = () => () => ({ value: () => '1' });
+    localFixture.detectChanges();
 
     // change the model to trigger updateEffect
-    comp['fieldModel'].set('3');
+    localComp['fieldModel'].set('3');
     // trigger change detection to allow updateEffect to run
-    fixture.detectChanges();
+    localFixture.detectChanges();
     expect(spy).toHaveBeenCalledWith(3);
   });
 });

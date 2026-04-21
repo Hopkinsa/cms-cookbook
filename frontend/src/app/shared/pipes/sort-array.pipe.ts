@@ -5,37 +5,37 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class SortArrayPipe implements PipeTransform {
-  transform(collection: any[] | null, field: string, dir: string): any[] | null {
+  transform<T>(collection: T[] | null, field: string, dir: string): T[] | null {
     if (!collection) {
       return null;
     }
     if (!field) {
       return collection;
     }
-    const direction = dir ? dir : 'asc';
-    const isCollectionArray = Array.isArray(collection);
-    collection.sort((a, b) => {
-      const val1: string = isCollectionArray ? a : a[field];
-      const val2: string = isCollectionArray ? b : b[field];
-      let sortDir = 0;
-      if (direction === 'desc') {
-        if (val1 > val2) {
-          sortDir = -1;
-        }
-        if (val1 < val2) {
-          sortDir = 1;
-        }
-      } else {
-        // ascending
-        if (val1 < val2) {
-          sortDir = -1;
-        }
-        if (val1 > val2) {
-          sortDir = 1;
-        }
+    const direction = dir || 'asc';
+    const sortDirection = direction === 'desc' ? -1 : 1;
+
+    return [...collection].sort((leftItem, rightItem) => {
+      const leftValue = this.resolveSortValue(leftItem, field);
+      const rightValue = this.resolveSortValue(rightItem, field);
+
+      if (leftValue === rightValue) {
+        return 0;
       }
-      return sortDir;
+
+      return leftValue < rightValue ? -1 * sortDirection : sortDirection;
     });
-    return collection;
+  }
+
+  private resolveSortValue<T>(item: T, field: string): string {
+    if (typeof item === 'string' || typeof item === 'number') {
+      return String(item).toLowerCase();
+    }
+
+    if (item && typeof item === 'object' && field in (item as Record<string, unknown>)) {
+      return String((item as Record<string, unknown>)[field] ?? '').toLowerCase();
+    }
+
+    return '';
   }
 }

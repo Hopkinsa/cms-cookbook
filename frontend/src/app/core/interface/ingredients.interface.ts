@@ -1,18 +1,18 @@
-export interface IIngredients {
+export type IIngredients = {
   is_title: boolean;
   ingredient: string;
   preparation: string;
   quantity: number;
   quantity_unit: number;
-}
+};
 
-export interface IIngredientsUpdate {
+export type IIngredientsUpdate = {
   is_title?: boolean;
   ingredient?: string;
   preparation?: string;
   quantity?: number;
   quantity_unit?: number;
-}
+};
 
 export const ingredientInitialState: IIngredients = {
   is_title: false,

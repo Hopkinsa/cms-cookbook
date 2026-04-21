@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 
 describe('DisplayRecipeComponent', () => {
   it('computed title, totalTime, banner and serving up/down, amend/back', () => {
-    const recipe: any = { title: 'T', prep_time: 10, cook_time: 5, img_url: 'file.png', serves: 2 };
+    const recipe: any = { title: 'T', prep_time: 10, cook_time: 5, img_url: 'file.png', serves: 2, tags: ['vegan'] };
     const recipeServesSignal: any = jest.fn(() => 2);
     recipeServesSignal.set = jest.fn();
     recipeServesSignal.update = jest.fn();
@@ -42,11 +42,40 @@ describe('DisplayRecipeComponent', () => {
     comp.servingDown();
     expect((mockSignal.recipeServes as any).update).toHaveBeenCalled();
 
+    comp.setMeasurementMode('metric');
+    expect(comp.measurementMode()).toBe('metric');
+
     // amend should set returnTo and navigate
     comp.amend();
     expect(mockSignal.returnTo.set).toHaveBeenCalled();
     // back
     comp.back();
-    expect(mockRouter.navigate).toHaveBeenCalled();
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/recipes']);
+  });
+
+  it('navigates to recipes with the selected tag filter', () => {
+    const recipe: any = { title: 'T', prep_time: 10, cook_time: 5, img_url: 'file.png', serves: 2, tags: ['vegan'] };
+    const recipeServesSignal: any = jest.fn(() => 2);
+    recipeServesSignal.set = jest.fn();
+    recipeServesSignal.update = jest.fn();
+    const mockSignal: any = { recipe: () => recipe, recipeServes: recipeServesSignal, returnTo: { set: jest.fn() } };
+    const mockTitle: any = { setTitle: jest.fn() };
+    const mockRouter: any = { navigate: jest.fn(), url: '/recipe/1' };
+
+    TestBed.configureTestingModule({
+      imports: [DisplayRecipeComponent],
+      providers: [
+        { provide: SignalService, useValue: mockSignal },
+        { provide: Title, useValue: mockTitle },
+        { provide: Router, useValue: mockRouter },
+      ],
+    });
+
+    const fixture = TestBed.createComponent(DisplayRecipeComponent);
+    const comp = fixture.componentInstance as any;
+
+    comp.filterByTag('vegan');
+
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/recipes'], { queryParams: { tag: 'vegan' } });
   });
 });

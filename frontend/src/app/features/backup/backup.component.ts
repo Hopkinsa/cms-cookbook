@@ -1,13 +1,12 @@
 import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
+import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { BackupService, SignalService } from '@server/core/services';
-import { crudResponse } from '@server/core/interface';
 import { FeedbackComponent } from '@server/components/feedback/feedback.component';
-import { HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-backup',
@@ -45,21 +44,21 @@ export class BackupComponent {
   backup(): void {
     this.enableBtn.set(false);
     this.backupService.backupDB().subscribe((res) => {
-      if (res !== null && res !== undefined) {
-        this.signalService.feedbackMessage.set({ type: 'success', message: 'Database backed up' });
-        const a = document.createElement('a');
-        const objUrl = URL.createObjectURL(res);
-        a.href = objUrl;
-        a.download = this.downloadName();
-        a.click();
-        URL.revokeObjectURL(objUrl);
-      }
+      this.signalService.feedbackMessage.set({ type: 'success', message: 'Database backed up' });
+      const a = document.createElement('a');
+      const objUrl = URL.createObjectURL(res);
+      a.href = objUrl;
+      a.download = this.downloadName();
+      a.click();
+      URL.revokeObjectURL(objUrl);
       this.enableBtn.set(true);
     });
   }
 
-  onFileSelected(event: any): void {
-    const file: File = event.target.files[0];
+  onFileSelected(event: Event): void {
+    const inputElement = event.target as HTMLInputElement | null;
+    const file = inputElement?.files?.[0];
+
     if (file) {
       this.enableBtn.set(false);
       const formData = new FormData();
@@ -67,9 +66,9 @@ export class BackupComponent {
 
       this.isUploading = true; // Start uploading
       this.backupService.uploadFile(formData).subscribe(
-        (res: any) => {
+        (res: HttpEvent<unknown>) => {
           if (res.type === HttpEventType.UploadProgress) {
-            if (event.total) {
+            if (res.total) {
               this.uploadProgress = Math.round((100 * res.loaded) / res.total);
             }
           } else if (res.type === HttpEventType.Response) {
@@ -78,7 +77,7 @@ export class BackupComponent {
             this.isUploading = false;
           }
         },
-        (error: any) => {
+        (error: unknown) => {
           console.error('Upload error:', error);
           this.signalService.feedbackMessage.set({ type: 'error', message: 'File upload failed' });
           this.isUploading = false;
@@ -90,10 +89,8 @@ export class BackupComponent {
 
   restore(): void {
     this.backupService.restoreDB().subscribe((res) => {
-      if (res !== null && res !== undefined) {
-        if ((res as unknown as crudResponse).completed) {
-          this.signalService.feedbackMessage.set({ type: 'success', message: 'Database restored' });
-        }
+      if (res.completed) {
+        this.signalService.feedbackMessage.set({ type: 'success', message: 'Database restored' });
       }
     });
   }

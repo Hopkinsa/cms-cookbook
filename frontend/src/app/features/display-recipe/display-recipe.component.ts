@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, inject, linkedSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { environment } from 'src/environment/environment';
@@ -11,13 +12,22 @@ import { IngredientsComponent } from '@server/components/ingredients/ingredients
 import { StepsComponent } from '@server/components/steps/steps.component';
 import { Title } from '@angular/platform-browser';
 import { generateFilename } from '@server/shared/helper/filename.helper';
+import { IngredientMeasurementMode } from '@server/shared/helper/ingredient-measurement.helper';
 
 @Component({
   selector: 'app-display-recipe',
   templateUrl: './display-recipe.component.html',
   styleUrls: ['./display-recipe.component.scss'],
   standalone: true,
-  imports: [MatButtonModule, MatChipsModule, MatIconModule, IngredientsComponent, StepsComponent, HoursMinutesPipe],
+  imports: [
+    MatButtonModule,
+    MatButtonToggleModule,
+    MatChipsModule,
+    MatIconModule,
+    IngredientsComponent,
+    StepsComponent,
+    HoursMinutesPipe,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DisplayRecipeComponent {
@@ -27,6 +37,7 @@ export class DisplayRecipeComponent {
   protected imgURL = `${environment.baseImgURL}`;
   protected imgPlaceholderURL = `${environment.baseTemplateURL}`;
   protected signalService: SignalService = inject(SignalService);
+  protected readonly measurementMode = signal<IngredientMeasurementMode>('original');
   protected readonly recipeTitle = computed(() => {
     if (this.signalService.recipe()) {
       this.title.setTitle(`${this.signalService.recipe()!.title} | Cookbook`);
@@ -80,6 +91,20 @@ export class DisplayRecipeComponent {
   amend(): void {
     this.signalService.returnTo.set('display');
     this.router.navigate([this.router.url, 'amend']);
+  }
+
+  filterByTag(tag: string): void {
+    const selectedTag = tag.trim();
+
+    if (selectedTag === '') {
+      return;
+    }
+
+    this.router.navigate(['/recipes'], { queryParams: { tag: selectedTag } });
+  }
+
+  setMeasurementMode(mode: IngredientMeasurementMode): void {
+    this.measurementMode.set(mode);
   }
 
   back(): void {

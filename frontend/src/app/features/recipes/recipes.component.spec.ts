@@ -1,21 +1,23 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
 import { RecipesComponent } from './recipes.component';
+import { IRecipeSearchInit } from '@server/core/interface';
 import { RecipeListService, RecipeService, SignalService } from '@server/core/services';
 import { of } from 'rxjs';
 
 describe('RecipesComponent', () => {
-  it('paginates filtered recipes and supports delete, amend and back', () => {
+  it('paginates filtered recipes, applies route tag filter, and supports delete, amend and back', () => {
     const mockSignal: any = {
       returnTo: { set: jest.fn() },
+      recipeSearch: signal({ ...IRecipeSearchInit, tags: ['quick'], terms: 'soup' }),
       filteredRecipeList: signal([
         { id: 1, title: 'A', img_url: '', tags: ['vegan'], date_created: 1, date_updated: 1 },
         { id: 2, title: 'B', img_url: '', tags: ['vegan', 'quick'], date_created: 1, date_updated: 1 },
         { id: 3, title: 'C', img_url: '', tags: ['breakfast'], date_created: 1, date_updated: 1 },
       ]),
       filteredRecipesFound: signal(3),
-      pageIndex: signal(0),
+      pageIndex: signal(1),
       pageSize: signal(2),
       pageSizeOptions: [2, 4, 6],
     };
@@ -25,6 +27,7 @@ describe('RecipesComponent', () => {
     };
     const mockRecipeService: any = { deleteRecipe: jest.fn(() => of({})) };
     const mockRouter: any = { navigate: jest.fn() };
+    const mockRoute: any = { snapshot: { queryParamMap: convertToParamMap({ tag: 'vegan' }) } };
 
     TestBed.configureTestingModule({
       providers: [
@@ -32,11 +35,15 @@ describe('RecipesComponent', () => {
         { provide: RecipeListService, useValue: mockRecipeList },
         { provide: RecipeService, useValue: mockRecipeService },
         { provide: Router, useValue: mockRouter },
+        { provide: ActivatedRoute, useValue: mockRoute },
       ],
     });
 
     const comp = TestBed.runInInjectionContext(() => new RecipesComponent()) as any;
 
+    expect(mockSignal.recipeSearch().tags).toEqual(['quick', 'vegan']);
+    expect(mockSignal.recipeSearch().terms).toBe('soup');
+    expect(mockSignal.pageIndex()).toBe(0);
     expect(comp.icon('file.name.png')).toContain('file.name-Icon.png');
     expect(comp.filteredRecipes().map((recipe: any) => recipe.id)).toEqual([1, 2, 3]);
     expect(comp.resultsPage().map((recipe: any) => recipe.id)).toEqual([1, 2]);

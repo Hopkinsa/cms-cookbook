@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpEventType } from '@angular/common/http';
+import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -25,17 +25,19 @@ export class ImageUploadComponent {
   value = 0;
   isUploading = false; // To track upload status
 
-  onFileSelected(event: any): void {
-    const file: File = event.target.files[0];
+  onFileSelected(event: Event): void {
+    const inputElement = event.target as HTMLInputElement | null;
+    const file = inputElement?.files?.[0];
+
     if (file) {
       const formData = new FormData();
       formData.append('file', file);
 
       this.isUploading = true; // Start uploading
       this.fileService.uploadImage(formData).subscribe(
-        (res: any) => {
+        (res: HttpEvent<unknown>) => {
           if (res.type === HttpEventType.UploadProgress) {
-            if (event.total) {
+            if (res.total) {
               this.uploadProgress = Math.round((100 * res.loaded) / res.total);
             }
           } else if (res.type === HttpEventType.Response) {
@@ -49,7 +51,7 @@ export class ImageUploadComponent {
             }, 1000);
           }
         },
-        (error) => {
+        (error: unknown) => {
           console.error('Upload error:', error);
           this.signalService.feedbackMessage.set({ type: 'error', message: 'Image upload failed' });
           this.isUploading = false;

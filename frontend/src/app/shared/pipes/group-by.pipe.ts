@@ -5,12 +5,15 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class GroupByPipe implements PipeTransform {
-  transform(collection: any[] | null, field: string): any[] | null {
+  transform<T extends Record<string, unknown>>(
+    collection: T[] | null,
+    field: keyof T & string,
+  ): Record<string, T[]> | null {
     if (!collection) {
       return null;
     }
-    const newCollection = collection.reduce((group, item) => {
-      const property = item[field];
+    return collection.reduce<Record<string, T[]>>((group, item) => {
+      const property = String(item[field] ?? '');
 
       // Initialize the group if it doesn't exist
       if (!group[property]) {
@@ -21,6 +24,5 @@ export class GroupByPipe implements PipeTransform {
       group[property].push(item);
       return group;
     }, {});
-    return newCollection;
   }
 }

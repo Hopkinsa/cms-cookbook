@@ -1,8 +1,8 @@
-export interface IFeedback {
+export type IFeedback = {
   type?: string;
   message?: string;
-}
+};
 
-export interface crudResponse {
+export type crudResponse = {
   completed: boolean;
-}
+};

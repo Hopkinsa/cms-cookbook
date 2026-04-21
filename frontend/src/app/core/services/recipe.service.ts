@@ -5,7 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environment/environment';
 
 import { SignalService } from '@server/core/services/signal.service';
-import { IRecipe } from '@server/core/interface/recipe.interface';
+import { crudResponse, IRecipe } from '@server/core/interface';
 import { ErrorHandlerService } from './error-handler.service';
 
 @Injectable({
@@ -37,21 +37,27 @@ export class RecipeService {
     return this.getRecipe() ? `${this.apiUrl}recipe/${this.getRecipe()}` : undefined;
   });
 
-  createRecipe(data: IRecipe): Observable<IRecipe[]> {
+  createRecipe(data: IRecipe): Observable<crudResponse> {
     return this.http
-      .post<IRecipe[]>(`${this.apiUrl}recipe`, data)
-      .pipe(catchError(this.error.handleError('createRecipe', 'Unable to save recipe', [])));
+      .post<crudResponse>(`${this.apiUrl}recipe`, data)
+      .pipe(
+        catchError(this.error.handleError<crudResponse>('createRecipe', 'Unable to save recipe', { completed: false })),
+      );
   }
 
-  updateRecipe(recipe: number): Observable<IRecipe[]> {
+  updateRecipe(recipe: number): Observable<crudResponse> {
     return this.http
-      .patch<IRecipe[]>(`${this.apiUrl}recipe/${recipe}`, this.signalService.recipe())
-      .pipe(catchError(this.error.handleError('updateRecipe', 'Unable to save recipe', [])));
+      .patch<crudResponse>(`${this.apiUrl}recipe/${recipe}`, this.signalService.recipe())
+      .pipe(
+        catchError(this.error.handleError<crudResponse>('updateRecipe', 'Unable to save recipe', { completed: false })),
+      );
   }
 
-  deleteRecipe(recipe: number): Observable<IRecipe[]> {
+  deleteRecipe(recipe: number): Observable<crudResponse> {
     return this.http
-      .delete<IRecipe[]>(`${this.apiUrl}recipe/${recipe}`)
-      .pipe(catchError(this.error.handleError('deleteRecipe', 'Unable to remove recipe', [])));
+      .delete<crudResponse>(`${this.apiUrl}recipe/${recipe}`)
+      .pipe(catchError(this.error.handleError<crudResponse>('deleteRecipe', 'Unable to remove recipe', {
+        completed: false,
+      })));
   }
 }

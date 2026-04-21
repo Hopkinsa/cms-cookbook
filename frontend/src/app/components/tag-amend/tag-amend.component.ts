@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input, signal } from '@angular/core';
+import { form, FormField } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { FormField, form } from '@angular/forms/signals';
 
 import { crudResponse, ITags, tagsInitialState } from '@server/core/interface';
 import { SignalService, TagService } from '@server/core/services';
@@ -15,13 +15,13 @@ import { SignalService, TagService } from '@server/core/services';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TagAmendComponent {
-  signalTag = input<any>(tagsInitialState, {
+  readonly signalTag = input<ITags | undefined>(undefined, {
     alias: 'tag',
   });
 
   protected signalService: SignalService = inject(SignalService);
   protected tagService: TagService = inject(TagService);
-  protected tagModel = signal<ITags>({...tagsInitialState});
+  protected readonly tagModel = signal<ITags>({ ...tagsInitialState });
   protected tagForm = form(this.tagModel);
   protected readonly enableSave = signal(true);
 
