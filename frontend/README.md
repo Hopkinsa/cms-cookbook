@@ -20,3 +20,4 @@ Please note that starting it this way will not start the backend server.
 
 - [Angular Frontend](../docs/angular-frontend.md)
 - [NodeJS Backend](../docs/nodejs-backend.md)
+- [PM2 Deployment](../docs/pm2-deployment.md)
