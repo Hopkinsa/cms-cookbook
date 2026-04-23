@@ -1,8 +1,10 @@
 import { TestBed } from '@angular/core/testing';
+import { signal } from '@angular/core';
 import { DisplayRecipeComponent } from './display-recipe.component';
 import { SignalService } from '@server/core/services';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { IRecipeSearchInit } from '@server/core/interface';
 
 describe('DisplayRecipeComponent', () => {
   it('computed title, totalTime, banner and serving up/down, amend/back', () => {
@@ -10,7 +12,13 @@ describe('DisplayRecipeComponent', () => {
     const recipeServesSignal: any = jest.fn(() => 2);
     recipeServesSignal.set = jest.fn();
     recipeServesSignal.update = jest.fn();
-    const mockSignal: any = { recipe: () => recipe, recipeServes: recipeServesSignal, returnTo: { set: jest.fn() } };
+    const mockSignal: any = {
+      recipe: () => recipe,
+      recipeServes: recipeServesSignal,
+      recipeSearch: signal({ ...IRecipeSearchInit }),
+      pageIndex: { set: jest.fn() },
+      returnTo: { set: jest.fn() },
+    };
     const mockTitle: any = { setTitle: jest.fn() };
     const mockRouter: any = { navigate: jest.fn(), url: '/recipe/1' };
 
@@ -58,7 +66,13 @@ describe('DisplayRecipeComponent', () => {
     const recipeServesSignal: any = jest.fn(() => 2);
     recipeServesSignal.set = jest.fn();
     recipeServesSignal.update = jest.fn();
-    const mockSignal: any = { recipe: () => recipe, recipeServes: recipeServesSignal, returnTo: { set: jest.fn() } };
+    const mockSignal: any = {
+      recipe: () => recipe,
+      recipeServes: recipeServesSignal,
+      recipeSearch: signal({ ...IRecipeSearchInit, tags: ['quick'], terms: 'soup' }),
+      pageIndex: { set: jest.fn() },
+      returnTo: { set: jest.fn() },
+    };
     const mockTitle: any = { setTitle: jest.fn() };
     const mockRouter: any = { navigate: jest.fn(), url: '/recipe/1' };
 
@@ -76,6 +90,9 @@ describe('DisplayRecipeComponent', () => {
 
     comp.filterByTag('vegan');
 
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/recipes'], { queryParams: { tag: 'vegan' } });
+    expect(mockSignal.recipeSearch().tags).toEqual(['quick', 'vegan']);
+    expect(mockSignal.recipeSearch().tag).toBe('');
+    expect(mockSignal.pageIndex.set).toHaveBeenCalledWith(0);
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/recipes']);
   });
 });

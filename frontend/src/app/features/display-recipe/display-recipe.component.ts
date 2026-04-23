@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { environment } from 'src/environment/environment';
 
 import { SignalService } from '@server/core/services/signal.service';
+import { IRecipeSearch } from '@server/core/interface';
 import { HoursMinutesPipe } from '@server/shared/pipes';
 import { IngredientsComponent } from '@server/components/ingredients/ingredients.component';
 import { StepsComponent } from '@server/components/steps/steps.component';
@@ -100,7 +101,18 @@ export class DisplayRecipeComponent {
       return;
     }
 
-    this.router.navigate(['/recipes'], { queryParams: { tag: selectedTag } });
+    const currentSearch = this.signalService.recipeSearch();
+
+    if (!currentSearch.tags.includes(selectedTag)) {
+      this.signalService.recipeSearch.set({
+        ...currentSearch,
+        tag: '',
+        tags: [...currentSearch.tags, selectedTag],
+      } as IRecipeSearch);
+    }
+
+    this.signalService.pageIndex.set(0);
+    this.router.navigate(['/recipes']);
   }
 
   setMeasurementMode(mode: IngredientMeasurementMode): void {
