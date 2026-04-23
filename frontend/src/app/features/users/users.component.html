@@ -1,0 +1,101 @@
+<app-feedback />
+<div class="row">
+  <h1>User Management</h1>
+</div>
+
+<div class="user-layout">
+  <section>
+    <div class="row-actions header-actions">
+      <h2>Accounts</h2>
+      @if (canCreateUser()) {
+        <button matButton="tonal" type="button" (click)="startCreate()">Add user</button>
+      }
+    </div>
+    @if (users().length > 0) {
+      @for (user of users(); track user.id) {
+        <div class="user-card">
+          <div>
+            <strong>{{ user.firstName }} {{ user.surname }}</strong>
+            <div>{{ user.username }} · {{ user.email }}</div>
+            <div>Status: {{ user.isActive ? 'Active' : 'Inactive' }}</div>
+          </div>
+          <div class="row-actions">
+            @if (signalService.hasPermission('user.update')) {
+              <button matButton="tonal" type="button" (click)="edit(user)">Edit</button>
+            }
+            @if (signalService.hasPermission('user.delete')) {
+              <button matButton="text" type="button" (click)="remove(user)">Delete</button>
+            }
+          </div>
+        </div>
+      }
+    } @else {
+      <p>No users found</p>
+    }
+  </section>
+
+  <section>
+    @if (canShowEditor()) {
+    <div class="row-actions header-actions">
+      <h2>{{ editingUserId() === null ? 'Create User' : 'Edit User' }}</h2>
+      @if (canCreateUser()) {
+        <button matButton="tonal" type="button" (click)="startCreate()">New</button>
+      }
+    </div>
+
+    <form class="user-form" (submit)="save($event)">
+      <label>
+        <span>First name</span>
+        <input id="first-name" type="text" [formField]="userForm.firstName" />
+      </label>
+
+      <label>
+        <span>Surname</span>
+        <input id="surname" type="text" [formField]="userForm.surname" />
+      </label>
+
+      <label>
+        <span>Username</span>
+        <input id="username" type="text" [formField]="userForm.username" />
+      </label>
+
+      <label>
+        <span>Email</span>
+        <input id="email" type="email" [formField]="userForm.email" />
+      </label>
+
+      <label>
+        <span>Password {{ editingUserId() === null ? '' : '(leave blank to keep current password)' }}</span>
+        <input id="password" type="password" [formField]="userForm.password" />
+      </label>
+
+      <label class="checkbox-row">
+        <input id="active" type="checkbox" [formField]="userForm.isActive" />
+        <span>Account active</span>
+      </label>
+
+      <div class="permissions">
+        <h3>Permissions</h3>
+        @for (permission of permissionCodes; track permission) {
+          <label class="checkbox-row">
+            <input type="checkbox" [checked]="hasSelectedPermission(permission)" (change)="togglePermission(permission, $event)" />
+            <span>{{ permission }}</span>
+          </label>
+        }
+      </div>
+
+      <div class="row-actions">
+        <button matButton="filled" type="submit" [disabled]="!enableSave() || !canSubmitUser()">
+          {{ editingUserId() === null ? 'Create user' : 'Save user' }}
+        </button>
+      </div>
+    </form>
+    } @else {
+      <p>You can view users, but you do not have permission to create or edit them.</p>
+    }
+  </section>
+</div>
+
+<div class="row-actions footer-actions">
+  <button matButton="filled" type="button" (click)="back()">Back</button>
+</div>

@@ -3,7 +3,7 @@
   "description": "Content management system cookbook - Frontend",
   "license": "ISC",
   "author": "Andy Hopkins",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
