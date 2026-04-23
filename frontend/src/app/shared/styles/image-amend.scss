@@ -88,10 +88,17 @@
     }
 
     & .previewImage {
-      display: inline-block;
+      display: block;
       width: 100px;
       height: 100px;
-      overflow: hidden;
+      object-fit: contain;
+      object-position: center;
+    }
+
+    & .previewPlaceholder {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #f3f3f3, #fafafa);
     }
   }
 }
@@ -139,6 +146,13 @@
     width: 100px;
     height: 100px;
   }
+
+  & .previewImage,
+  & .previewPlaceholder {
+    width: 100%;
+    height: 100%;
+    border-radius: 0.2rem;
+  }
 }
 
 .optionBtn,
@@ -176,5 +190,17 @@
   max-height: 50vh;
   width: 100%;
   overflow: hidden;
-  border: 1px solid #f0f;
+  display: flex;
+  border: 1px solid #ccc;
+  background: #fafafa;
+
+  & image-cropper {
+    display: block;
+    width: 100%;
+    height: 50vh;
+    --cropper-color: #666;
+    --cropper-border: 1px solid rgba(0, 0, 0, 0.35);
+    --cropper-outline-color: rgba(0, 0, 0, 0.25);
+    --cropper-overlay-color: rgba(255, 255, 255, 0.35);
+  }
 }

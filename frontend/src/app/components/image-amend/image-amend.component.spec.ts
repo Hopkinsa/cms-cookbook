@@ -1,31 +1,52 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpEventType } from '@angular/common/http';
-import { of } from 'rxjs';
 
 import { ImageAmendComponent } from './image-amend.component';
 import { FileService, SignalService } from '@server/core/services';
 
-// Mock cropperjs before the component is imported/used
-jest.mock('cropperjs', () => {
-  return jest.fn().mockImplementation(() => ({
-    zoom: jest.fn(),
-    rotate: jest.fn(),
-    scale: jest.fn(),
-    setAspectRatio: jest.fn(),
-    setDragMode: jest.fn(),
-    reset: jest.fn(),
-    getImageData: jest.fn(() => ({ naturalWidth: 200, naturalHeight: 100 })),
-    getData: jest.fn(() => ({ width: 100, height: 50 })),
-    getCroppedCanvas: jest.fn(() => ({
-      toBlob: (cb: any) => cb(new Blob(['a'], { type: 'image/png' })),
-    })),
-  }));
+jest.mock('ngx-image-cropper', () => {
+  const core = require('@angular/core');
+
+  @core.Component({
+    selector: 'image-cropper',
+    standalone: true,
+    template: '',
+  })
+  class MockImageCropperComponent {
+    @core.Input() imageURL = '';
+    @core.Input() imageAltText = '';
+    @core.Input() cropperFrameAriaLabel = '';
+    @core.Input() output = 'blob';
+    @core.Input() maintainAspectRatio = false;
+    @core.Input() aspectRatio = 1;
+    @core.Input() cropper = undefined;
+    @core.Input() transform = {};
+    @core.Input() allowMoveImage = false;
+    @core.Output() imageCropped = new core.EventEmitter();
+    @core.Output() imageLoaded = new core.EventEmitter();
+    @core.Output() cropperChange = new core.EventEmitter();
+    @core.Output() transformChange = new core.EventEmitter();
+  }
+
+  return {
+    ImageCropperComponent: MockImageCropperComponent,
+  };
 });
 
 describe('ImageAmendComponent (edge cases)', () => {
+  const mockCropEvent = {
+    width: 100,
+    height: 50,
+    cropperPosition: { x1: 0, y1: 0, x2: 100, y2: 50 },
+    imagePosition: { x1: 10, y1: 15, x2: 110, y2: 65 },
+    objectUrl: 'blob:preview-a',
+  };
+
   beforeEach(() => {
     const mockSignal: any = { feedbackMessage: { set: jest.fn() } };
     const mockFile: any = { editImage: jest.fn(() => ({ subscribe: () => {} })) };
+
+    URL.revokeObjectURL = jest.fn();
 
     TestBed.configureTestingModule({
       imports: [ImageAmendComponent],
@@ -36,90 +57,94 @@ describe('ImageAmendComponent (edge cases)', () => {
     });
   });
 
-  it('initializes cropper and responds to controls', () => {
+  it('tracks crop state and responds to controls', () => {
     const fixture = TestBed.createComponent(ImageAmendComponent);
     const comp = fixture.componentInstance as any;
 
-    // Provide a fake image element for the viewChild and set original image
-    (comp as any).imageElement = () => ({ nativeElement: document.createElement('img') });
-    (comp as any).signalImageOrig = () => 'pic.png';
-
-    // set a manual cropper mock on the component to avoid module instance issues
-    const cropperMock = {
-      zoom: jest.fn(),
-      rotate: jest.fn(),
-      scale: jest.fn(),
-      setAspectRatio: jest.fn(),
-      setDragMode: jest.fn(),
-      reset: jest.fn(),
-      getImageData: jest.fn(() => ({ naturalWidth: 200, naturalHeight: 100 })),
-      getData: jest.fn(() => ({ width: 100, height: 50 })),
-      getCroppedCanvas: jest.fn(() => ({ toBlob: (cb: any) => cb(new Blob(['a'], { type: 'image/png' })) })),
-    } as any;
-
-    // allow component effects to run first
     fixture.detectChanges();
 
-    // then replace the cropper with our spy mock so method calls hit spies
-    (comp as any).cropper = cropperMock;
-
-    // ensure control methods exist and can be called without throwing
-    expect(typeof cropperMock.zoom).toBe('function');
-    expect(typeof cropperMock.rotate).toBe('function');
+    comp.imageLoaded({ original: { size: { width: 200, height: 100 } } });
+    comp.cropperChanged({ x1: 0, y1: 0, x2: 100, y2: 50 });
+    comp.imageCropped(mockCropEvent);
+    fixture.detectChanges();
 
     expect(() => comp.zoomIn()).not.toThrow();
     expect(() => comp.zoomOut()).not.toThrow();
     expect(() => comp.rotateLeft()).not.toThrow();
     expect(() => comp.rotateRight()).not.toThrow();
 
-    // flip toggles state correctly
-    const prevX = comp.flipX;
+    expect(comp.imgWidth()).toBe(200);
+    expect(comp.imgHeight()).toBe(100);
+    expect(comp.cropWidth()).toBe(100);
+    expect(comp.cropHeight()).toBe(50);
+    expect((fixture.nativeElement.querySelector('.previewImage') as HTMLImageElement | null)?.src).toContain(
+      'blob:preview-a',
+    );
+
     comp.flipH();
-    expect(comp.flipX).toBe(-prevX);
+    expect(comp.transform().flipH).toBe(true);
 
-    const prevY = comp.flipY;
     comp.flipV();
-    expect(comp.flipY).toBe(-prevY);
+    expect(comp.transform().flipV).toBe(true);
 
-    // aspect ratio and drag/select/reset
+    comp.scaleUp();
+    expect(comp.transform().scale).toBeCloseTo(1.05);
+
+    comp.scaleDown();
+    expect(comp.transform().scale).toBeCloseTo(1);
+
     comp.aspectRatio(2);
-    expect(cropperMock.setAspectRatio).toHaveBeenCalled();
+    expect(comp.maintainAspectRatio()).toBe(true);
+    expect(comp.selectedAspectRatio()).toBe(2);
 
     comp.selectBox();
-    expect(cropperMock.setDragMode).toHaveBeenCalledWith('crop');
+    expect(comp.allowMoveImage()).toBe(false);
 
     comp.drag();
-    expect(cropperMock.setDragMode).toHaveBeenCalledWith('move');
+    expect(comp.allowMoveImage()).toBe(true);
 
     comp.reset();
-    expect(cropperMock.setAspectRatio).toHaveBeenCalled();
-    expect(cropperMock.reset).toHaveBeenCalled();
+    expect(comp.maintainAspectRatio()).toBe(false);
+    expect(comp.allowMoveImage()).toBe(false);
+    expect(comp.transform()).toEqual({ scale: 1, rotate: 0, flipH: false, flipV: false });
   });
 
-  it('apply uploads cropped image and handles success', () => {
+  it('apply uploads adapted crop box data and handles success', () => {
     const mockFileService: any = TestBed.inject(FileService) as any;
     const mockSignalService: any = TestBed.inject(SignalService) as any;
 
-    // make editImage invoke success response
     mockFileService.editImage = jest.fn(() => ({ subscribe: (next: any) => next({ type: HttpEventType.Response }) }));
 
     const fixture = TestBed.createComponent(ImageAmendComponent);
     const comp = fixture.componentInstance as any;
-    (comp as any).imageElement = () => ({ nativeElement: document.createElement('img') });
     (comp as any).signalIconImage = () => 'icon.png';
     (comp as any).signalBannerImage = () => 'banner.png';
+    (comp as any).signalImageOrig = () => 'pic.png';
 
     fixture.detectChanges();
 
-    // set cropper mock so apply will use it
-    (comp as any).cropper = {
-      getData: jest.fn(() => ({ width: 100, height: 100 })),
-      getCroppedCanvas: jest.fn(() => ({ toBlob: (cb: any) => cb(new Blob(['a'], { type: 'image/png' })) })),
-    } as any;
+    comp.transformChanged({ scale: 1.25, rotate: 90, flipH: true, flipV: false });
+    comp.imageCropped({
+      ...mockCropEvent,
+      imagePosition: { x1: 10, y1: 20, x2: 100, y2: 100 },
+      objectUrl: 'blob:preview-b',
+    });
 
     comp.apply();
 
-    expect(mockFileService.editImage).toHaveBeenCalled();
+    expect(mockFileService.editImage).toHaveBeenCalledWith({
+      file: 'pic.png',
+      saveTo: 'icon.png',
+      cropBoxData: {
+        rotate: 90,
+        scaleX: -1.25,
+        scaleY: 1.25,
+        x: '10',
+        y: '20',
+        width: '90',
+        height: '80',
+      },
+    });
     expect(mockSignalService.feedbackMessage.set).toHaveBeenCalledWith({ type: 'success', message: 'Image added' });
   });
 
@@ -127,21 +152,17 @@ describe('ImageAmendComponent (edge cases)', () => {
     const mockFileService: any = TestBed.inject(FileService) as any;
     const mockSignalService: any = TestBed.inject(SignalService) as any;
 
-    // make editImage invoke error callback
     mockFileService.editImage = jest.fn(() => ({ subscribe: (_next: any, err: any) => err('boom') }));
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
     const fixture = TestBed.createComponent(ImageAmendComponent);
     const comp = fixture.componentInstance as any;
-    (comp as any).imageElement = () => ({ nativeElement: document.createElement('img') });
     (comp as any).signalIconImage = () => 'icon.png';
+    (comp as any).signalImageOrig = () => 'pic.png';
 
     fixture.detectChanges();
 
-    // set cropper mock so apply will use it
-    (comp as any).cropper = {
-      getData: jest.fn(() => ({ width: 100, height: 100 })),
-      getCroppedCanvas: jest.fn(() => ({ toBlob: (cb: any) => cb(new Blob(['a'], { type: 'image/png' })) })),
-    } as any;
+    comp.imageCropped(mockCropEvent);
 
     comp.apply();
 
@@ -150,5 +171,7 @@ describe('ImageAmendComponent (edge cases)', () => {
       type: 'error',
       message: 'Image upload failed',
     });
+
+    consoleSpy.mockRestore();
   });
 });

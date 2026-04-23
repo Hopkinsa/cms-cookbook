@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
@@ -27,7 +27,6 @@ import { SearchBarComponent } from '@server/components/search-bar/search-bar.com
   encapsulation: ViewEncapsulation.None,
 })
 export class RecipesComponent {
-  private route: ActivatedRoute = inject(ActivatedRoute);
   private router: Router = inject(Router);
   protected signalService: SignalService = inject(SignalService);
   private recipeListService: RecipeListService = inject(RecipeListService);
@@ -41,30 +40,6 @@ export class RecipesComponent {
   });
 
   protected imgURL = `${environment.baseImgURL}`;
-
-  constructor() {
-    this.applyRouteTagFilter();
-  }
-
-  private applyRouteTagFilter(): void {
-    const selectedTag = this.route.snapshot.queryParamMap.get('tag')?.trim();
-
-    if (!selectedTag) {
-      return;
-    }
-
-    const currentSearch = this.signalService.recipeSearch();
-
-    if (!currentSearch.tags.includes(selectedTag)) {
-      this.signalService.recipeSearch.set({
-        ...currentSearch,
-        tag: '',
-        tags: [...currentSearch.tags, selectedTag],
-      });
-    }
-
-    this.signalService.pageIndex.set(0);
-  }
 
   icon(img_url: string): string {
     const imgNames = generateFilename(img_url);

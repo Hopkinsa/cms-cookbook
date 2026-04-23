@@ -61,21 +61,21 @@
             <div class="aspectRatio">
                 <p>Aspect Ratio</p>
                 <div class="optWrapper">
-                    <button class="optionBtnSqr" type="button" (click)="aspectRatio(0)">16:9</button>
-                    <button class="optionBtnSqr" type="button" (click)="aspectRatio(1)">4:3</button>
-                    <button class="optionBtnSqr" type="button" (click)="aspectRatio(2)">1:1</button><br />
-                    <button class="optionBtnSqr" type="button" (click)="aspectRatio(3)">Free</button>
-                    <button class="optionBtnSqr" type="button" (click)="aspectRatio(4)">Icon</button>
-                    <button class="optionBtnSqr" type="button" (click)="aspectRatio(5)">Hero</button>
+                    <button class="optionBtnSqr" type="button" [class.selected]="selectedAspectRatio() === 0" (click)="aspectRatio(0)">16:9</button>
+                    <button class="optionBtnSqr" type="button" [class.selected]="selectedAspectRatio() === 1" (click)="aspectRatio(1)">4:3</button>
+                    <button class="optionBtnSqr" type="button" [class.selected]="selectedAspectRatio() === 2" (click)="aspectRatio(2)">1:1</button><br />
+                    <button class="optionBtnSqr" type="button" [class.selected]="selectedAspectRatio() === null" (click)="aspectRatio(3)">Free</button>
+                    <button class="optionBtnSqr" type="button" [class.selected]="selectedAspectRatio() === 4" (click)="aspectRatio(4)">Icon</button>
+                    <button class="optionBtnSqr" type="button" [class.selected]="selectedAspectRatio() === 5" (click)="aspectRatio(5)">Hero</button>
                 </div>
             </div>
             <div class="dragMode">
                 <p>Mode</p>
                 <div class="optWrapper">
-                    <button matIconButton type="button" (click)="selectBox()">
+                    <button matIconButton type="button" [class.selected]="!allowMoveImage()" (click)="selectBox()">
                         <mat-icon>crop_free</mat-icon>
                     </button>
-                    <button matIconButton type="button" (click)="drag()">
+                    <button matIconButton type="button" [class.selected]="allowMoveImage()" (click)="drag()">
                         <mat-icon fontSet="material-icons-outlined">image</mat-icon>
                     </button>
                 </div>
@@ -125,7 +125,12 @@
                         Size: {{ cropWidth() }} x {{ cropHeight() }} px</p>
                     <div class="optWrapper">
                         <div class="imageDisplay">
-                            <div class="previewImage"></div>
+                            @if (previewSrc()) {
+                            <img class="previewImage" [src]="previewSrc()" alt="Current crop preview" />
+                            }
+                            @else {
+                            <div class="previewPlaceholder"></div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -133,7 +138,20 @@
             </div>
         </div>
         <div class="image-container">
-            <img #image alt="" />
+            <image-cropper
+                cropperFrameAriaLabel="Image crop selection"
+                output="blob"
+                [allowMoveImage]="allowMoveImage()"
+                [aspectRatio]="cropperAspectRatio()"
+                [cropper]="cropperOverride()"
+                [imageAltText]="signalImageOrig()"
+                [imageURL]="imgOrigSrc()"
+                [maintainAspectRatio]="maintainAspectRatio()"
+                [transform]="transform()"
+                (cropperChange)="cropperChanged($event)"
+                (imageCropped)="imageCropped($event)"
+                (imageLoaded)="imageLoaded($event)"
+                (transformChange)="transformChanged($event)" />
         </div>
     </div>
 </div>
