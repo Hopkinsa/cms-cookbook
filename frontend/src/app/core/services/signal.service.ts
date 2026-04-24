@@ -1,7 +1,8 @@
-import { computed, inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 
 import {
+  type AuthPermissionCode,
   IFeedback,
   IRecipe,
   IRecipeList,
@@ -11,19 +12,17 @@ import {
   ITags,
   IUnits,
 } from '@server/core/interface';
-import { storageSignal } from './signal-storage.service';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SignalService {
   private router: Router = inject(Router);
+  private authService: AuthService = inject(AuthService);
 
   // Signal that controls access to editing
-  readonly editEnabled: WritableSignal<boolean> = storageSignal('editEnabled', false, {
-    storage: localStorage,
-    crossTabSync: true,
-  });
+  readonly editEnabled: WritableSignal<boolean> = signal(false);
 
   // Signal that controls feedback
   readonly feedbackMessage: WritableSignal<IFeedback | null> = signal(null);
@@ -83,10 +82,44 @@ export class SignalService {
   // Signal that contains previous page
   readonly returnTo: WritableSignal<string | null> = signal(null);
 
+  private readonly syncEditAccess = effect(() => {
+    const hasAccess = this.authService.hasAdminAccess();
+    if (this.editEnabled() !== hasAccess) {
+      this.editEnabled.set(hasAccess);
+    }
+  });
+
+  hasPermission(permission: AuthPermissionCode): boolean {
+    return this.authService.hasPermission(permission);
+  }
+
+  hasAnyPermission(permissions: readonly AuthPermissionCode[]): boolean {
+    return this.authService.hasAnyPermission(permissions);
+  }
+
   // simple function for use as additional check on restricted pages
   // all effects trigger on signal changes, add call to the init page effect
-  canEdit(): void {
-    if (!this.editEnabled()) {
+  canEdit(requiredPermission?: AuthPermissionCode | AuthPermissionCode[]): void {
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/auth/login'], { queryParams: { returnTo: this.router.url } });
+      return;
+    }
+
+    if (requiredPermission === undefined) {
+      if (!this.editEnabled()) {
+        this.router.navigate(['/']);
+      }
+      return;
+    }
+
+    if (Array.isArray(requiredPermission)) {
+      if (!this.hasAnyPermission(requiredPermission)) {
+        this.router.navigate(['/']);
+      }
+      return;
+    }
+
+    if (!this.hasPermission(requiredPermission)) {
       this.router.navigate(['/']);
     }
   }

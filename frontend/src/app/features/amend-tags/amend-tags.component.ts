@@ -36,7 +36,7 @@ export class AmendTagsComponent {
   protected tagForm = form(this.tagModel);
 
   private initPage = effect(() => {
-    this.signalService.canEdit();
+    this.signalService.canEdit(['tag.create', 'tag.update', 'tag.delete']);
 
     // populate on change
     const tags = this.signalService.tags();

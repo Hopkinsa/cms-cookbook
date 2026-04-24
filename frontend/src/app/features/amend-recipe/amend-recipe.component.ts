@@ -75,7 +75,7 @@ export class AmendRecipeComponent {
   protected recipeForm = form(this.recipeModel);
 
   private initPage = effect(() => {
-    this.signalService.canEdit();
+    this.signalService.canEdit(this.id === -1 ? 'recipe.create' : 'recipe.update');
     // populate on change
     const recipe = this.signalService.recipe();
     if (recipe === null) {

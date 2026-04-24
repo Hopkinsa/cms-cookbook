@@ -1,16 +1,25 @@
 import { inject } from '@angular/core';
-import { Router, UrlTree } from '@angular/router';
-import { SignalService } from '@server/core/services';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { type AuthPermissionCode } from '@server/core/interface';
+import { AuthService } from '@server/core/services';
 
-export const AuthGuard = (): boolean | UrlTree => {
+export const AuthGuard = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree => {
   const router: Router = inject(Router);
-  const signalService: SignalService = inject(SignalService);
+  const authService: AuthService = inject(AuthService);
+  const permission = route.data['permission'] as AuthPermissionCode | undefined;
+  const permissionsAny = route.data['permissionsAny'] as AuthPermissionCode[] | undefined;
 
-  // if edit allowed, continue journey
-  if (signalService.editEnabled()) {
-    return true;
+  if (!authService.isAuthenticated()) {
+    return router.createUrlTree(['/auth/login'], { queryParams: { returnTo: state.url } });
   }
 
-  // if edit not allowed, redirect to homepage
-  return router.createUrlTree(['/']);
+  if (permission && !authService.hasPermission(permission)) {
+    return router.createUrlTree(['/']);
+  }
+
+  if (permissionsAny && !authService.hasAnyPermission(permissionsAny)) {
+    return router.createUrlTree(['/']);
+  }
+
+  return true;
 };

@@ -21,3 +21,13 @@ Object.defineProperty(document.body.style, 'transform', {
     };
   },
 });
+
+Object.defineProperty(URL, 'createObjectURL', {
+  writable: true,
+  value: jest.fn(() => 'blob:mock-url'),
+});
+
+Object.defineProperty(URL, 'revokeObjectURL', {
+  writable: true,
+  value: jest.fn(),
+});

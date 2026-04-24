@@ -1,8 +1,11 @@
 import { createServer } from 'http';
 
 import { log, PORT } from './utility/helpers.ts';
+import { loadEnvironment } from './utility/load-env.ts';
 import  DBService from './services/db.service.ts';
 import { app } from './app.ts';
+
+loadEnvironment();
 
 const server = createServer(app);
 

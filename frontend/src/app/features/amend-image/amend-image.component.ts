@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -27,6 +27,10 @@ export class AmendImageComponent {
   protected readonly imgName = signal('');
   protected readonly imgNameIcon = signal('');
   protected readonly imgNameBanner = signal('');
+
+  private readonly guardPage = effect(() => {
+    this.signalService.canEdit('image.update');
+  });
 
   constructor() {
     // Access route parameters

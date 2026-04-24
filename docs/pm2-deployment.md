@@ -70,28 +70,34 @@ The deployment package includes its own `package.json`, so installation happens 
 
 ## 4. Start the app with PM2
 
-The deployment package includes `ecosystem.config.js`.
+The deployment package includes `ecosystem.config.cjs`.
 
 ```javascript
 module.exports = {
-  apps: [{
-    name: 'cms-cookbook',
-
-    script: 'www/index.ts',
-    cwd: './cms-cookbook-www/',
-    interpreter: 'tsx',
-  }],
+  apps: [
+    {
+      name: 'cms-cookbook',
+      cwd: __dirname,
+      script: 'npm',
+      args: 'start',
+    },
+  ],
 };
 ```
 
-On the server, either move the file to the `httpd` root directory (srv) or add the contents to an existing configuration file.
-
-Start it from the `httpd` root:
+Start it from inside the deployed directory:
 
 ```bash
-cd /srv
-pm2 start ecosystem.config.js
+cd /srv/cms-cookbook-www
+pm2 start ecosystem.config.cjs
 ```
+
+Why this works:
+
+- the PM2 config lives in the same directory as the deployed `package.json`
+- `cwd: __dirname` means the deployment folder can have any name
+- PM2 runs `npm start`, which uses the deployment package's local `tsx` dependency
+- `.cjs` avoids the CommonJS-versus-ESM startup failure caused by the deployment package using `"type": "module"`
 
 The app name is `cms-cookbook`.
 
@@ -131,4 +137,4 @@ For a new release:
 
 - The backend port is fixed at `3000` in the current codebase.
 - Relative production frontend URLs expect the backend and static files to be served from the same deployed app.
-- If you expose the app publicly, place it behind a reverse proxy such as Nginx or Apache.
+- If you expose the app publicly, place it behind a reverse proxy such as NGINX or Apache.

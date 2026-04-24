@@ -1,18 +1,20 @@
-<button aria-label="Administrator menu" matIconButton type="button" [matMenuTriggerFor]="menu">
+ @if(authService.isAuthenticated()) {
+    <button aria-label="Administrator menu" matIconButton type="button" [matMenuTriggerFor]="menu">
     <mat-icon>more_vert</mat-icon>
 </button>
+ }
 <mat-menu #menu="matMenu">
     @for (link of links; track i; let i = $index) {
-    @if (link[2] === '' || (link[2] === 'admin' && signalService.editEnabled())) {
+    @if (showLink(link)) {
     <button mat-menu-item type="button" (click)="nav(i)">
-        {{ link[1] }}
+        {{ link.label }}
     </button>
     }
     }
 </mat-menu>
 
-<button class="lock" matIconButton type="button" (click)="toggleEdit()">
-    @if(signalService.editEnabled()) {
+<button class="lock" matIconButton type="button" (click)="authAction()">
+    @if(authService.isAuthenticated()) {
     <mat-icon>lock_open</mat-icon>
     }
     @else {
