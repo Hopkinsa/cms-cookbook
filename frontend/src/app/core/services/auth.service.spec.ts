@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 
 import {
@@ -158,25 +158,33 @@ describe('AuthService', () => {
     });
   });
 
-  it('creates and updates users, returning null on errors', (done) => {
+  it('creates and updates users, preserving backend error details on failures', (done) => {
     http.post.mockReturnValueOnce(of(userRecord));
 
     service.createUser(userUpsert).subscribe((createdUser) => {
-      expect(createdUser).toEqual(userRecord);
+      expect(createdUser).toEqual({ user: userRecord });
       expect(http.post).toHaveBeenCalledWith('users', userUpsert);
 
-      http.post.mockReturnValueOnce(throwError(() => new Error('create failed')));
+      http.post.mockReturnValueOnce(
+        throwError(() => new HttpErrorResponse({ status: 403, error: { message: 'Permission denied' } })),
+      );
       service.createUser(userUpsert).subscribe((failedCreate) => {
-        expect(failedCreate).toBeNull();
+        expect(failedCreate).toEqual({ user: null, status: 403, message: 'Permission denied' });
 
         http.patch.mockReturnValueOnce(of(userRecord));
         service.updateUser(2, userUpsert).subscribe((updatedUser) => {
-          expect(updatedUser).toEqual(userRecord);
+          expect(updatedUser).toEqual({ user: userRecord });
           expect(http.patch).toHaveBeenCalledWith('users/2', userUpsert);
 
-          http.patch.mockReturnValueOnce(throwError(() => new Error('update failed')));
+          service.session.set(sessionState);
+          service.users.set([userRecord]);
+          http.patch.mockReturnValueOnce(
+            throwError(() => new HttpErrorResponse({ status: 401, error: { message: 'Authentication required' } })),
+          );
           service.updateUser(2, userUpsert).subscribe((failedUpdate) => {
-            expect(failedUpdate).toBeNull();
+            expect(failedUpdate).toEqual({ user: null, status: 401, message: 'Authentication required' });
+            expect(service.session()).toEqual(authSessionInitialState);
+            expect(service.users()).toBeNull();
             done();
           });
         });

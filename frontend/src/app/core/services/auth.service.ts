@@ -1,7 +1,7 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { firstValueFrom, Observable, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from 'src/environment/environment';
 
 import {
@@ -10,6 +10,7 @@ import {
   type AuthSessionState,
   authSessionInitialState,
   type AuthUser,
+  type AuthUserSaveResponse,
   type AuthUserUpsert,
   crudResponse,
   type PasswordResetRequestResponse,
@@ -72,12 +73,18 @@ export class AuthService {
     );
   }
 
-  createUser(user: AuthUserUpsert): Observable<AuthUser | null> {
-    return this.http.post<AuthUser>(`${this.apiUrl}users`, user).pipe(catchError(() => of(null)));
+  createUser(user: AuthUserUpsert): Observable<AuthUserSaveResponse> {
+    return this.http.post<AuthUser>(`${this.apiUrl}users`, user).pipe(
+      map((savedUser) => ({ user: savedUser })),
+      catchError((error: unknown) => of(this.toUserSaveError(error, 'Unable to create user'))),
+    );
   }
 
-  updateUser(userId: number, user: AuthUserUpsert): Observable<AuthUser | null> {
-    return this.http.patch<AuthUser>(`${this.apiUrl}users/${userId}`, user).pipe(catchError(() => of(null)));
+  updateUser(userId: number, user: AuthUserUpsert): Observable<AuthUserSaveResponse> {
+    return this.http.patch<AuthUser>(`${this.apiUrl}users/${userId}`, user).pipe(
+      map((savedUser) => ({ user: savedUser })),
+      catchError((error: unknown) => of(this.toUserSaveError(error, 'Unable to save user'))),
+    );
   }
 
   deleteUser(userId: number): Observable<crudResponse> {
@@ -107,5 +114,33 @@ export class AuthService {
   private clearSession(): void {
     this.session.set({ ...authSessionInitialState });
     this.users.set(null);
+  }
+
+  private toUserSaveError(error: unknown, fallbackMessage: string): AuthUserSaveResponse {
+    if (error instanceof HttpErrorResponse) {
+      if (error.status === 401) {
+        this.clearSession();
+      }
+
+      return {
+        user: null,
+        status: error.status,
+        message: this.getErrorMessage(error.error) ?? fallbackMessage,
+      };
+    }
+
+    return {
+      user: null,
+      message: fallbackMessage,
+    };
+  }
+
+  private getErrorMessage(errorBody: unknown): string | undefined {
+    if (typeof errorBody !== 'object' || errorBody === null) {
+      return undefined;
+    }
+
+    const message = (errorBody as { message?: unknown })['message'];
+    return typeof message === 'string' ? message : undefined;
   }
 }

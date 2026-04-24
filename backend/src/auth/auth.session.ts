@@ -5,6 +5,7 @@ import { log } from '../utility/helpers.ts';
 import { DEFAULT_FRONTEND_ORIGIN, DEFAULT_SESSION_SECRET, SESSION_COOKIE_NAME } from './auth.constants.ts';
 
 const DEBUG = 'auth.session | ';
+const LOCAL_BACKEND_ORIGIN = 'http://localhost:3000';
 const SESSIONS_TABLE = `
 CREATE TABLE IF NOT EXISTS sessions (
     sid TEXT PRIMARY KEY,
@@ -122,6 +123,31 @@ export function createSessionMiddleware() {
   });
 }
 
+export function getAllowedOrigins(): string[] {
+  const configuredOrigins = `${process.env['FRONTEND_ORIGIN'] ?? ''}`
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+  if (configuredOrigins.length > 0) {
+    return configuredOrigins;
+  }
+
+  if (process.env['NODE_ENV'] === 'production') {
+    return [DEFAULT_FRONTEND_ORIGIN];
+  }
+
+  return [DEFAULT_FRONTEND_ORIGIN, LOCAL_BACKEND_ORIGIN];
+}
+
+export function isAllowedOrigin(origin: string | undefined | null): boolean {
+  if (!origin) {
+    return true;
+  }
+
+  return getAllowedOrigins().includes(origin);
+}
+
 export function getAllowedOrigin(): string {
-  return process.env['FRONTEND_ORIGIN'] ?? DEFAULT_FRONTEND_ORIGIN;
+  return getAllowedOrigins()[0] ?? DEFAULT_FRONTEND_ORIGIN;
 }

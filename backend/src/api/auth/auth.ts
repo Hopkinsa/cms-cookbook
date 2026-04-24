@@ -50,7 +50,14 @@ export async function login(req: Request, res: Response): Promise<void> {
   }
 
   getAuthSession(req).auth = toSessionUser(user);
-  res.status(200).json(buildSessionResponse(req));
+  req.session.save((error) => {
+    if (error) {
+      sendFailureResponse(res, 'Unable to create session', 500);
+      return;
+    }
+
+    res.status(200).json(buildSessionResponse(req));
+  });
 }
 
 export async function logout(req: Request, res: Response): Promise<void> {

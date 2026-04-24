@@ -3,16 +3,16 @@ import Database from 'better-sqlite3';
 import { log } from '../../utility/helpers.ts';
 import {
   PASSWORD_RESET_TOKENS_TABLE,
-  PERMISSION_DATA,
   PERMISSIONS_TABLE,
+  PERMISSION_DATA,
   RECIPE_DATA,
   RECIPE_TABLE,
   TAG_DATA,
   TAG_TABLE,
   UNIT_DATA,
   UNIT_TABLE,
-  USER_PERMISSIONS_TABLE,
   USERS_TABLE,
+  USER_PERMISSIONS_TABLE,
 } from './init.sql.ts';
 
 const DEBUG = 'init | ';

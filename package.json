@@ -3,7 +3,7 @@
   "description": "Content management system cookbook",
   "license": "ISC",
   "author": "Andy Hopkins",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "scripts": {
     "start": "npm run start --prefix ./frontend & npm run start --prefix ./backend",
     "style": "cd ./frontend && npm run style && cd ../backend && npm run style",
