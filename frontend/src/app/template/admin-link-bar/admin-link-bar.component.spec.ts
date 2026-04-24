@@ -1,7 +1,7 @@
-import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 
+import { AuthService } from '@server/core/services/auth.service';
 import { SignalService } from '@server/core/services/signal.service';
 
 import { AdminLinkBarComponent } from './admin-link-bar.component';
@@ -11,13 +11,21 @@ describe('AdminLinkBarComponent', () => {
   let fixture: ComponentFixture<AdminLinkBarComponent>;
   let router: Router;
   const signalServiceMock = {
-    editEnabled: signal(false),
+    hasAnyPermission: jest.fn(() => false),
+  };
+  const authServiceMock = {
+    isAuthenticated: jest.fn(() => false),
+    logout: jest.fn(() => ({ subscribe: (cb: () => void) => cb() })),
   };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AdminLinkBarComponent],
-      providers: [provideRouter([]), { provide: SignalService, useValue: signalServiceMock }],
+      providers: [
+        provideRouter([]),
+        { provide: SignalService, useValue: signalServiceMock },
+        { provide: AuthService, useValue: authServiceMock },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AdminLinkBarComponent);
@@ -27,7 +35,6 @@ describe('AdminLinkBarComponent', () => {
   });
 
   afterEach(() => {
-    signalServiceMock.editEnabled.set(false);
     jest.restoreAllMocks();
   });
 
@@ -43,11 +50,21 @@ describe('AdminLinkBarComponent', () => {
     expect(navigateSpy).toHaveBeenCalledWith(['/images']);
   });
 
-  it('should toggle edit mode', () => {
-    component.toggleEdit();
-    expect(signalServiceMock.editEnabled()).toBe(true);
+  it('navigates to login when signed out', () => {
+    const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValue(true);
 
-    component.toggleEdit();
-    expect(signalServiceMock.editEnabled()).toBe(false);
+    component.authAction();
+
+    expect(navigateSpy).toHaveBeenCalledWith(['/auth/login'], { queryParams: { returnTo: '/' } });
+  });
+
+  it('logs out when signed in', () => {
+    authServiceMock.isAuthenticated.mockReturnValue(true);
+    const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValue(true);
+
+    component.authAction();
+
+    expect(authServiceMock.logout).toHaveBeenCalled();
+    expect(navigateSpy).toHaveBeenCalledWith(['/']);
   });
 });

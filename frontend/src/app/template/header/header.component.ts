@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { AdminLinkBarComponent } from "../admin-link-bar/admin-link-bar.component";
-import { environment } from 'src/environment/environment';
+import { environment } from '@server/environment/environment';
 
 @Component({
   selector: 'app-header',

@@ -1,7 +1,7 @@
 <app-feedback />
 <div class="row">
   <h1>Available Images</h1>
-  @if (signalService.editEnabled()) {
+  @if (signalService.hasPermission('image.upload')) {
   <app-image-upload [variant]="'text'" />
   }
 </div>
@@ -14,11 +14,15 @@
       <button class="image-box" type="button" (click)="openModal(image, 'original')">
         <img alt="{{ image }}" height="112" width="320" [ngSrc]="imgURL + image" />
       </button>
-      @if (signalService.editEnabled()) {
+      @if (signalService.hasAnyPermission(['image.update', 'image.delete'])) {
       <div class="image-amend">
+        @if (signalService.hasPermission('image.update')) {
         <button matIconButton type="button" (click)="amend(image)"><mat-icon>edit</mat-icon></button>
+        }
+        @if (signalService.hasPermission('image.delete')) {
         <button matIconButton type="button" (click)="delete(image)"><mat-icon
             fontSet="material-icons-outlined">delete</mat-icon></button>
+        }
       </div>
       }
       <div class="row image-box-row ">

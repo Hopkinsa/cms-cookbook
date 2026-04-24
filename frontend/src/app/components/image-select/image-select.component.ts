@@ -11,7 +11,7 @@ import {
 import { form, FormField } from '@angular/forms/signals';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { environment } from 'src/environment/environment';
+import { environment } from '@server/environment/environment';
 
 import { FileService } from '@server/core/services';
 import { SortArrayPipe, TruncatePipe } from '@server/shared/pipes';

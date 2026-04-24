@@ -2,7 +2,7 @@ import { effect, inject, Injectable, signal, WritableSignal } from '@angular/cor
 import { HttpClient, httpResource } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { environment } from 'src/environment/environment';
+import { environment } from '@server/environment/environment';
 
 import { SignalService } from '@server/core/services/signal.service';
 import { crudResponse, IRecipe } from '@server/core/interface';

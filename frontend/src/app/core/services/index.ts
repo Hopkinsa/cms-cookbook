@@ -6,3 +6,4 @@ export * from './tag.service';
 export * from './recipe.service';
 export * from './recipe-list.service';
 export * from './backup.service';
+export * from './auth.service';

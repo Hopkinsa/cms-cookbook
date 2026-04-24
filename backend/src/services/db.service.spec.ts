@@ -16,6 +16,12 @@ import DBService from './db.service';
 
 describe('DBService', () => {
   const pathToDB = path.join(DATA_PATH, 'cookbook.db');
+  const makeFakeDb = () => ({
+    name: 'db',
+    prepare: jest.fn(() => ({
+      get: jest.fn(() => ({ total: 1 })),
+    })),
+  });
 
   beforeEach(() => {
     DBService.newDB = false;
@@ -28,7 +34,7 @@ describe('DBService', () => {
   });
 
   test('creates and seeds the database when the file is missing', async () => {
-    const fakeDb = { name: 'db' } as any;
+    const fakeDb = makeFakeDb() as any;
     (fs.existsSync as jest.Mock).mockImplementation((target: fs.PathLike) => {
       if (target === pathToDB) {
         return false;
@@ -43,25 +49,28 @@ describe('DBService', () => {
     (fs.mkdirSync as jest.Mock).mockImplementation(() => undefined as any);
     const openDatabaseSpy = jest.spyOn(DBService, 'openDatabase').mockResolvedValue(fakeDb);
     const createDatabaseSpy = jest.spyOn(initApi, 'createDatabase').mockResolvedValue();
+    const seedAuthDatabaseSpy = jest.spyOn(initApi, 'seedAuthDatabase').mockResolvedValue();
     const populateDatabaseSpy = jest.spyOn(initApi, 'populateDatabase').mockResolvedValue();
     const infoSpy = jest.spyOn(log, 'info_lv2').mockImplementation(() => {});
 
     await DBService.connectToDatabase();
 
-  expect(fs.mkdirSync).toHaveBeenCalledWith(DATA_PATH);
+    expect(fs.mkdirSync).toHaveBeenCalledWith(DATA_PATH);
     expect(openDatabaseSpy).toHaveBeenCalled();
     expect(DBService.db).toBe(fakeDb);
     expect(createDatabaseSpy).toHaveBeenCalledWith(fakeDb);
+    expect(seedAuthDatabaseSpy).toHaveBeenCalledWith(fakeDb);
     expect(populateDatabaseSpy).toHaveBeenCalledWith(fakeDb);
     expect(infoSpy).toHaveBeenCalledWith('db.service | Database folder does not exist.');
     expect(infoSpy).toHaveBeenCalledWith(`db.service | The database at '${pathToDB}' was created.`);
   });
 
   test('opens an existing database without creating schema', async () => {
-    const fakeDb = { name: 'existing-db' } as any;
+    const fakeDb = makeFakeDb() as any;
     (fs.existsSync as jest.Mock).mockImplementation((target: fs.PathLike) => target === pathToDB);
     const openDatabaseSpy = jest.spyOn(DBService, 'openDatabase').mockResolvedValue(fakeDb);
     const createDatabaseSpy = jest.spyOn(initApi, 'createDatabase').mockResolvedValue();
+    const seedAuthDatabaseSpy = jest.spyOn(initApi, 'seedAuthDatabase').mockResolvedValue();
     const populateDatabaseSpy = jest.spyOn(initApi, 'populateDatabase').mockResolvedValue();
     const infoSpy = jest.spyOn(log, 'info_lv2').mockImplementation(() => {});
 
@@ -69,7 +78,8 @@ describe('DBService', () => {
 
     expect(openDatabaseSpy).toHaveBeenCalled();
     expect(DBService.db).toBe(fakeDb);
-    expect(createDatabaseSpy).not.toHaveBeenCalled();
+    expect(createDatabaseSpy).toHaveBeenCalledWith(fakeDb);
+    expect(seedAuthDatabaseSpy).toHaveBeenCalledWith(fakeDb);
     expect(populateDatabaseSpy).not.toHaveBeenCalled();
     expect(infoSpy).toHaveBeenCalledWith(`db.service | The database at '${pathToDB}' was opened.`);
   });

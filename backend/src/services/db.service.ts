@@ -1,7 +1,8 @@
 import Database from 'better-sqlite3';
 
 import { DATA_PATH, log } from '../utility/helpers.ts';
-import { createDatabase, populateDatabase } from '../api/init/init.ts';
+import { createDatabase, populateDatabase, seedAuthDatabase } from '../api/init/init.ts';
+import { ensureBootstrapAdmin } from '../auth/auth.repository.ts';
 import * as fs from 'fs';
 
 const DEBUG = 'db.service | ';
@@ -26,14 +27,17 @@ class DBService {
       }
     }
     this.db = await this.openDatabase();
+    await createDatabase(this.db);
+    await seedAuthDatabase(this.db);
     if (this.newDB) {
       log.info_lv2(`${DEBUG}The database does not exist.`);
-      await createDatabase(this.db);
       await populateDatabase(this.db);
       log.info_lv2(`${DEBUG}The database at '${pathToDB}' was created.`);
     } else {
       log.info_lv2(`${DEBUG}The database at '${pathToDB}' was opened.`);
     }
+
+    await ensureBootstrapAdmin();
   };
 }
 export default DBService;

@@ -1,33 +1,43 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { AuthService } from '@server/core/services/auth.service';
 import { IRecipeSearchInit } from '@server/core/interface';
 import { SignalService } from './signal.service';
 
 describe('SignalService', () => {
-  it('canEdit navigates to / when editEnabled is false', () => {
-    const router = { navigate: jest.fn() } as any;
-    TestBed.configureTestingModule({ providers: [{ provide: Router, useValue: router }] });
+  it('redirects to login when canEdit is called while signed out', () => {
+    const router = { navigate: jest.fn(), url: '/' } as any;
+    const authService = {
+      hasAdminAccess: () => false,
+      isAuthenticated: () => false,
+      hasPermission: () => false,
+      hasAnyPermission: () => false,
+    } as any;
+    TestBed.configureTestingModule({
+      providers: [{ provide: Router, useValue: router }, { provide: AuthService, useValue: authService }],
+    });
 
     // Using TestBed to get a real instance
     const service = TestBed.inject(SignalService);
 
     TestBed.runInInjectionContext(() => {
       const spy = jest.spyOn(router, 'navigate');
-      service.editEnabled.set(true);
-      expect(service.editEnabled()).toBe(true);
       service.canEdit();
-      expect(spy).not.toHaveBeenCalled();
-      const svc = new SignalService();
-      svc.editEnabled.set(false);
-      expect(svc.editEnabled()).toBe(false);
-      svc.canEdit();
-      expect(spy).toHaveBeenCalled();
+      expect(spy).toHaveBeenCalledWith(['/auth/login'], { queryParams: { returnTo: '/' } });
     });
   });
 
   it('recipeServesAdjustment returns correct ratio or 1 when missing', () => {
-    const router = { navigate: jest.fn() } as any;
-    TestBed.configureTestingModule({ providers: [{ provide: Router, useValue: router }] });
+    const router = { navigate: jest.fn(), url: '/' } as any;
+    const authService = {
+      hasAdminAccess: () => false,
+      isAuthenticated: () => false,
+      hasPermission: () => false,
+      hasAnyPermission: () => false,
+    } as any;
+    TestBed.configureTestingModule({
+      providers: [{ provide: Router, useValue: router }, { provide: AuthService, useValue: authService }],
+    });
 
     const service = TestBed.inject(SignalService);
     // no recipe set
@@ -39,8 +49,16 @@ describe('SignalService', () => {
   });
 
   it('filters recipes with OR and AND category matching', () => {
-    const router = { navigate: jest.fn() } as any;
-    TestBed.configureTestingModule({ providers: [{ provide: Router, useValue: router }] });
+    const router = { navigate: jest.fn(), url: '/' } as any;
+    const authService = {
+      hasAdminAccess: () => false,
+      isAuthenticated: () => false,
+      hasPermission: () => false,
+      hasAnyPermission: () => false,
+    } as any;
+    TestBed.configureTestingModule({
+      providers: [{ provide: Router, useValue: router }, { provide: AuthService, useValue: authService }],
+    });
 
     const service = TestBed.inject(SignalService);
 

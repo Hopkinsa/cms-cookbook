@@ -26,7 +26,7 @@ export class BackupComponent {
   isUploading = false; // To track upload status
 
   private initPage = effect(() => {
-    this.signalService.canEdit();
+    this.signalService.canEdit(['backup.export', 'backup.restore']);
   });
 
   pad(num: number): string {

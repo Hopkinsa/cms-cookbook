@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { createServer } from 'http';
 
 import { log, PORT } from './utility/helpers.ts';

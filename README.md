@@ -55,4 +55,5 @@ pm2 can also be used to serve the application.  An example ecosystem.config file
 
 - [Angular Frontend](./docs/angular-frontend.md)
 - [NodeJS Backend](./docs/nodejs-backend.md)
+- [How to install](./docs/install.md)
 - [PM2 Deployment](./docs/pm2-deployment.md)

@@ -5,8 +5,11 @@ import { CdkDrag, CdkDragDrop, CdkDragPlaceholder, CdkDropList } from '@angular/
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { FloatLabelType, MatFormFieldModule } from '@angular/material/form-field';
+import {MatTabsModule} from '@angular/material/tabs';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { environment } from 'src/environment/environment';
+import { environment } from '@server/environment/environment';
 
 import { RecipeService, SignalService } from '@server/core/services';
 import {
@@ -49,8 +52,11 @@ import {
     CdkDragPlaceholder,
     MatButtonModule,
     MatChipsModule,
+    MatFormFieldModule,
     MatIconModule,
+    MatInputModule,
     MatProgressBarModule,
+    MatTabsModule,
     FeedbackComponent,
     ImportRecipeComponent,
     ImageSelectComponent,
@@ -75,7 +81,7 @@ export class AmendRecipeComponent {
   protected recipeForm = form(this.recipeModel);
 
   private initPage = effect(() => {
-    this.signalService.canEdit();
+    this.signalService.canEdit(this.id === -1 ? 'recipe.create' : 'recipe.update');
     // populate on change
     const recipe = this.signalService.recipe();
     if (recipe === null) {

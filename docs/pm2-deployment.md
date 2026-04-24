@@ -132,3 +132,12 @@ For a new release:
 - The backend port is fixed at `3000` in the current codebase.
 - Relative production frontend URLs expect the backend and static files to be served from the same deployed app.
 - If you expose the app publicly, place it behind a reverse proxy such as Nginx or Apache.
+
+## Troubleshooting
+
+Sometimes a change of NodeJS version can cause issues, the following steps can help with updating PM2 to use the new version.
+
+- nvm use <node_version>
+- npm install -g pm2
+- pm2 update
+- pm2 restart all --update-env

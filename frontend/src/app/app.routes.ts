@@ -25,10 +25,34 @@ export const routes: Routes = [
         },
       },
       {
+        path: 'auth/login',
+        title: 'Login | Cookbook',
+        loadComponent: () => import('./features/login/login.component').then((m) => m.LoginComponent),
+      },
+      {
+        path: 'auth/password-reset/request',
+        title: 'Password Reset | Cookbook',
+        loadComponent: () =>
+          import('./features/password-reset-request/password-reset-request.component').then(
+            (m) => m.PasswordResetRequestComponent,
+          ),
+      },
+      {
+        path: 'auth/password-reset/complete',
+        title: 'Complete Password Reset | Cookbook',
+        loadComponent: () =>
+          import('./features/password-reset-complete/password-reset-complete.component').then(
+            (m) => m.PasswordResetCompleteComponent,
+          ),
+      },
+      {
         path: 'backup',
         title: 'Backup / Restore | Cookbook',
         loadComponent: () => import('./features/backup/backup.component').then((m) => m.BackupComponent),
         canActivate: [AuthGuard],
+        data: {
+          permissionsAny: ['backup.export', 'backup.restore'],
+        },
       },
       {
         path: 'recipe/add',
@@ -36,6 +60,9 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/amend-recipe/amend-recipe.component').then((m) => m.AmendRecipeComponent),
         canActivate: [AuthGuard],
+        data: {
+          permission: 'recipe.create',
+        },
         resolve: {
           unit: unitResolver,
           tag: tagResolver,
@@ -48,6 +75,9 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/amend-recipe/amend-recipe.component').then((m) => m.AmendRecipeComponent),
         canActivate: [AuthGuard],
+        data: {
+          permission: 'recipe.update',
+        },
         resolve: {
           unit: unitResolver,
           tag: tagResolver,
@@ -93,10 +123,22 @@ export const routes: Routes = [
         },
       },
       {
+        path: 'users',
+        title: 'Users | Cookbook',
+        loadComponent: () => import('./features/users/users.component').then((m) => m.UsersComponent),
+        canActivate: [AuthGuard],
+        data: {
+          permission: 'user.read',
+        },
+      },
+      {
         path: 'amend-tags',
         title: 'Amend Categories and Tags | Cookbook',
         loadComponent: () => import('./features/amend-tags/amend-tags.component').then((m) => m.AmendTagsComponent),
         canActivate: [AuthGuard],
+        data: {
+          permissionsAny: ['tag.create', 'tag.update', 'tag.delete'],
+        },
         resolve: {
           tag: tagResolver,
         },
@@ -114,6 +156,10 @@ export const routes: Routes = [
         path: 'images/:name',
         title: 'Amend Image | Cookbook',
         loadComponent: () => import('./features/amend-image/amend-image.component').then((m) => m.AmendImageComponent),
+        canActivate: [AuthGuard],
+        data: {
+          permission: 'image.update',
+        },
       },
     ],
   },

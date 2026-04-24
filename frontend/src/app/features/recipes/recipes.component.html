@@ -1,6 +1,6 @@
 <div class="row">
   <h1>Recipes</h1>
-  @if (signalService.editEnabled()) {
+  @if (signalService.hasPermission('recipe.create')) {
   <button matButton="tonal" type="button" (click)="add()">Add</button>
   }
 </div>
@@ -26,11 +26,15 @@
         <div class="recipe-img recipe-img-blank"></div>
         }
       </a>
-      @if (signalService.editEnabled()) {
+      @if (signalService.hasAnyPermission(['recipe.update', 'recipe.delete'])) {
       <div class="recipe-amend">
+        @if (signalService.hasPermission('recipe.update')) {
         <button matIconButton type="button" (click)="amend(recipe.id)"><mat-icon>edit</mat-icon></button>
+        }
+        @if (signalService.hasPermission('recipe.delete')) {
         <button matIconButton type="button" (click)="delete(recipe.id)"><mat-icon
             fontSet="material-icons-outlined">delete</mat-icon></button>
+        }
       </div>
       }
       <div class="recipe-name"><a [routerLink]="['/recipe', recipe.id]">{{ recipe.title }}</a></div>
