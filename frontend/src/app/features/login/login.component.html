@@ -1,0 +1,20 @@
+<app-feedback />
+<section class="auth-panel">
+  <h1>Administrator Login</h1>
+  <form class="auth-form" (submit)="submit($event)">
+    <label>
+      <span>Username or Email</span>
+      <input id="login" type="text" [formField]="loginForm.login" />
+    </label>
+
+    <label>
+      <span>Password</span>
+      <input id="password" type="password" [formField]="loginForm.password" />
+    </label>
+
+    <div class="actions">
+      <button matButton="filled" type="submit" [disabled]="!enableSubmit()">Login</button>
+      <a matButton routerLink="/auth/password-reset/request">Forgot password?</a>
+    </div>
+  </form>
+</section>

@@ -1,4 +1,5 @@
 import { recipeSeedData } from './recipe-seed-data.ts';
+import { PASSWORD_RESET_TOKENS_TABLE, PERMISSION_DATA, PERMISSIONS_TABLE, USER_PERMISSIONS_TABLE, USERS_TABLE } from '../../auth/auth.sql.ts';
 
 export const TAG_TABLE = `
 CREATE TABLE IF NOT EXISTS tags (
@@ -23,6 +24,8 @@ CREATE TABLE IF NOT EXISTS recipe (
     card TEXT
 );
 `;
+
+export { USERS_TABLE, PERMISSIONS_TABLE, USER_PERMISSIONS_TABLE, PASSWORD_RESET_TOKENS_TABLE, PERMISSION_DATA };
 
 let jsonCards = '';
 recipeSeedData.forEach((line) => {
