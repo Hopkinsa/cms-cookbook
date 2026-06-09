@@ -5,9 +5,8 @@
 module.exports = {
   apps: [{
     name: 'cms-cookbook',
-
-    script: 'www/index.ts',
-    cwd: './cmsc/',
-    interpreter: 'tsx',
+    cwd: __dirname,
+    script: 'npm',
+    args: 'start',
   }],
 };

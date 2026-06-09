@@ -1,5 +1,5 @@
 import { recipeSeedData } from './recipe-seed-data.ts';
-import { PASSWORD_RESET_TOKENS_TABLE, PERMISSION_DATA, PERMISSIONS_TABLE, USER_PERMISSIONS_TABLE, USERS_TABLE } from '../../auth/auth.sql.ts';
+import { PASSWORD_RESET_TOKENS_TABLE, PERMISSIONS_TABLE, PERMISSION_DATA, USERS_TABLE, USER_PERMISSIONS_TABLE } from '../../auth/auth.sql.ts';
 
 export const TAG_TABLE = `
 CREATE TABLE IF NOT EXISTS tags (

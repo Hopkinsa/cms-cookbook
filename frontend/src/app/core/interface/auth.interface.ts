@@ -68,6 +68,12 @@ export type AuthUserUpsert = {
   permissions: AuthPermissionCode[];
 };
 
+export type AuthUserSaveResponse = {
+  user: AuthUser | null;
+  message?: string;
+  status?: number;
+};
+
 export type PasswordResetRequestResponse = crudResponse & {
   message?: string;
   resetToken?: string;

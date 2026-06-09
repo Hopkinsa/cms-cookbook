@@ -143,8 +143,8 @@ export class UsersComponent {
       ? this.authService.createUser({ ...requestBody, password: requestBody.password ?? '' })
       : this.authService.updateUser(this.editingUserId()!, requestBody);
 
-    saveRequest.subscribe((savedUser) => {
-      if (savedUser) {
+    saveRequest.subscribe((saveResult) => {
+      if (saveResult.user) {
         this.signalService.feedbackMessage.set({
           type: 'success',
           message: this.editingUserId() === null ? 'User created' : 'User saved',
@@ -152,7 +152,7 @@ export class UsersComponent {
         this.refreshUsers();
         this.resetForm();
       } else {
-        this.signalService.feedbackMessage.set({ type: 'error', message: 'Unable to save user' });
+        this.signalService.feedbackMessage.set({ type: 'error', message: saveResult.message ?? 'Unable to save user' });
       }
 
       this.enableSave.set(true);

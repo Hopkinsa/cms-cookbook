@@ -29,8 +29,8 @@ describe('UsersComponent', () => {
         },
       ]),
       loadUsers: jest.fn(() => of([])),
-      createUser: jest.fn(() => of({ id: 2 })),
-      updateUser: jest.fn(() => of({ id: 1 })),
+      createUser: jest.fn(() => of({ user: { id: 2 } })),
+      updateUser: jest.fn(() => of({ user: { id: 1 } })),
       deleteUser: jest.fn(() => of({ completed: true })),
     };
     feedbackMessage = signal(null);
@@ -100,5 +100,28 @@ describe('UsersComponent', () => {
     expect(authService.createUser).not.toHaveBeenCalled();
     expect(signalService.feedbackMessage()).toEqual({ type: 'error', message: 'You do not have permission to save users' });
     expect(fixture.nativeElement.textContent).toContain('You can view users, but you do not have permission to create or edit them.');
+  });
+
+  it('shows the backend authorization error when a save is rejected', () => {
+    authService.createUser.mockReturnValue(of({ user: null, status: 403, message: 'Permission denied' }));
+
+    const fixture = TestBed.createComponent(UsersComponent);
+    const component = fixture.componentInstance as any;
+    fixture.detectChanges();
+
+    component.startCreate();
+    component.userModel.set({
+      firstName: 'Editor',
+      surname: 'User',
+      username: 'editor',
+      email: 'editor@example.com',
+      password: 'Password123!',
+      isActive: true,
+    });
+    component.selectedPermissions.set(['user.read']);
+
+    component.save({ preventDefault: jest.fn() } as unknown as Event);
+
+    expect(signalService.feedbackMessage()).toEqual({ type: 'error', message: 'Permission denied' });
   });
 });

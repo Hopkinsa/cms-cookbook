@@ -96,12 +96,17 @@ function replaceUserPermissions(userId: number, permissionCodes: PermissionCode[
   runTransaction(userId, permissionRows);
 }
 
-export async function ensureBootstrapAdmin(): Promise<void> {
-  const countRow = DBService.db.prepare(COUNT_USERS).get() as { total: number } | undefined;
-  if ((countRow?.total ?? 0) > 0) {
-    return;
-  }
+function getBootstrapAdminPermissions(): PermissionCode[] {
+  return AUTH_PERMISSIONS.map((permission) => permission.code);
+}
 
+function getBootstrapAdminConfig(): {
+  username: string;
+  email: string;
+  password: string;
+  firstName: string;
+  surname: string;
+} | null {
   const username = process.env['BOOTSTRAP_ADMIN_USERNAME'];
   const email = process.env['BOOTSTRAP_ADMIN_EMAIL'];
   const password = process.env['BOOTSTRAP_ADMIN_PASSWORD'];
@@ -110,17 +115,56 @@ export async function ensureBootstrapAdmin(): Promise<void> {
 
   if (!username || !email || !password) {
     log.info_lv1(`${DEBUG}No bootstrap admin configured. Set BOOTSTRAP_ADMIN_USERNAME, BOOTSTRAP_ADMIN_EMAIL, and BOOTSTRAP_ADMIN_PASSWORD to create the first administrator.`);
+    return null;
+  }
+
+  return {
+    username,
+    email,
+    password,
+    firstName,
+    surname,
+  };
+}
+
+function syncBootstrapAdminPermissions(user: StoredUser): void {
+  const bootstrapPermissions = getBootstrapAdminPermissions();
+  const existingPermissions = [...user.permissions].sort();
+  const desiredPermissions = [...bootstrapPermissions].sort();
+
+  if (existingPermissions.length === desiredPermissions.length && existingPermissions.every((permission, index) => permission === desiredPermissions[index])) {
+    return;
+  }
+
+  replaceUserPermissions(user.id, bootstrapPermissions);
+  log.info_lv1(`${DEBUG}Updated bootstrap admin permissions for '${user.username}'.`);
+}
+
+export async function ensureBootstrapAdmin(): Promise<void> {
+  const bootstrapAdmin = getBootstrapAdminConfig();
+  if (!bootstrapAdmin) {
+    return;
+  }
+
+  const existingBootstrapAdmin = findUserByLogin(bootstrapAdmin.username) ?? findUserByLogin(bootstrapAdmin.email);
+  if (existingBootstrapAdmin) {
+    syncBootstrapAdminPermissions(existingBootstrapAdmin);
+    return;
+  }
+
+  const countRow = DBService.db.prepare(COUNT_USERS).get() as { total: number } | undefined;
+  if ((countRow?.total ?? 0) > 0) {
     return;
   }
 
   await createUser({
-    firstName,
-    surname,
-    username,
-    email,
-    password,
+    firstName: bootstrapAdmin.firstName,
+    surname: bootstrapAdmin.surname,
+    username: bootstrapAdmin.username,
+    email: bootstrapAdmin.email,
+    password: bootstrapAdmin.password,
     isActive: true,
-    permissions: AUTH_PERMISSIONS.map((permission) => permission.code),
+    permissions: getBootstrapAdminPermissions(),
   });
 }
 

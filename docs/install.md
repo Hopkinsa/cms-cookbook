@@ -42,7 +42,8 @@ Notes:
 
 - The bootstrap admin is created only when there are no existing users.
 - If the database already contains users, setting these variables will not add another automatic admin.
-- The backend loads environment variables from shell exports or a local `.env` file because it starts with `dotenv/config`. [Example env file](dot.env)
+- If the configured bootstrap admin account already exists, startup now syncs that account to the full current bootstrap permission set.
+- The backend loads environment variables from shell exports or a local `.env` file because it starts with `dotenv/config`.   [Example env file](dot.env)
 
 ## Start The Application
 

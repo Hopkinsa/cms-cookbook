@@ -5,7 +5,8 @@ import { setImmediate as nodeSetImmediate } from 'timers';
 
 import DBService from '../../services/db.service.ts';
 import { createDatabase, seedAuthDatabase } from '../init/init.ts';
-import { createUser } from '../../auth/auth.repository.ts';
+import { AUTH_PERMISSIONS } from '../../auth/auth.constants.ts';
+import { createUser, ensureBootstrapAdmin, findUserByLogin } from '../../auth/auth.repository.ts';
 
 let app: Express;
 
@@ -49,6 +50,11 @@ describe('auth and protected routes', () => {
 
   afterEach(() => {
     DBService.db.close();
+    delete process.env['BOOTSTRAP_ADMIN_USERNAME'];
+    delete process.env['BOOTSTRAP_ADMIN_EMAIL'];
+    delete process.env['BOOTSTRAP_ADMIN_PASSWORD'];
+    delete process.env['BOOTSTRAP_ADMIN_FIRST_NAME'];
+    delete process.env['BOOTSTRAP_ADMIN_SURNAME'];
     jest.restoreAllMocks();
   });
 
@@ -96,5 +102,32 @@ describe('auth and protected routes', () => {
     expect(response.status).toBe(200);
     expect(response.body).toHaveLength(1);
     expect(response.body[0].username).toBe('admin');
+  });
+
+  test('ensureBootstrapAdmin backfills missing permissions for an existing configured bootstrap admin', async () => {
+    DBService.db.prepare('DELETE FROM user_permissions').run();
+    DBService.db.prepare('DELETE FROM users').run();
+
+    await createUser({
+      firstName: 'Bootstrap',
+      surname: 'Admin',
+      username: 'bootstrap',
+      email: 'bootstrap@example.com',
+      password: 'Password123!',
+      isActive: true,
+      permissions: ['user.read'],
+    });
+
+    process.env['BOOTSTRAP_ADMIN_USERNAME'] = 'bootstrap';
+    process.env['BOOTSTRAP_ADMIN_EMAIL'] = 'bootstrap@example.com';
+    process.env['BOOTSTRAP_ADMIN_PASSWORD'] = 'Password123!';
+
+    await ensureBootstrapAdmin();
+
+    const bootstrapAdmin = findUserByLogin('bootstrap');
+
+    expect(bootstrapAdmin).not.toBeNull();
+    expect(bootstrapAdmin?.permissions).toHaveLength(AUTH_PERMISSIONS.length);
+    expect(bootstrapAdmin?.permissions).toEqual(expect.arrayContaining(AUTH_PERMISSIONS.map((permission) => permission.code)));
   });
 });

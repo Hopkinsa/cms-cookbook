@@ -49,7 +49,9 @@ function createRequest(overrides: Partial<Request> = {}): Request {
   return {
     body: {},
     params: {},
-    session: {},
+    session: {
+      save: (callback: (error?: Error) => void) => callback(),
+    },
     ...overrides,
   } as Request;
 }
@@ -100,7 +102,8 @@ describe('auth handlers', () => {
   });
 
   it('creates a session on successful login', async () => {
-    const req = createRequest({ body: { login: 'admin', password: 'secret' }, session: {} as any });
+    const save = jest.fn((callback: (error?: Error) => void) => callback());
+    const req = createRequest({ body: { login: 'admin', password: 'secret' }, session: { save } as any });
     const res = createResponse();
     const user = {
       id: 1,
@@ -125,9 +128,37 @@ describe('auth handlers', () => {
       email: 'admin@example.com',
       permissions: ['user.read'],
     });
+    expect(save).toHaveBeenCalledTimes(1);
     expect(buildSessionResponse).toHaveBeenCalledWith(req);
     expect((res.status as jest.Mock)).toHaveBeenCalledWith(200);
     expect((res.json as jest.Mock)).toHaveBeenCalledWith({ authenticated: true, user: (req.session as any).auth });
+  });
+
+  it('reports a session save failure after successful authentication', async () => {
+    const req = createRequest({
+      body: { login: 'admin', password: 'secret' },
+      session: {
+        save: (callback: (error?: Error) => void) => callback(new Error('save failed')),
+      } as any,
+    });
+    const res = createResponse();
+    const user = {
+      id: 1,
+      firstName: 'Admin',
+      surname: 'User',
+      username: 'admin',
+      email: 'admin@example.com',
+      passwordHash: 'hash',
+      isActive: true,
+      permissions: ['user.read'],
+    };
+    (findUserByLogin as jest.Mock).mockReturnValue(user);
+    (verifyPassword as jest.Mock).mockResolvedValue(true);
+
+    await login(req, res);
+
+    expect(sendFailureResponse).toHaveBeenCalledWith(res, 'Unable to create session', 500);
+    expect(res.status).not.toHaveBeenCalledWith(200);
   });
 
   it('handles logout success and failure', async () => {
