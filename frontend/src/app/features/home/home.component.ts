@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { environment } from 'src/environment/environment';
+import { environment } from '@server/environment/environment';
 
 import { SignalService } from '@server/core/services/signal.service';
 

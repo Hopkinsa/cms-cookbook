@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
-import { environment } from 'src/environment/environment';
+import { environment } from '@server/environment/environment';
 
 import { SignalService } from '@server/core/services/signal.service';
 import { IRecipeSearch } from '@server/core/interface';

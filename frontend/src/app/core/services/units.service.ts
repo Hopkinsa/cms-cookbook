@@ -1,6 +1,6 @@
 import { effect, inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { httpResource } from '@angular/common/http';
-import { environment } from 'src/environment/environment';
+import { environment } from '@server/environment/environment';
 
 import { SignalService } from '@server/core/services/signal.service';
 import { IUnits } from '@server/core/interface';

@@ -1,8 +1,8 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { firstValueFrom, Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
-import { environment } from 'src/environment/environment';
+import { catchError, tap } from 'rxjs/operators';
+import { environment } from '@server/environment/environment';
 
 import {
   AuthLoginRequest,

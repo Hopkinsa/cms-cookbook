@@ -4,42 +4,43 @@ h1 {
 h1 + button {
   margin-left: 1rem;
 }
-.row {
+.row,
+.row-form {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
 form {
+  display: flex;
+  flex-direction: column;
   margin-bottom: 1rem;
 }
-label {
-  margin: 0.25rem 0.5rem 0.25rem 0;
-  width: auto;
-  display: block;
 
-  & b {
-    display: inline-block;
-    width: 6rem;
+.tab-form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1rem;
+}
+
+.mat-mdc-form-field {
+  max-width: 35rem;
+  margin-bottom: 1rem;
+}
+
+.row-form {
+  max-width: 35rem;
+  justify-content: space-between;
+  .mat-mdc-form-field {
+    max-width: 10rem;
+    margin-bottom: 1rem;
   }
 }
-input {
-  margin-right: 0.5rem;
 
-  &[type='number'] {
-    width: 2rem;
-  }
-  &[type='text'] {
-    width: 15rem;
-  }
-  &[type='checkbox'] {
-    margin-left: 0px;
-  }
-}
 .file-input {
   display: none;
 }
 mat-chip-grid {
-  margin-left: 6rem;
+  margin-left: 0rem;
   & + button {
     margin-left: 6rem;
   }
@@ -53,8 +54,9 @@ button {
   display: inline-block;
   margin-right: 0.5rem;
 }
+
 .drag-list {
-  width: 500px;
+  width: 35rem;
   max-width: 100%;
   border: solid 1px #ccc;
   min-height: 60px;
@@ -64,13 +66,13 @@ button {
   overflow: hidden;
   margin-bottom: 0.25rem;
   margin-top: 0.25rem;
-  margin-left: 6rem;
 
   & + button {
-    margin-left: 6rem;
+    margin-left: 0rem;
   }
 }
 .drag-box {
+  width: 35rem;
   padding: 20px 10px;
   border-bottom: solid 1px #ccc;
   color: rgba(0, 0, 0, 0.87);
@@ -116,7 +118,6 @@ button {
   .image-preview-container {
     display: flex;
     flex-direction: column;
-    margin-left: 6rem;
     margin-right: 1rem;
     border: 1px solid #ccc;
     width: 9rem;
@@ -143,12 +144,4 @@ button {
       margin-right: 1rem;
     }
   }
-}
-.label-textarea {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-}
-textarea {
-  width: 21rem;
 }

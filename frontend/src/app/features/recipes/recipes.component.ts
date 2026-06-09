@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { environment } from 'src/environment/environment';
+import { environment } from '@server/environment/environment';
 
 import { RecipeListService, RecipeService, SignalService } from '@server/core/services';
 import { generateFilename } from '@server/shared/helper/filename.helper';
